@@ -78,7 +78,7 @@ public class PageWebserviceImpl extends BasePlateformWebservice{
 			@WebParam(name="params") String params){
 		JSONMessageResult msg = null;
 		Session sess = null;
-		try {
+		try {dd
 			sess = SystemSessionFactory.getSession();
 			//检查pageUrl 是否合法(无.. js后缀)
 			int hasDD = pageUrl.indexOf("..");
