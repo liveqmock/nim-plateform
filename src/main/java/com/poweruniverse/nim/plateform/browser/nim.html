@@ -1,0 +1,203 @@
+<!doctype html>
+<html >
+<head>
+	<meta charset="utf-8">
+	<title>正在加载页面...</title>
+	<link href="/resources/nim/jquery-ui-1.11.0/jquery-ui.css" rel="stylesheet">
+
+	<script src="/resources/nim/jquery-ui-1.11.0/external/jquery-1.10.2.js"></script>
+	<script src="/resources/nim/jquery-ui-1.11.0/jquery-ui.js"></script>
+	<script src="/resources/nim/jquery-ui-1.11.0/jquery-ui-datepicker-zh.js"></script>
+	
+	<!-- jquery json编码-->
+	<script src="/resources/nim/jquery-json/jquery-json.js"></script>
+	
+	<!--jquery 字段验证-->
+	<script src="/resources/nim/jquery-validation-1.12.0/dist/jquery.validate.js"></script>
+
+	<!--javascript模板-->
+	<script src="/resources/nim/handlebars-v1.3.0/handlebars-v1.3.0.js"></script>
+	<script src="/resources/nim/handlebars-v1.3.0/handlebars-helper.js"></script>
+	
+	<!--jquery 分页-->
+	<script src="/resources/nim/jquery.pagination/jquery.pagination.js"></script>
+	<link rel="stylesheet" href="/resources/nim/jquery.pagination/jquery.pagination.css" />
+	
+	<!--TableTree 树状表格-->
+	<script src="/resources/nim/tabletree4j_v2_update_2/Core4j.js"></script>
+	<link rel="stylesheet" href="/resources/nim/tabletree4j_v2_update_2/tabletree4j.css" />
+	<script src="/resources/nim/tabletree4j_v2_update_2/TableTree4j-debug.js"></script>
+	<script src="/resources/nim/tabletree4j_v2_update_2/tabletree4j-extend.js"></script>
+
+	
+	<!--codemirror编辑器-->
+	<script src="/resources/nim/codemirror-4.0/lib/codemirror.js"></script>
+	<link rel="stylesheet" href="/resources/nim/codemirror-4.0/lib/codemirror.css">
+	<script src="/resources/nim/codemirror-4.0/mode/xml/xml.js"></script>
+	<script src="/resources/nim/codemirror-4.0/mode/javascript/javascript.js"></script>
+	<script src="/resources/nim/codemirror-4.0/mode/css/css.js"></script>
+	<script src="/resources/nim/codemirror-4.0/mode/htmlmixed/htmlmixed.js"></script>
+	<script src="/resources/nim/codemirror-4.0/mode/htmlembedded/htmlembedded.js"></script>
+
+	<script src="/resources/nim/codemirror-4.0/addon/search/search.js"></script>
+	<script src="/resources/nim/codemirror-4.0/addon/search/searchcursor.js"></script>
+	<script src="/resources/nim/codemirror-4.0/addon/dialog/dialog.js"></script>
+	<link rel="stylesheet" href="/resources/nim/codemirror-4.0/addon/dialog/dialog.css" />
+
+	<script src="/resources/nim/light-ui/light-ui-core.js"></script>
+	<script src="/resources/nim/light-ui/light-ui-utils.js"></script>
+	
+	<script src="/resources/nim/light-ui/datasource/light-ui-dataUtils.js"></script>
+	<script src="/resources/nim/light-ui/datasource/light-ui-record.js"></script>
+	<script src="/resources/nim/light-ui/datasource/light-ui-datasource.js"></script>
+	
+	<script src="/resources/nim/light-ui/widget/light-ui-template.js"></script>
+	<script src="/resources/nim/light-ui/widget/light-ui-page.js"></script>
+	<script src="/resources/nim/light-ui/widget/light-ui-forms.js"></script>
+	<script src="/resources/nim/light-ui/widget/light-ui-fields.js"></script>
+	<script src="/resources/nim/light-ui/widget/light-ui-toolsbar.js"></script>
+	<script src="/resources/nim/light-ui/widget/light-ui-fields-set.js"></script>
+	<script src="/resources/nim/light-ui/widget/light-ui-grids.js"></script>
+	<script src="/resources/nim/light-ui/widget/light-ui-grids-rows.js"></script>
+	<script src="/resources/nim/light-ui/widget/light-ui-grids-columns.js"></script>
+	<script src="/resources/nim/light-ui/widget/light-ui-tree.js"></script>
+	<script src="/resources/nim/light-ui/widget/light-ui-treegrid.js"></script>
+	<script src="/resources/nim/light-ui/widget/light-ui-choose-el.js"></script>
+	<script src="/resources/nim/light-ui/widget/light-ui-fields-display.js"></script>
+	<script src="/resources/nim/light-ui/widget/light-ui-field-manager.js"></script>
+	
+	<script src="/resources/nim/light-ui/widget/light-ui-images.js"></script>
+	
+	<script src="/resources/nim/light-ui/light-ui-taskUtils.js"></script>
+
+	<script src="/resources/nim/light-ui/_designer/light-ui-designer.js"></script>
+	<script src="/resources/nim/light-ui/_designer/light-ui-popup.js"></script>
+	<script src="/resources/nim/light-ui/_designer/light-ui-mapping.js"></script>
+
+	<script>
+		//解析url
+		var _urlInfo = LUI.Util.parseURL(window.location);
+	</script>
+
+	<!--文件上传-->
+	<link href="/resources/nim/jquery-upload-file-master/css/uploadfile.css" rel="stylesheet">
+	<script src="/resources/nim/jquery-upload-file-master/js/jquery.uploadfile.js"></script>
+	<!--文件上传 for ie-->
+	<script src="/resources/nim/ajaxfileupload-2.1/ajaxfileupload.js" type="text/javascript"></script>
+
+	<!--zTree 树状表格 -->
+	<link href="/resources/nim/zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+	<script src="/resources/nim/zTree_v3/js/jquery.ztree.all-3.5.js"></script>
+	<script src="/resources/nim/zTree_v3/js/jquery.ztree.exhide-3.5.js"></script>
+
+	<link href="/resources/nim/jquery-layout-1.3.0/jquery-ui-custom.css" rel="stylesheet">
+	<script src="/resources/nim/jquery-layout-1.3.0/jquery-layout-1.3.0.js"></script>
+	
+	<link rel="stylesheet" href="/resources/nim/chosen_v1.1.0/chosen.css">
+	<script src="/resources/nim/chosen_v1.1.0/chosen.jquery.js" type="text/javascript"></script>
+	<script src="/resources/nim/chosen_v1.1.0/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+
+	<!--kindeditor编辑器-->
+	<link rel="stylesheet" href="/resources/nim/kindeditor-4.1.10/themes/default/default.css" />
+	<script charset="utf-8" src="/resources/nim/kindeditor-4.1.10/kindeditor.js"></script>
+	<script charset="utf-8" src="/resources/nim/kindeditor-4.1.10/lang/zh_CN.js"></script>
+	
+	<!--扩展的jquery ui-->
+	<script src="/resources/nim/jquery-ui-1.11.0/external/override.js"></script>
+	
+	<!--扩展的mask-->
+	<script src="/resources/nim/jquery-ui-1.11.0/external/mask/mask.js"></script>
+	
+	<!--扩展的combobox-->
+	<link href="/resources/nim/jquery-ui-1.11.0/external/combobox/combobox.css" rel="stylesheet">
+	<script src="/resources/nim/jquery-ui-1.11.0/external/combobox/combobox.js"></script>
+
+	<script src="nim.js"></script>
+	<link rel="stylesheet" href="nim.css">
+ 
+	<style>
+		body {
+			font-size: 62.5%;
+			padding:0px;
+			margin:0px;
+		}
+		table {
+			font-size: 1em;
+		}
+
+		.designer-tree-page_ico_close{ background-position: -32px -96px;}
+		.designer-tree-page_ico_open{ background-position: -32px -96px;}
+		.designer-tree-page_ico_docu{ background-position: -32px -96px;}
+
+		.designer-tree-database_ico_close{ background-position: -176px -128px;}
+		.designer-tree-database_ico_open{ background-position: -176px -128px;}
+		.designer-tree-database_ico_docu{ background-position: -176px -128px;}
+
+		.designer-tree-form_ico_close{ background-position: -192px -128px;}
+		.designer-tree-form_ico_open{ background-position: -192px -128px;}
+		.designer-tree-form_ico_docu{ background-position: -192px -128px;}
+
+		.designer-tree-grid_ico_close{ background-position:  -112px -112px;}
+		.designer-tree-grid_ico_open{ background-position:  -112px -112px;}
+		.designer-tree-grid_ico_docu{ background-position:  -112px -112px;}
+
+		.designer-tree-changelog_ico_close{ background-position:  -64px -112px;}
+		.designer-tree-changelog_ico_open{ background-position:  -64px -112px;}
+		.designer-tree-changelog_ico_docu{ background-position:  -64px -112px;}
+
+		.designer-tree-info_ico_docu{ background-position:  -16px -112px;}
+
+		.designer-tree-invalid_ico_close {
+			background-position: -110px -64px;
+    		margin-right: 2px;
+    		vertical-align: top;
+		}
+		
+		.designer-tree-invalid_ico_open {
+			background-position: -110px -64px;
+    		margin-right: 2px;
+    		vertical-align: top;
+		}
+
+		.designer-tree-invalid_ico_docu {
+			background-position: -110px -64px;
+    		margin-right: 2px;
+    		vertical-align: top;
+		}
+
+		.field-invalid{
+			border: 1px solid #FF0000 !important;
+		}
+
+		.field-disabled{
+			 -moz-user-input: disabled;
+			background: none repeat scroll 0 0 padding-box rgba(0, 0, 0, 0) !important;
+			cursor: default;
+			color: #444444 !important;
+		}
+
+		.chosen-container {
+			font-size: 1em;
+		}
+
+		/*input 左侧缩进编辑*/
+		.ui-widget input{text-indent:4px;}
+		.ui-widget input:-moz-read-write{text-indent:7px;width:-moz-calc(100% - 10px);}
+		
+		/*jquery-ui 日期选择控件 年月选择框的宽度*/
+		.ui-datepicker select.ui-datepicker-month, .ui-datepicker select.ui-datepicker-year {
+    		width: 42%;
+		}
+	</style>
+        
+        
+	
+</head>
+<body>
+	<!--工作区-->
+	<div id="_pageContent" class="ui-layout-center" style="padding:0px;width: 100%;"></div>
+	<div id="_designer" class="ui-layout-east" style="border-left:1px solid #8db2e3;border-right:0px;border-top:0px;border-bottom:0px;"></div>
+	<iframe src="javascript:''" id="_downloadFrame" tabIndex='-2' style="position:absolute;width:0;height:0;border:0"></iframe>
+	<div id="_original" tabIndex='-3' style="position:absolute;width:0;height:0;border:0;overflow: auto;"></div>
+</body>
+</html>

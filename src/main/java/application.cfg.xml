@@ -1,0 +1,42 @@
+<!-- 配置当前系统所使用的参数（修改后需要重新启动）
+	name:当前系统名称
+	title:页面默认标题
+	src:系统源文件目录
+	module:页面文件目录名
+	ip:当前系统ip地址
+	port:当前系统www服务端口号
+	webservicePort:当前系统webservice服务端口号
+	webserviceSrc:webservice客户端访问代码生成目标路径
+ -->
+<application name="" title="华电重工管理信息系统" 
+			 src="D:/data/workspace/nim-plateform/src/main/java/" 
+			 jdkPath="C:/java/jdk1.7.0_67/" 
+			 module="module" 
+			 ip="127.0.0.1" 
+			 port="8080" 
+			 webservicePort="1081"
+			 webserviceSrc="D:/data/workspace/nim-base/src/main/java/" >
+	<pages>
+		<!-- 本系统登陆页面(必需) -->
+		<login page="/nim.html?_pt_=hdzg2/login/login.html"/>
+		<!-- 本系统首页 (必需)-->
+		<home page="/nim.html?_pt_=hdzg2/index/index.html"/>
+		<!-- 单点登录系统登录页面URL
+		<sso page=""/> -->
+	</pages>
+	<components>
+		<!--本地服务组件配置-->
+		<localComponent name="nim-data"/>
+		<localComponent name="nim-plateform"/>
+		<!--远程服务组件配置-->
+		<!--
+			<remoteComponent name="esb" ip="127.0.0.1" port="8081">
+				 <webservice clientClass="com.poweruniverse.nim.esb.Component" clientServerClass="nim-esb"/>
+			</remoteComponent>
+		-->
+	</components>
+	
+	<!-- 数据配置-->
+	<sessionFactory name="system" cfg-file-name="WEB-INF/hibernate.sys.xml"/>
+	<sessionFactory name="system" cfg-file-name="WEB-INF/hibernate.sys.xml"/>
+</application>

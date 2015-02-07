@@ -1,0 +1,553 @@
+@charset "utf-8";
+
+#hhi{font-size: 16px; font-family:"Microsoft YaHei";}
+#hhi .w1000{ width:1000px; margin:0 auto;}
+#hhi .l{ float:left;}
+#hhi .r{ float:right;}
+.clear{ clear:both;}
+#hhi ul{ margin:0; padding:0; list-style:none;}
+#hhi div,#hhi ul,#hhi li,#hhi h1,#hhi h2,#hhi h3,#hhi h4,#hhi h5,#hhi h6,#hhi pre,#hhi form,#hhi fieldset,#hhi input,#hhi textarea,#hhi p,#hhi th, #hhi td {border-collapse:collapse; border-spacing:0;}
+table { border-collapse:collapse; border-spacing:0;}
+#hhi .overflow{ overflow:hidden;text-overflow:ellipsis; -o-text-overflow:ellipsis; white-space:nowrap;}
+#hhi .block{ display:block; float:left;}
+#hhi img{ border:0;}
+#hhi a{ text-decoration:none;}
+#hhi em{ font-style:normal;}
+/**颜色**/
+#hhi .white{ color:#fff;}
+#hhi .light-bule{ color:#c5cbd7;}
+#hhi .orange{ color:#f60;}
+#hhi .gray{ color:#666;}
+#hhi .bg01{ background:#f5f5f5;}
+/**字体**/
+#hhi .f12{ font-size:12px;}
+#hhi .f14{ font-size:14px;}
+#hhi .f16{ font-size:16px;}
+#hhi .f18{ font-size:18px;}
+#hhi .f20{ font-size:20px;}
+
+#hhi .b{ font-weight:bold;}
+#hhi .pl10{ padding-left:10px;}
+
+/**head**/
+#hhi .head{ width:100%; height:30px; line-height:30px; background:#3f6f8c;}
+#hhi .head .l-hy{ float:left; width:300px; color:#fff; height:30px; line-height:30px;}
+#hhi .head .r-menu{ float:right; width:110px; color:#c5cbd7; height:23px; line-height:30px;}
+#hhi .head .r-menu ul{list-style: none outside none;padding: 0;margin: 0;}
+
+
+#hhi .head .r-menu li{ float:right; margin-left:20px; width:16px; height:16px; display:block; float:right; margin-top:7px; cursor:pointer;}
+#hhi .head .r-menu li.off{ background:url(module/hdzg2/index/images/base-icon.png) 0px -116px no-repeat;}
+#hhi .head .r-menu li.off:hover{ background:url(module/hdzg2/index/images/base-icon.png) -86px -116px no-repeat;}
+#hhi .head .r-menu li.help{ background:url(module/hdzg2/index/images/base-icon.png) 0px -36px no-repeat; margin-left:10px; }
+#hhi .head .r-menu li.help:hover{ background:url(module/hdzg2/index/images/base-icon.png) -84px -36px no-repeat;}
+
+#hhi .head .r-menu li.set{ background:url(module/hdzg2/index/images/base-icon.png) 10px -70px no-repeat; position:relative; width:36px; height:30px; margin-top:0; margin-left:10px;}
+#hhi .head .r-menu li.set:hover{ background:url(module/hdzg2/index/images/base-icon.png) #2d5d7a -74px -70px no-repeat; width:36px; height:30px; margin-top:0;}
+
+#hhi .head .r-menu li.set .setUL{ position:absolute; top:30px; left:0; width:70px; background:#2d5d7a; font-size:12px; display:none; z-index:11;}
+#hhi .head .r-menu li.set .setUL span{ height:24px; line-height:24px; width:70px; float:left; text-align:center;}
+#hhi .head .r-menu li.set .setUL span a{ color:#c5cbd7;}
+#hhi .head .r-menu li.set .setUL span a:hover{ color:#fff;}
+#hhi .head .r-menu li .set-hover{ background:#2d5d7a; color:#FFF; font-weight:bold;}
+#hhi .head .r-menu li .set-hover b{border-color:#8c8c8c #2d2d2d #2d2d2d;}
+
+#hhi .head .r-menu li.set:hover .setUL{ display:block;}
+
+
+#hhi .head .login{ width:50px; background:url(module/hdzg2/index/images/base-icon.png) left 7px no-repeat; height:30px; float:right; padding-left:12px;}
+#hhi .head .login:hover{ width:50px; background:url(module/hdzg2/index/images/base-icon.png) 1px -146px no-repeat; height:30px; float:right; padding-left:12px;}
+#hhi .head .login a{ color:#c5cbd7; padding:0 10px; line-height:30px; text-decoration: none;}
+#hhi .head .login a:hover{ color:#fff; }
+
+/****导航nav****/
+#hhi .nav{ height:80px; }
+#hhi .nav .logo{ float:left;}
+#hhi .nav .nav-menu{ width:610px; line-height:80px; float:right; font-family:"Microsoft YaHei","文鼎CS中黑"; font-weight:bold; height:76px; padding-right:5px;}
+#hhi .nav .nav-menu ul{list-style: none outside none;padding: 0;margin: 0;}
+#hhi .nav .nav-menu li{ padding-left:46px; float:left;}
+#hhi .nav .nav-menu li a{ color:#666;text-decoration: none;}
+#hhi .nav .nav-menu li a:hover,#hhi .nav .nav-menu li a.on{ color:#FF6600;}
+#hhi .nav .nav-menu li .ksdh{ width:22px; height:22px; background:url(module/hdzg2/index/images/base-icon.png) 0 -193px no-repeat; vertical-align:-3px;}
+
+/**banner-箭头指向问题**/
+#hhi .con .banner .info .arrow {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) #AAAAAA;
+    border-image: none;
+    border-style: solid;
+    border-width: 10px;
+    left: 860px;
+    position: absolute;
+    top: -20px;
+    z-index: -9;
+}
+
+/**友情链接**/
+#hhi .yqlj{ height:14px; padding:18px 0; font-size:14px; text-align:center;}
+#hhi .yqlj a{ padding:0 15px; line-height:14px; height:14px; border-right:#ddd 1px solid; color:#999;}
+#hhi .yqlj a:hover{ color:#666;}
+/**�ײ�**/
+#hhi .footer{ background:#345; color:#cbd6e2; font-size:12px; text-align:center; line-height:24px;}
+
+/********内容开始**/
+#hhi .con{}
+/**常用登录系统**/
+#hhi .cydlxt{ width:890px; height:100px; float:left;}
+#hhi .cydlxt ul{ list-style: none outside none;margin: 0;padding: 0;height:100px;}
+#hhi .cydlxt li{ float:left; margin-right:8px;text-align: center;}
+#hhi .cydlxt li a{ text-decoration: none;color:#666; width:140px; height:24px; border-bottom:#e6e6e6 3px solid; padding-top:73px; font-size:14px; font-weight:bold; color:#666; display:block; float:left;}
+#hhi .cydlxt li a:hover{ color:#358;border-bottom:#358 3px solid; color:#358; }
+
+#hhi .cydlxt li a.cybgxzbg{ background:url(module/hdzg2/index/images/cyxtdl-icon.png) 0 0 no-repeat; }
+#hhi .cydlxt li a.cybgxzbg:hover{ background:url(module/hdzg2/index/images/cyxtdl-icon.png) -161px 0 no-repeat;}
+
+#hhi .cydlxt li a.dlhdzgnwbg{ background:url(module/hdzg2/index/images/cyxtdl-icon.png) 0 -111px no-repeat;}
+#hhi .cydlxt li a.dlhdzgnwbg:hover{ background:url(module/hdzg2/index/images/cyxtdl-icon.png) -161px -111px no-repeat;}
+
+#hhi .cydlxt li a.dlhdzgyxbg{ background:url(module/hdzg2/index/images/cyxtdl-icon.png) 0 -224px no-repeat;}
+#hhi .cydlxt li a.dlhdzgyxbg:hover{ background:url(module/hdzg2/index/images/cyxtdl-icon.png) -161px -224px no-repeat;}
+
+#hhi .cydlxt li a.dlzgoabg{ background:url(module/hdzg2/index/images/cyxtdl-icon.png) 0 -336px no-repeat;}
+#hhi .cydlxt li a.dlzgoabg:hover{ background:url(module/hdzg2/index/images/cyxtdl-icon.png) -161px -336px no-repeat;}
+
+#hhi .cydlxt li a.dlhdgcnwbg{ background:url(module/hdzg2/index/images/cyxtdl-icon.png) 0 -447px no-repeat;}
+#hhi .cydlxt li a.dlhdgcnwbg:hover{ background:url(module/hdzg2/index/images/cyxtdl-icon.png) -161px -447px no-repeat;}
+
+#hhi .cydlxt li a.dlhdgcoabg{ background:url(module/hdzg2/index/images/cyxtdl-icon.png) 0 -559px no-repeat;}
+#hhi .cydlxt li a.dlhdgcoabg:hover{ background:url(module/hdzg2/index/images/cyxtdl-icon.png) -161px -559px no-repeat;}
+
+/**二维码**/
+#hhi .ewm{ width:98px; height:100px; float:left; text-align:center;}
+#hhi .ewm a{ color:#666; font-size:12px; text-decoration: none;}
+#hhi .ewm a:hover{ color:#f60;}
+
+/**二维码**/
+#hhi .action {
+	cursor:hand;cursor:pointer;
+}
+
+
+/****************************************************/
+/**可编辑表单**/
+.nim-form{
+	
+}
+
+/**字段集合**/
+.nim-fieldset{
+	
+}
+
+/**字段 容器 **/
+.nim-field-container{
+	
+}
+
+/**字段 标题**/
+.nim-field-label{
+	
+}
+
+/**字段 可以编辑 状态正常(字体、颜色、背景色、边框)**/
+.nim-field-el{
+	background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #D3D3D3;
+    color: #444444;
+    font-family: "Microsoft YaHei";
+    font-size: 14px;
+    line-height: 18px;
+    padding: 4px;
+}
+
+
+/**字段 输入值无效（背景、边框）**/
+.nim-field-invalid {
+	border: 1px solid #FF0000 !important;
+}
+
+/**字段 不允许编辑（颜色、背景色）**/
+.nim-field-disabled {
+}
+
+/**按钮**/
+.nim-button{
+	background: none repeat scroll 0 0 #6F91BB;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: block;
+    float: left;
+    font-size: 14px;
+    height: 28px;
+    line-height: 28px;
+    margin-left: 10px;
+    text-align: center;
+    width: 120px;
+}
+
+
+/**按钮 无效（鼠标、背景色）**/
+.nim-button-disabled {
+	cursor: default;
+	background-color: #CCCCCC;
+}
+
+/** **/
+.ui-dialog-content .ajax-file-upload{
+	display:none;
+}
+
+/** resize的时候 显示辅助线 **/
+.ui-resizable-helper{
+	 border: 1px dotted #0000FF;
+}
+/** resize的时候 右边嵌入 **/
+.ui-resizable-e {
+    cursor: e-resize;
+    height: 100%;
+    right: 0;
+    top: 0;
+	width: 3px;
+}
+.ui-resizable-s {
+    bottom: 0;
+    cursor: s-resize;
+    height: 3px;
+    left: 0;
+    width: 100%;
+}
+/** resize的时候 显示辅助线 **/
+.ui-resizable-border{
+	 border: 1px dotted;
+}
+/****************************************************/
+
+
+/** tree **/
+.nim-tree-container{
+	border: 1px solid rgb(141, 178, 227);
+	padding: 0px;
+	margin: 0px;
+	background: none repeat scroll 0 0 #FFFFFF;
+    overflow: auto;
+}
+
+.nim-tree{
+	margin: 0px;
+	padding: 5px;
+}
+
+.nim-tree-node{
+    list-style: none outside none;
+    margin: 0;
+    outline: 0 none;
+    padding: 0;
+    text-align: left;
+    white-space: nowrap;
+}
+/**展开、关闭 切换按钮**/
+.nim-tree-node-switch{
+	background-image: url("resources/nim/light-ui/images/tree-icon.png");
+	background-attachment: scroll;
+    background-color: rgba(0, 0, 0, 0);
+    background-repeat: no-repeat;
+    border: 0 none;
+    cursor: pointer;
+    display: inline-block;
+    height: 16px;
+    line-height: 0;
+    margin: 0;
+    outline: medium none;
+    vertical-align: middle;
+    width: 16px;
+}
+
+/** 叶子节点 前 应该不显示按钮 **/
+.nim-tree-node-switch-single{
+	background-position: -56px 0px;
+}
+
+.nim-tree-node-switch-middle{
+	background-position: -56px -18px;
+}
+
+.nim-tree-node-switch-bottom{
+	background-position: -56px -36px;
+}
+
+.nim-tree-node-switch-single{
+	background-position: -56px -54px;
+}
+/** end **/
+
+.nim-tree-node-switch-top-expand{
+	background-position: -92px 0px;
+}
+
+.nim-tree-node-switch-top-collapse{
+ 	background-position: -74px 0px;
+}
+
+
+.nim-tree-node-switch-middle-expand{
+	background-position: -92px -18px;
+}
+
+.nim-tree-node-switch-middle-collapse{
+ 	background-position: -74px -18px;
+}
+
+.nim-tree-node-switch-bottom-expand{
+	background-position: -92px -36px;
+}
+
+.nim-tree-node-switch-bottom-collapse{
+ 	background-position: -74px -36px;
+}
+
+.nim-tree-node-switch-single-expand{
+	background-position: -92px -54px;
+}
+
+.nim-tree-node-switch-single-collapse{
+	background-position: -74px -54px;
+}
+
+
+/**展开、关闭、正在加载 图标**/
+.nim-tree-node-icon{
+	background-attachment: scroll;
+    background-color: rgba(0, 0, 0, 0);
+    background-repeat: no-repeat;
+    border: 0 none;
+    cursor: pointer;
+    display: inline-block;
+    height: 16px;
+    margin: 0;
+    outline: medium none;
+    width: 16px;
+}
+.nim-tree-node-icon-open{
+    background-image: url("resources/nim/light-ui/images/tree-icon.png");
+	background-position: -110px -16px;
+    margin-right: 2px;
+    vertical-align: top;
+}
+
+.nim-tree-node-icon-close{
+    background-image: url("resources/nim/light-ui/images/tree-icon.png");
+	background-position: -110px 0;
+    margin-right: 2px;
+    vertical-align: top;
+}
+
+.nim-tree-node-icon-loading{
+	background-image: url("resources/nim/light-ui/images/tree-loading.gif");
+	margin-right: 2px;
+    vertical-align: top;
+}
+
+.nim-tree-node-icon-leaf{
+	background-image: url("resources/nim/light-ui/images/tree-icon.png");
+	background-position: -110px -32px;
+    margin-right: 2px;
+    vertical-align: top;
+}
+
+
+
+
+/** 子元素容器**/
+.nim-tree-children-container{
+	margin: 0;
+    padding: 0 0 0 18px;
+}
+/** 子元素容器 左侧连接线**/
+.nim-tree .nim-tree-line {
+    background: url("resources/nim/light-ui/images/tree-line.gif") repeat-y scroll 0 0 rgba(0, 0, 0, 0);
+}
+
+/** 节点**/
+.nim-tree-node-label{
+    background-color: rgba(0, 0, 0, 0);
+    color: #333333;
+    height: 16px;
+    cursor: pointer;
+    display: inline-block !important;
+    margin: 0;
+    padding: 1px 3px 0 0;
+    text-decoration: none;
+    float: none !important;
+    vertical-align: middle;
+}
+
+.nim-tree-node-label:hover{
+	text-decoration: underline;
+	font-weight: bold;
+}
+/** 节点 选中效果**/
+.nim-tree-node-selected{
+	background-color: #FFE6B0;
+    border: 1px solid #FFB951;
+    color: #000000;
+    opacity: 0.8;
+    padding-top: 0;
+}
+
+/** 节点 文本**/
+.nim-tree-node-text{
+    display: inline-block;
+    height: 16px;
+    line-height: 16px;
+    vertical-align: top;
+}
+
+/** checkbox **/
+/**字段 标题**/
+.nim-field-label{
+	font-size: 13px;
+	middle;
+}
+
+/**字段 可以编辑 状态正常(字体、颜色、背景色、边框)**/
+.nim-field-checkbox{
+	vertical-align: middle;
+}
+.nim-field-checkbox-text{
+	vertical-align: middle;
+	margin-right:10px;
+	font-size: 14px;
+}
+
+/** 集合字段  附件集合**/
+
+/** 文件上传按钮**/
+.nim-setfield-file-uploader {
+    background: url("resources/nim/light-ui/images/file-upload-btn.jpg") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: 0 none;
+    color: #FFFFFF;
+    display: block;
+    font-family: "Arial","Helvetica","sans-serif","微软雅黑";
+    font-size: 12px;
+    height: 23px;
+    line-height: 23px;
+    text-align: center;
+    text-decoration: none;
+    width: 59px;
+}
+
+/** 文件列表**/
+.nim-setfield-file-list{
+	list-style: none outside none;
+	margin: 0;
+    padding: 0;
+}
+
+/** 文件行**/
+.nim-setfield-file-item{
+	font-size: 14px;
+	font-family: "Arial","Helvetica","sans-serif","微软雅黑";
+    line-height: 25px;
+}
+
+/** 文件名 文本样式**/
+.nim-setfield-file-item-text{
+	padding: 0 22px;
+	text-decoration: none;
+}
+/** **/
+
+
+
+/** 文件 类型 图标 **/
+.nim-file-type-icon-16 {
+    background: url("resources/nim/light-ui/images/file_icon_16.gif") no-repeat scroll -421px -83px rgba(0, 0, 0, 0);
+    display: inline-block;
+    height: 22px;
+    width: 26px;
+    position: absolute;
+    margin-top: 4px;
+}
+.nim-file-type-icon-16-multi {
+    background-position: -43px -27px;
+}
+.nim-file-type-icon-16-shouchang {
+    background-position: -202px -3px;
+}
+.nim-file-type-icon-16-yingyong_child, .nim-file-type-icon-16-yingyong {
+    background-position: -43px -3px;
+}
+.nim-file-type-icon-16-beifen {
+    background-position: -121px -3px;
+}
+.nim-file-type-icon-16-doc, .nim-file-type-icon-16-docx {
+    background-position: -101px -83px;
+}
+.nim-file-type-icon-16-xls, .nim-file-type-icon-16-xlsx {
+    background-position: -133px -83px;
+}
+.nim-file-type-icon-16-ppt, .nim-file-type-icon-16-pptx {
+    background-position: -261px -83px;
+}
+.nim-file-type-icon-16-vsd {
+    background-position: -37px -83px;
+}
+.nim-file-type-icon-16-pdf {
+    background-position: -69px -83px;
+}
+.nim-file-type-icon-16-apk {
+    background-position: -389px -83px;
+}
+.nim-file-type-icon-16-dws, .nim-file-type-icon-16-dwt, .nim-file-type-icon-16-dxf, .nim-file-type-icon-16-dwg {
+    background-position: -6px -105px;
+}
+.nim-file-type-icon-16-mmap {
+    background-position: -37px -106px;
+}
+.nim-file-type-icon-16-xmind {
+    background-position: -69px -106px;
+}
+.nim-file-type-icon-16-mm {
+    background-position: -69px -106px;
+}
+.nim-file-type-icon-16-exe, .nim-file-type-icon-16-msi, .nim-file-type-icon-16-dmg {
+    background-position: -325px -83px;
+}
+.nim-file-type-icon-16-ipa {
+    background-position: -293px -83px;
+}
+.nim-file-type-icon-16-zip, .nim-file-type-icon-16-rar {
+    background-position: -357px -83px;
+}
+.nim-file-type-icon-16-psd {
+    background-position: -517px -83px;
+}
+.nim-file-type-icon-16-key {
+    background-position: -550px -83px;
+}
+.nim-file-type-icon-16-ai {
+    background-position: -583px -83px;
+}
+.nim-file-type-icon-16-txt {
+    background-position: -165px -83px;
+}
+.nim-file-type-icon-16-torrent {
+    background-position: -453px -83px;
+}
+.nim-file-type-icon-16-dir {
+    background-position: -5px -3px;
+}
+.nim-file-type-icon-16-jpg, .nim-file-type-icon-16-jpeg, .nim-file-type-icon-16-gif, .nim-file-type-icon-16-bmp, .nim-file-type-icon-16-png, .nim-file-type-icon-16-jpe, .nim-file-type-icon-16-cur, .nim-file-type-icon-16-svg, .nim-file-type-icon-16-svgz, .nim-file-type-icon-16-tif, .nim-file-type-icon-16-tiff, .nim-file-type-icon-16-ico {
+    background-position: -5px -83px;
+}
+.nim-file-type-icon-16-wma, .nim-file-type-icon-16-wav, .nim-file-type-icon-16-mp3, .nim-file-type-icon-16-aac, .nim-file-type-icon-16-ra, .nim-file-type-icon-16-ram, .nim-file-type-icon-16-mp2, .nim-file-type-icon-16-ogg, .nim-file-type-icon-16-aif, .nim-file-type-icon-16-mpega, .nim-file-type-icon-16-amr, .nim-file-type-icon-16-mid, .nim-file-type-icon-16-midi, .nim-file-type-icon-16-m4a {
+    background-position: -197px -83px;
+}
+.nim-file-type-icon-16-wmv, .nim-file-type-icon-16-rmvb, .nim-file-type-icon-16-mpeg4, .nim-file-type-icon-16-mpeg2, .nim-file-type-icon-16-flv, .nim-file-type-icon-16-avi, .nim-file-type-icon-16-3gp, .nim-file-type-icon-16-mpga, .nim-file-type-icon-16-qt, .nim-file-type-icon-16-rm, .nim-file-type-icon-16-wmz, .nim-file-type-icon-16-wmd, .nim-file-type-icon-16-wvx, .nim-file-type-icon-16-wmx, .nim-file-type-icon-16-wm, .nim-file-type-icon-16-swf, .nim-file-type-icon-16-mpg, .nim-file-type-icon-16-mp4, .nim-file-type-icon-16-mkv, .nim-file-type-icon-16-mpeg, .nim-file-type-icon-16-mov, .nim-file-type-icon-16-asf {
+    background-position: -229px -83px;
+}
+
+

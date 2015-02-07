@@ -1,0 +1,8 @@
+<!-- oim-plateform组件 提供的webservice服务 -->
+<component name="nim-plateform">
+	<!-- 提供设计器服务 -->
+	<webservice name="design" class="com.poweruniverse.nim.plateform.webservice.DesignerWebserviceImpl" />
+	<!-- 提供页面服务 -->
+	<webservice name="page" class="com.poweruniverse.nim.plateform.webservice.PageWebserviceImpl" />
+</component>
+

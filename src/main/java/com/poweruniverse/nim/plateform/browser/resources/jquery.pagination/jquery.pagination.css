@@ -1,0 +1,13 @@
+.pagination a, .pagination span {
+    display: block;
+    float: left;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    padding: 0em 0.5em;
+    line-height: 22px;
+}
+.pagination a {
+    border: 1px solid #AAAAEE;
+    color: #1155BB;
+    text-decoration: none;
+}

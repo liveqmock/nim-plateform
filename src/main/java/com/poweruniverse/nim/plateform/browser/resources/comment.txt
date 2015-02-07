@@ -1,0 +1,4 @@
+本目录中的文件 
+
+通过servlet 使用 /resources/nim/* 读取
+
