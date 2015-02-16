@@ -1,0 +1,412 @@
+<type-def>
+	<!-- 类型中定义的属性 在基本属性页面中编辑 -->
+	<!-- .......页面 page............ -->
+	<type name="page" label="页面" isAppendable="false" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="needsLogin" label="需要登录" type="boolean" allowBlank="false" />
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+		</properties>
+		<events>
+			<event name="onLoad" label="加载完毕" type="string"  allowBlank="true" default="" params="event" info="加载完毕事件"/>
+			<event name="onClose" label="关闭之前" type="string"  allowBlank="true" default="" params="event" info="关闭事件"/>
+		</events>
+	</type>
+	<!-- .......1引入/包含 import............ -->
+	<type name="import" label="引入" isAppendable="true" defaultComponent="importSubpage" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" />
+			<property name="autoLoad" label="自动加载" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+		</properties>
+		<events>
+			<event name="onLoad" label="加载完成" type="string"  allowBlank="true" default="" params="event" info="加载完成事件"/>
+		</events>
+		<structure>
+			<item component-name="parameters" />
+		</structure>
+	</type>
+	<!-- .......图形............ -->
+	<type name="image" label="图形" isAppendable="true" defaultComponent="workflowImg" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" />
+		</properties>
+		<events>
+			<event name="onLoad" label="加载完成" type="string"  allowBlank="true" default="" params="event" info="加载完成事件"/>
+		</events>
+		<structure>
+		</structure>
+	</type>
+	<!-- .......2定时任务 timmer............ -->
+	<type name="timmer" label="定时任务" isAppendable="true" defaultComponent="javascriptTimer" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="定时任务类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" />
+		</properties>
+		<events>
+		</events>
+	</type>
+	<!-- .......3变量-数据源 variable............ -->
+	<type name="variable" label="变量" isAppendable="true" defaultComponent="gnVariable" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" onChange="setVariableRenderTemplate" />
+			<property name="autoLoad" label="自动加载" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+		</properties>
+		<events>
+			<event name="onLoad" type="string" label="数据加载" params=""/>
+		</events>
+	</type>
+	<!-- .......4对象-数据源 record............ -->
+	<type name="record" label="对象" isAppendable="true" defaultComponent="gnRecord" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+		</properties>
+		<events>
+			<event name="onLoad" type="string" label="数据加载" params=""/>
+			<event name="onSave" type="string" label="数据保存" params=""/>
+			<event name="onSubmit" type="string" label="数据提交" params=""/>
+			<event name="onChange" type="string" label="数据变化" params=""/>
+		</events>
+	</type>
+	<!-- .......5数据集-数据源 dataset........... -->
+	<type name="dataset" label="数据集" isAppendable="true" defaultComponent="gnDataset" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			
+		</properties>
+		<events>
+			<event name="onLoad" type="string" label="数据加载" params=""/>
+			<event name="onSave" type="string" label="数据保存" params=""/>
+			<event name="onSubmit" type="string" label="数据提交" params=""/>
+			<event name="onChange" type="string" label="数据变化" params=""/>
+		</events>
+	</type>
+	<!-- .......6标签 tab............ -->
+	<type name="tab" label="标签页" isAppendable="true" defaultComponent="tabSelector" iconClass="ui-icon-copy" isArray="false" isDragable="true" dropable="ul">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" />
+		</properties>
+		<events>
+			<event name="onRender" type="string" label="标签完成" params=""/>
+			<event name="onSelect" type="string" label="选择" params=""/>
+		</events>
+	</type>
+	<!-- .......7表单 form............ -->
+	<type name="form" label="表单" isAppendable="true" defaultComponent="singleEditForm" iconClass="ui-icon-contact" isArray="false" isDragable="true">
+		<properties>
+			<property name="component" label="表单类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="false" />
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" />
+			
+		</properties>
+		<events>
+			<event name="onRender" type="string" label="显示完成" params="" />
+		</events>
+	</type>
+	<!-- .......8列表 grid............ -->
+	<type name="grid" label="表格" isAppendable="true" defaultComponent="displayGrid" iconClass="ui-icon-copy" isArray="false" isDragable="true" dropable="ul"><!-- treeGrid应该归类到表格 是对表格的扩展  -->
+		<properties>
+			<property name="component" label="表格类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshGridExtendForm"/>
+			<property name="datasourceType" label="数据来源" type="string" default="private" allowBlank="false" info="生成方式" 
+					enabled="true" widget="textSelectEditor" options="[{
+					value:'public',text:'公共数据源'
+				},{
+					value:'private',text:'私有数据源'
+				},{
+					value:'none',text:'无数据源'
+				}]" onChange="changeDataSourceType"/>
+		
+			<property name="datasourceName" label="数据源" type="string" allowBlank="false" info="数据源"  widget="textSelectEditor" dataGetter="getDatasetOptions" />
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" />
+			<property name="autoLoad" label="自动加载" type="string" allowBlank="false" default="true" widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" info="表单的宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="高度" type="string" allowBlank="true" info="表单的高度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<structure>
+			<item component-name="gnDataset" />
+			<item component-name="gridColumns" />
+		</structure>
+		<events>
+			<event name="onGridRendered" type="string" label="表格显示完成" params="" />
+			<event name="onRowRendered" type="string" label="行显示完成" params="" />
+			<event name="onRowClick" type="string" label="行点击" params="" />
+			<event name="onCellClick" type="string" label="单元格点击" params="" />
+		</events>
+	</type>
+	<!-- .......8子表格 subGrid 用于集合字段的显示 操作 不直接关联数据源  不直接设置尺寸............ -->
+	<type name="subGrid" label="表格" isAppendable="false" defaultComponent="subGrid" iconClass="ui-icon-copy" isArray="false" isDragable="true" dropable="ul"><!-- treeGrid应该归类到表格 是对表格的扩展  -->
+		<properties>
+			<property name="component" label="表格类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" />
+			<property name="renderto" label="目标表格" type="string" allowBlank="false" info="关联表格元素" enabled="true" widget="textChooseElEditor" droppable=".grid" />
+			<property name="headerLines" label="表头行数" type="string" allowBlank="false" info="是否有表头" default="0" enabled="true" 
+				widget="textSelectEditor" options="[{value:'0',text:'无'},{value:'1',text:'一行'},{value:'2',text:'两行'}]"/>
+			<property name="footerLines" label="表尾行数" type="string" allowBlank="false" info="是否有表尾" default="0" enabled="true" 
+				widget="textSelectEditor" options="[{value:'0',text:'无'},{value:'1',text:'一行'},{value:'2',text:'两行'}]"/>
+			<!--
+			<property name="toolsbarRenderto" label="目标工具条" type="string" allowBlank="true" info="关联工具条元素" enabled="true" widget="textChooseElEditor" droppable=".toolsbar" />
+			-->
+		</properties>
+		<structure>
+			<item component-name="gridColumns" />
+		</structure>
+		<events>
+			<event name="onGridRendered" type="string" label="表格显示完成" params="" />
+			<event name="onRowRendered" type="string" label="行显示完成" params="" />
+		</events>
+	</type>
+	<!-- .......9树tree............ -->
+	<type name="tree" label="树" isAppendable="true" defaultComponent="treeDisplay" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+		<properties>
+			<property name="component" label="树类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" />
+			<property name="showLine" label="显示连接线" type="string" allowBlank="false" default="true" widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="高度" type="string" allowBlank="true" default="22px" info="字段高度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<structure>
+		</structure>
+		<events>
+			<event name="onTreeLoad" 		type="string" label="数据加载" params="" />
+			<event name="onTreeRender" 		type="string" label="显示完成" params="" />
+			<event name="onNodeAppend"		type="string" label="新增节点" params="" />
+			<event name="onNodeRemove"		type="string" label="删除节点" params="" />
+			<event name="onNodeClick"		type="string" label="点击节点" params="" />
+			<event name="onNodeSelect"		type="string" label="选中节点" params="" />
+			<event name="onNodeUnselect"	type="string" label="取消选中" params="" />
+			<event name="onNodeCheck"		type="string" label="勾选节点" params="" />
+			<event name="onNodeUncheck"		type="string" label="取消勾选" params="" />
+			<event name="onNodeExpand"		type="string" label="展开节点" params="" />
+			<event name="onNodeCollapse"	type="string" label="收起节点" params="" />
+		</events>
+	</type>
+	<!-- .......10 动作 action............ -->
+	<type name="action" label="动作" isAppendable="true" defaultComponent="link" iconClass="ui-icon-copy" isArray="false" isDragable="true" dropable="ul">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" />
+		</properties>
+		<events>
+		</events>
+	</type>
+	
+	<!-- 集合与子项  -->
+	<!-- .......1 属性列表 properties............ -->
+	<type name="properties" label="属性列表" isAppendable="false" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+	</type>	
+	<!-- .......2 属性 property............ -->
+	<type name="simpleProperty" label="属性" isAppendable="false"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="false" />
+			<property name="fieldType" label="" type="string" allowBlank="false" info="数值类型" default="" enabled="true"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="字段名"  enabled="true"/>
+		</properties>
+		<events>
+		</events>
+	</type>	
+	<type name="workflowProperty" label="流程属性" isAppendable="false"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="false" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="字段名"  enabled="false"/>
+		</properties>
+		<events>
+		</events>
+	</type>	
+	<!-- .......3 属性 property............ -->
+	<type name="complexProperty" label="属性" isAppendable="false"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="false" />
+			<property name="fieldType" label="" type="string" allowBlank="false" info="数值类型" default="" enabled="false"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="字段名"  enabled="true"/>
+		</properties>
+		<events>
+		</events>
+	</type>	
+	<!-- .......3 字段列表 fields............ -->
+	<type name="fields" label="字段列表" isAppendable="false"  iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+	</type>	
+	<!-- .......4 字段 field............ 
+	<type name="simpleField" label="字段" isAppendable="false"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="false" />
+			<property name="fieldType" label="" type="string" allowBlank="false" info="" default="" enabled="false"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="字段名"  enabled="true"/>
+		</properties>
+		<events>
+		</events>
+	</type>	
+	-->
+	<!-- .......4 字段 field............ 
+	<type name="complexField" label="字段" isAppendable="false"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="false" />
+			<property name="fieldType" label="" type="string" allowBlank="false" info="" default="" enabled="false"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="字段名"  enabled="true"/>
+		</properties>
+		<events>
+		</events>
+	</type>	
+	-->
+	<!-- .......5表列集合 columns............ -->
+	<type name="columns" label="表格列" isAppendable="false"  iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+	</type>	
+	<!-- .......7条件列表 filters............ -->
+	<type name="filters" label="条件列表" isAppendable="false"  iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+	</type>	
+	<!-- .......8 数据源 过滤条件 filter............ -->
+	<type name="filter" label="过滤条件" isAppendable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="过滤条件类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="标题"/>
+		</properties>
+		<events>
+		</events>
+	</type>
+	<!-- .......4 查询表单 查询条件 field............ -->
+	<type name="searchFilter" label="查询条件" isAppendable="false"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="字段名"  enabled="true"/>
+		</properties>
+		<events>
+		</events>
+	</type>	
+	<!-- .......9排序列表 sorts............ -->
+	<type name="sorts" label="排序列表" isAppendable="false"  iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+	</type>	
+	<!-- .......10 排序 sort............ -->
+	<type name="sort" label="排序" isAppendable="true" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="排序条件类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+		</properties>
+		<events>
+		</events>
+	</type>	
+	<!-- .......11按钮列表 buttons............ -->
+	<type name="buttons" label="按钮列表" isAppendable="false" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+	</type>
+	<!-- .......表单列表 forms(用于流程检视表单的下级)............ -->
+	<type name="forms" label="表单列表" isAppendable="false" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+	</type>
+
+	<!-- .......11toolbar buttons............ 
+	<type name="toolsbar" label="工具栏" isAppendable="false" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+	</type>
+	-->
+	<!-- .......12 按钮 button............ -->
+	<type name="button" label="按钮" isAppendable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="用于绑定数据的字段名"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题"/>
+		</properties>
+		<events>
+		</events>
+	</type>
+	<!-- .......13 按钮 button............ -->
+	<type name="workflows" label="流程集合" isAppendable="false" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+	</type>
+	<!-- .......14 功能 button............ -->
+	<type name="workflow" label="流程" isAppendable="true" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="false" />
+			<property name="name" label="名称" type="string" allowBlank="false" enabled="false" info="用于绑定数据的字段名"/>
+			<property name="label" label="标题" type="string" allowBlank="false" enabled="false" info="字段标题"/>
+			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setGongNengOptions"/>
+			<property name="gongNengDH" label="功能" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" dataGetter="getRelaGongNengOptions" info="" enabled="true" onChange="setWorkflowNameLabel"/>
+		</properties>
+		<events>
+		</events>
+	</type>
+	<!-- .......1 参数列表 parameters............ -->
+	<type name="parameters" label="参数列表" isAppendable="false" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+	</type>	
+	<!-- .......2 属性 property............ -->
+	<type name="parameter" label="参数" isAppendable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="false" />
+			<property name="parameterType" label="" type="string" allowBlank="false" info="数值类型" default="string" enabled="true"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="标题"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="名称"  enabled="true"/>
+			<property name="value" label="值" type="string" allowBlank="false" info="值"  enabled="true"/>
+		</properties>
+		<events>
+		</events>
+	</type>	
+</type-def>

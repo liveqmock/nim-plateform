@@ -1,6 +1,0 @@
-本目录中的配置信息 
-为当前系统的默认配置信息 ：title loginPage homePage
- 
-如果存在 web-inf/plateform.cfg.xml 会覆盖本文件的配置内容
-
-

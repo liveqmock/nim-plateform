@@ -3,6 +3,8 @@ package com.poweruniverse.nim.plateform.webservice;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -20,7 +22,10 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
+import com.poweruniverse.nim.base.bean.UserInfo;
+import com.poweruniverse.nim.base.description.Application;
 import com.poweruniverse.nim.base.message.JSONMessageResult;
+import com.poweruniverse.nim.base.message.StringResult;
 import com.poweruniverse.nim.base.webservice.BasePlateformWebservice;
 import com.poweruniverse.nim.data.pageParser.DesignerElParser;
 import com.poweruniverse.nim.data.service.utils.JSONConvertUtils;
@@ -37,10 +42,16 @@ public class DesignerWebserviceImpl extends BasePlateformWebservice{
 	@Resource
 	private WebServiceContext wsContext;
 	
+	public DesignerWebserviceImpl(UserInfo userInfo) {
+		super();
+		this.userInfo = userInfo;
+	}
+
+	
 	public JSONMessageResult savePageDef(
 			@WebParam(name="contextPath") String contextPath,
-			@WebParam(name="xmlFilePath") String xmlFilePath,
-			@WebParam(name="pageDefineString") String pageDefineString){
+			@WebParam(name="pageUrl") String pageUrl,
+			@WebParam(name="pageDef") String pageDef){
 		JSONMessageResult msg = null;
 //		{
 //			"type":"page",
@@ -61,9 +72,11 @@ public class DesignerWebserviceImpl extends BasePlateformWebservice{
 //				}]
 //			}]
 //		}
-		JSONObject pageDefineJson = JSONObject.fromObject(pageDefineString);
+		JSONObject pageDefineJson = JSONObject.fromObject(pageDef);
 		XMLWriter output = null;
 		try {
+			Application app = Application.getInstance();
+			
 			Document doc = DocumentHelper.createDocument();
 			Element cfgEl = doc.addElement("page");
 			
@@ -72,7 +85,7 @@ public class DesignerWebserviceImpl extends BasePlateformWebservice{
 			OutputFormat format = OutputFormat.createPrettyPrint(); //设置XML文档输出格式
 			format.setEncoding("utf-8"); //设置XML文档的编码类型
 			
-			output = new XMLWriter(new FileOutputStream(new File(contextPath+"module/"+xmlFilePath)),format);
+			output = new XMLWriter(new FileOutputStream(new File(contextPath+app.getModulePath()+"/"+pageUrl)),format);
 			output.write(doc);
 			output.close();
 			output =null;
@@ -99,13 +112,15 @@ public class DesignerWebserviceImpl extends BasePlateformWebservice{
 	 */
 	public JSONMessageResult readPageDef(
 			@WebParam(name="contextPath") String contextPath,
-			@WebParam(name="xmlFilePath") String xmlFilePath){
+			@WebParam(name="pageUrl") String pageUrl){
 		JSONMessageResult msg = null;
 
 		try {
+			Application app = Application.getInstance();
+			
 			JSONObject pageDef = new JSONObject();
 			
-			File cfgFile = new File(contextPath+"module/"+xmlFilePath);
+			File cfgFile = new File(contextPath+app.getModulePath()+"/"+pageUrl);
 			if(cfgFile.exists()){
 				SAXReader reader = new SAXReader();
 				Document doc = reader.read(cfgFile);
@@ -136,8 +151,10 @@ public class DesignerWebserviceImpl extends BasePlateformWebservice{
 			@WebParam(name="content") String content){
 		JSONMessageResult msg = null;
 		try {
+			Application app = Application.getInstance();
+			
 			String filePathName = pageUrl.replaceAll("\\.\\.", "");
-			File cfgFile = new File(contextPath+"module/"+filePathName);
+			File cfgFile = new File(contextPath+app.getModulePath()+"/"+filePathName);
 			FileUtils.writeStringToFile(cfgFile, content);
 			msg = new JSONMessageResult();
 		} catch (Exception e) {
@@ -148,31 +165,30 @@ public class DesignerWebserviceImpl extends BasePlateformWebservice{
 	}
 	
 	/**
-	 * 读取module目录下的页面html css js文件 
+	 * 读取module目录下的页面html css js xml文件 
 	 * @return
 	 */
-	public JSONMessageResult readFile(
+	public StringResult readFile(
 			@WebParam(name="contextPath") String contextPath,
 			@WebParam(name="pageUrl") String pageUrl){
-		JSONMessageResult msg = null;
+		StringResult msg = new StringResult();
 		try {
+			Application app = Application.getInstance();
+			
 			String filePathName = pageUrl.replaceAll("\\.\\.", "");
-			File cfgFile = new File(contextPath+"module/"+filePathName);
+			File cfgFile = new File(contextPath+app.getModulePath()+"/"+filePathName);
 			if(cfgFile.exists()){
 				String fileContent = FileUtils.readFileToString(cfgFile,"utf-8");
-				msg = new JSONMessageResult("content", fileContent);
-			}else{
-				msg = new JSONMessageResult("content", "");
+				msg = new StringResult(fileContent);
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			msg = new JSONMessageResult("Exception："+e.getMessage());
 		}
 		return msg;
 	}
 	/**
-	 * 读取web-inf/compnent.cfg.xml 文件 解析页面控件的定义信息
+	 * 读取/解析 客户端组件定义文件 
 	 * @return
 	 */
 	public JSONMessageResult readCmpDef(@WebParam(name="contextPath") String contextPath){
@@ -183,23 +199,29 @@ public class DesignerWebserviceImpl extends BasePlateformWebservice{
 			JSONObject typeMap = new JSONObject();
 			JSONObject cmpMap = new JSONObject();
 			
-			File designPath = new File(contextPath+"WEB-INF/designer");
-			File[] designFiles = designPath.listFiles();
+			SAXReader reader = new SAXReader();
+			reader.setEncoding("utf-8");
+			
+			List<Document> cmpDefDocs = new ArrayList<Document>();
+			
+			cmpDefDocs.add(reader.read(DesignerWebserviceImpl.class.getResourceAsStream("/com/poweruniverse/nim/plateform/browser/component/component-columns.xml")));
+			cmpDefDocs.add(reader.read(DesignerWebserviceImpl.class.getResourceAsStream("/com/poweruniverse/nim/plateform/browser/component/component-fields.xml")));
+			cmpDefDocs.add(reader.read(DesignerWebserviceImpl.class.getResourceAsStream("/com/poweruniverse/nim/plateform/browser/component/components.xml")));
+			cmpDefDocs.add(reader.read(DesignerWebserviceImpl.class.getResourceAsStream("/com/poweruniverse/nim/plateform/browser/component/type-columns.xml")));
+			cmpDefDocs.add(reader.read(DesignerWebserviceImpl.class.getResourceAsStream("/com/poweruniverse/nim/plateform/browser/component/type-fields.xml")));
+			cmpDefDocs.add(reader.read(DesignerWebserviceImpl.class.getResourceAsStream("/com/poweruniverse/nim/plateform/browser/component/types.xml")));
+			
 			//读取type定义
-			for(File designFile:designFiles){
-				if(designFile.getName().endsWith("xml")){
-					SAXReader reader = new SAXReader();
-					Document doc = reader.read(designFile);
-					
-					Map<String,JSONObject> typeDefs = DesignerElParser.parseEl(doc.getRootElement().elements("type"));
-					for(String typeName:typeDefs.keySet()){
-						typeMap.put(typeName, typeDefs.get(typeName));
-					}
-					
-					Map<String,JSONObject> cmpDefs = DesignerElParser.parseEl(doc.getRootElement().elements("component"));
-					for(String cmpName:cmpDefs.keySet()){
-						cmpMap.put(cmpName, cmpDefs.get(cmpName));
-					}
+			for(Document doc:cmpDefDocs){
+
+				Map<String,JSONObject> typeDefs = DesignerElParser.parseEl(doc.getRootElement().elements("type"));
+				for(String typeName:typeDefs.keySet()){
+					typeMap.put(typeName, typeDefs.get(typeName));
+				}
+				
+				Map<String,JSONObject> cmpDefs = DesignerElParser.parseEl(doc.getRootElement().elements("component"));
+				for(String cmpName:cmpDefs.keySet()){
+					cmpMap.put(cmpName, cmpDefs.get(cmpName));
 				}
 			}
 			

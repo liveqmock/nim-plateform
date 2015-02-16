@@ -37,26 +37,31 @@ public class GetResourcesServlet extends BasePlateformServlet {
 		
 		try {
 			//设置response
-			res.setContentType("application/octet-stream");
-			res.setHeader("Content-Disposition","attachment;filename="+new String(uri_utf_8.getBytes("utf-8"),"iso8859-1"));
+			if(uri_utf_8.endsWith("css")){
+				res.setContentType("text/css");
+			}else{
+				res.setContentType("application/octet-stream");
+				res.setHeader("Content-Disposition","attachment;filename="+new String(uri_utf_8.getBytes("utf-8"),"iso8859-1"));
+			}
+			
 
 			byte[] data = new byte[10240];
 			fis = GetResourcesServlet.class.getResourceAsStream("/com/poweruniverse/nim/plateform/browser/resources"+uri_utf_8);
 			if(fis==null){
 				System.err.println("资源文件:"+uri_utf_8+"不存在！");
 			}else{
-				System.out.println("资源文件:"+uri_utf_8+"存在！");
+//				System.out.println("资源文件:"+uri_utf_8+"存在！");
 				//
 				int ret = fis.read(data);
 				while(ret!=-1){
 					res.getOutputStream().write(data, 0, ret);
 					ret = fis.read(data);
 				}
+				//流
+				res.getOutputStream().flush();
+				fis.close();
+				fis=null;
 			}
-			//流
-			res.getOutputStream().flush();
-			fis.close();
-			fis=null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally{

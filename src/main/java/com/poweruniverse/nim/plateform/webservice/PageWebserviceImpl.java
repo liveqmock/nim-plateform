@@ -1,38 +1,26 @@
 package com.poweruniverse.nim.plateform.webservice;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.ws.WebServiceContext;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.io.FileUtils;
-import org.dom4j.Element;
 import org.hibernate.Session;
 
 import com.poweruniverse.nim.base.bean.UserInfo;
+import com.poweruniverse.nim.base.description.Application;
 import com.poweruniverse.nim.base.message.InvokeEnvelope;
 import com.poweruniverse.nim.base.message.JSONMessageResult;
+import com.poweruniverse.nim.base.message.StringResult;
 import com.poweruniverse.nim.base.utils.InvokeUtils;
 import com.poweruniverse.nim.base.webservice.BasePlateformWebservice;
-import com.poweruniverse.nim.data.entity.ShiTiLei;
 import com.poweruniverse.nim.data.entity.YongHu;
-import com.poweruniverse.nim.data.entity.ZiDuan;
-import com.poweruniverse.nim.data.service.utils.SystemSessionFactory;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
+import com.poweruniverse.nim.data.service.utils.HibernateSessionFactory;
 
 /**
  * 
@@ -44,6 +32,12 @@ public class PageWebserviceImpl extends BasePlateformWebservice{
 	
 	@Resource
 	private WebServiceContext wsContext;
+	
+	public PageWebserviceImpl(UserInfo userInfo) {
+		super();
+		this.userInfo = userInfo;
+	}
+
 	/**
 	 * 读取原始页面内容 
 	 * @param contextPath
@@ -53,11 +47,16 @@ public class PageWebserviceImpl extends BasePlateformWebservice{
 	public JSONMessageResult orginal(
 			@WebParam(name="contextPath") String contextPath,
 			@WebParam(name="pageUrl") String pageUrl){
-		File tempFile = new File(contextPath+"module/"+pageUrl);
 		String fileContent = null;
 		try {
-			fileContent = FileUtils.readFileToString(tempFile,"utf-8");
-		} catch (IOException e) {
+			Application app = Application.getInstance();
+			File tempFile = new File(contextPath+app.getModulePath()+"/"+pageUrl);
+			if(tempFile.exists()){
+				fileContent = FileUtils.readFileToString(tempFile,"utf-8");
+			}else{
+				fileContent = "文件("+pageUrl+")不存在！";
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		//可能存在的 根据配置文件 生成的脚本
@@ -72,49 +71,100 @@ public class PageWebserviceImpl extends BasePlateformWebservice{
 	 * @param params
 	 * @return
 	 */
-	public JSONMessageResult html(
+	public StringResult analyse(
 			@WebParam(name="contextPath") String contextPath,
 			@WebParam(name="pageUrl") String pageUrl,
+			@WebParam(name="isIndependent") boolean isIndependent,
 			@WebParam(name="params") String params){
-		JSONMessageResult msg = null;
+		StringResult msg = null;
 		Session sess = null;
-		try {dd
-			sess = SystemSessionFactory.getSession();
+		try {
+			Application app = Application.getInstance();
+			
+			sess = HibernateSessionFactory.getSession(HibernateSessionFactory.defaultSessionFactory);
 			//检查pageUrl 是否合法(无.. js后缀)
 			int hasDD = pageUrl.indexOf("..");
-			if(hasDD ==-1 && (pageUrl.endsWith("html") || pageUrl.endsWith("ftl"))){
+			if(hasDD ==-1 && pageUrl.endsWith("xml")){
 				//调用data组件的webservice方法 完成解析
 				UserInfo user = null;
 				Integer yongHuDM = this.getYongHuDM(wsContext, false);
 				if(yongHuDM!=null){
 					YongHu yh = (YongHu)sess.load(YongHu.class,yongHuDM);
-					user = new UserInfo(yh.getDengLuDH(),yh.getYongHuMC(),yh.getDengLuMM());
+					user = new UserInfo(yh.getYongHuDM(),yh.getYongHuMC(),yh.getDengLuDH(),yh.getDengLuMM(),this.getClientIP(wsContext));
 				}
 				
 				JSONObject argument = new JSONObject();
 				
 				//读取页面xml文件定义
-				String cfgContent = null;
-				File cfgFile = new File(contextPath+"module/"+pageUrl.substring(0,pageUrl.indexOf("."))+".xml");
+				String pageContent = null;
+				File cfgFile = new File(contextPath+app.getModulePath()+"/"+pageUrl.substring(0,pageUrl.indexOf("."))+".xml");
 				if(cfgFile.exists()){
-					cfgContent = FileUtils.readFileToString(cfgFile, "utf-8");
+					pageContent = FileUtils.readFileToString(cfgFile, "utf-8");
 				}
-				argument.put("cfgContent", cfgContent);//xml文件字符串
-				
-				//读取页面xml文件定义
-				String htmlContent = null;
-				File htmlFile = new File(contextPath+"module/"+pageUrl.substring(0,pageUrl.indexOf("."))+".xml");
-				if(htmlFile.exists()){
-					htmlContent = FileUtils.readFileToString(htmlFile, "utf-8");
-				}
-				argument.put("htmlContent", htmlContent);//html文件字符串
-				
+				argument.put("pageContent", pageContent);//xml文件字符串
+				argument.put("pageUrl", pageUrl);//xml文件字符串
+				argument.put("isIndependent", isIndependent);//是否独立打开 （主要用于确定是否独立打开子页面）
 				argument.put("params", params);//url传递来的参数
 				
-				InvokeEnvelope invokeEnvelope = new InvokeEnvelope("oim-plateform", user, "oim-data", "page", "analyse", argument);
-				msg = (JSONMessageResult)InvokeUtils.invokeService(invokeEnvelope);
+				InvokeEnvelope invokeEnvelope = new InvokeEnvelope("nim-plateform", user, "nim-data", "analyse", "analyse", argument);
+				msg = (StringResult)InvokeUtils.invokeService(invokeEnvelope);
+				
 			}else{
-				msg = new JSONMessageResult("错误的地址");
+				msg = new StringResult("alert('错误的页面地址:"+pageUrl+"');");
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			msg = new StringResult("alert('"+e.getMessage()+"');");
+		}
+		return msg;
+	}
+	
+	public JSONMessageResult html(
+			@WebParam(name="contextPath") String contextPath,
+			@WebParam(name="pageUrl") String pageUrl){
+		JSONMessageResult msg = null;
+		try {
+			Application app = Application.getInstance();
+			
+			//检查pageUrl 是否合法(无.. js后缀)
+			int hasDD = pageUrl.indexOf("..");
+			if(hasDD ==-1 && pageUrl.endsWith("html")){
+				msg = new JSONMessageResult();
+
+				Integer yongHuDM = this.getYongHuDM(wsContext, false);
+				msg.put("isLogged", !(yongHuDM==null));
+
+				//读取页面xml文件定义
+				String htmlContent = null;
+				File htmlFile = new File(contextPath+app.getModulePath()+"/"+pageUrl);
+				if(htmlFile.exists()){
+					htmlContent = FileUtils.readFileToString(htmlFile, "utf-8");
+				}else{
+					htmlContent = "文件("+pageUrl+")不存在！";
+				}
+				msg.put("content", htmlContent);
+				
+				//检查css文件是否存在
+				File cssFile = new File(contextPath+app.getModulePath()+"/"+pageUrl.substring(0,pageUrl.lastIndexOf("."))+".css");
+				if(cssFile.exists()){
+					msg.put("cssExists", true);
+				}else{
+					msg.put("cssExists", false);
+				}
+				
+				//检查css文件是否存在
+				File jsFile = new File(contextPath+app.getModulePath()+"/"+pageUrl.substring(0,pageUrl.lastIndexOf("."))+".js");
+				if(jsFile.exists()){
+					msg.put("jsExists", true);
+				}else{
+					msg.put("jsExists", false);
+				}
+				
+				msg.put("loginPage", app.getLoginPage());
+				msg.put("homePage", app.getHomePage());
+				
+			}else{
+				msg = new JSONMessageResult("错误的html页面地址");
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -122,27 +172,31 @@ public class PageWebserviceImpl extends BasePlateformWebservice{
 		}
 		return msg;
 	}
-	
-	
+		
 	/**
 	 * 读取module目录下的页面css文件 
 	 * @return
 	 */
-	public JSONMessageResult css(String contextPath, String pageUrl){
-		JSONMessageResult msg = null;
+	public StringResult css(
+			@WebParam(name="contextPath") String contextPath,
+			@WebParam(name="pageUrl") String pageUrl){
+		StringResult msg = null;
 		try {
+			Application app = Application.getInstance();
+			
 			//检查pageUrl 是否合法(无.. js后缀)
 			int hasDD = pageUrl.indexOf("..");
 			if(hasDD>=0 || !pageUrl.endsWith("css")){
-				msg = new JSONMessageResult("错误的地址");
+				msg = new StringResult("");
+				System.err.println("css文件"+pageUrl+"不存在！");
 			}else{
-				File cfgFile = new File(contextPath+"module/"+pageUrl);
+				File cfgFile = new File(contextPath+app.getModulePath()+"/"+pageUrl);
 				String fileContent = FileUtils.readFileToString(cfgFile,"utf-8");
-				msg = new JSONMessageResult("content", fileContent);
+				msg = new StringResult(fileContent);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			msg = new JSONMessageResult(e.getMessage());
+			msg = new StringResult("");
 		}
 		return msg;
 	}
@@ -151,27 +205,29 @@ public class PageWebserviceImpl extends BasePlateformWebservice{
 	 * 读取module目录下的页面js文件 
 	 * @return
 	 */
-	public JSONMessageResult js(String contextPath, String jsFileUrl){
-		JSONMessageResult msg = null;
+	public StringResult js(
+			@WebParam(name="contextPath") String contextPath,
+			@WebParam(name="pageUrl") String pageUrl){
+		StringResult msg = null;
 		try {
+			Application app = Application.getInstance();
+			
 			//检查pageUrl 是否合法(无.. js后缀)
-			int hasDD = jsFileUrl.indexOf("..");
-			if(hasDD>=0 || !jsFileUrl.endsWith("js")){
-				msg = new JSONMessageResult("错误的地址");
+			int hasDD = pageUrl.indexOf("..");
+			if(hasDD>=0 || !pageUrl.endsWith("js")){
+				msg = new StringResult("alert('错误的js文件地址:"+pageUrl+"');");
 			}else{
-				File cfgFile = new File(contextPath+"module/"+jsFileUrl);
+				File cfgFile = new File(contextPath+app.getModulePath()+"/"+pageUrl);
 				if(cfgFile.exists()){
 					String fileContent = FileUtils.readFileToString(cfgFile,"utf-8");
-					
-//					fileContent = "try{\n"+fileContent+"}catch(e){\nalert(e.name + ':' + e.message);\n}\n";
-					msg = new JSONMessageResult("content", fileContent);
+					msg = new StringResult(fileContent);
 				}else{
-					msg = new JSONMessageResult("content", "");
+					msg = new StringResult("alert('js文件不存在:"+pageUrl+"');");
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			msg = new JSONMessageResult(e.getMessage());
+			msg = new StringResult("alert('"+e.getMessage()+");");
 		}
 		return msg;
 	}

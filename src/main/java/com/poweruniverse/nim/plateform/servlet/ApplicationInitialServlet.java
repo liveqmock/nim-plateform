@@ -1,10 +1,8 @@
 package com.poweruniverse.nim.plateform.servlet;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -13,12 +11,16 @@ import javax.servlet.ServletException;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.hibernate.SessionFactory;
 
 import com.poweruniverse.nim.base.description.Application;
 import com.poweruniverse.nim.base.description.Component;
 import com.poweruniverse.nim.base.description.LocalComponent;
 import com.poweruniverse.nim.base.description.LocalWebservice;
+import com.poweruniverse.nim.base.description.RemoteComponent;
+import com.poweruniverse.nim.base.description.RemoteWebservice;
 import com.poweruniverse.nim.base.servlet.BasePlateformServlet;
+import com.poweruniverse.nim.data.service.utils.HibernateSessionFactory;
 
 /**
  * 初始化整个应用
@@ -79,21 +81,22 @@ public class ApplicationInitialServlet extends BasePlateformServlet{
 			String serverName = appEl.attributeValue("name");
 			String serverTitle = appEl.attributeValue("title");
 			String serverSrcPath = appEl.attributeValue("src");
+			String serverModule = appEl.attributeValue("module");
 			String serverJdkPath = appEl.attributeValue("jdkPath");
 			String serverIp = appEl.attributeValue("ip");
 			String serverPort = appEl.attributeValue("port");
 			String serverWebservicePort = appEl.attributeValue("webservicePort");
 			String serverWebserviceSrc = appEl.attributeValue("webserviceSrc");
-			app = Application.init(serverName, serverTitle, serverSrcPath,serverJdkPath, serverIp, serverPort, serverWebservicePort, serverWebserviceSrc);
+			app = Application.init(serverName, serverTitle, serverSrcPath,serverModule,serverJdkPath, serverIp, serverPort, serverWebservicePort, serverWebserviceSrc);
 
 			Element pagesEl = appEl.element("pages");
 			Element loginPageEl = pagesEl.element("login");
 			Element homePageEl = pagesEl.element("home");
-			app.setHomePage(loginPageEl.attributeValue("page"));
+			app.setHomePage(homePageEl.attributeValue("page"));
 			app.setLoginPage(loginPageEl.attributeValue("page"));
 			
-			//component 本地组件
 			Element componentsEl = appEl.element("components");
+			//component 本地组件
 			@SuppressWarnings("unchecked")
 			List<Element> localComponentEls = (List<Element>)componentsEl.elements("localComponent");
 			for(Element localComponentEl : localComponentEls){
@@ -121,6 +124,53 @@ public class ApplicationInitialServlet extends BasePlateformServlet{
 					app.addComponent(componentInfo);
 				}
 			}
+			
+			//component 远程组件
+			@SuppressWarnings("unchecked")
+			List<Element> remoteComponentEls = (List<Element>)componentsEl.elements("remoteComponent");
+			for(Element remoteComponentEl : remoteComponentEls){
+				String cmpName = remoteComponentEl.attributeValue("name");
+				String cmpIp = remoteComponentEl.attributeValue("ip");
+				String cmpWsPort = remoteComponentEl.attributeValue("port");
+				if(cmpName == null){
+					System.err.println("组件名称不存在,忽略此组件！");
+				}else{
+					RemoteComponent componentInfo = new RemoteComponent(cmpName, cmpIp, cmpWsPort);
+					//从组件同名配置文件中 取得webservice配置信息
+					Document componentCfgDoc = reader.read(ApplicationInitialServlet.class.getResourceAsStream("/"+cmpName+".cfg.xml"));
+					Element componentCfgRootEl = componentCfgDoc.getRootElement();//
+					if(!cmpName.equals(componentCfgRootEl.attributeValue("name"))){
+						System.err.println("组件配置文件：WEB-INF/classes/"+cmpName+".cfg.xml中的名称与组件名称不符,忽略此组件的webservice服务配置！");
+					}else{
+						List<Element> webserviceEls = (List<Element>)componentCfgRootEl.elements("webservice");
+						for(Element webserviceEl : webserviceEls){
+							String wsName = webserviceEl.attributeValue("name");
+							String wsClientClass = webserviceEl.attributeValue("clientClass");
+							String wsClientServiceClass = webserviceEl.attributeValue("clientServiceClass");
+							RemoteWebservice wsInfo = new RemoteWebservice(componentInfo, wsName, wsClientClass, wsClientServiceClass);
+							//记录此webservice
+							componentInfo.addWebservice(wsInfo);
+						}
+					}
+					//记录此组件
+					app.addComponent(componentInfo);
+				}
+			}
+			
+			//session factory 配置
+			List<Element> sessionFactoryEls = (List<Element>)appEl.elements("sessionFactory");
+			for(Element sessionFactoryEl : sessionFactoryEls){
+				String sessionFactoryName = sessionFactoryEl.attributeValue("name");
+				String sessionFactoryFileName = sessionFactoryEl.attributeValue("cfgFileName");
+				
+				File sessionFactoryFile = new File(contextPath+sessionFactoryFileName);
+				if(!sessionFactoryFile.exists()){
+					System.err.println("sessionFactory "+sessionFactoryName+" 的配置文件("+sessionFactoryFile.getPath()+")不存在！");
+				}
+				HibernateSessionFactory.createSessionFactory(sessionFactoryName, sessionFactoryFile);
+				
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

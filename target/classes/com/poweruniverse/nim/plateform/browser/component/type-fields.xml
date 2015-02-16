@@ -1,0 +1,211 @@
+<type-def>
+	<!-- ...................................................................................................  -->
+	<!-- 编辑控件类型  -->
+	<!-- ...................................................................................................  -->
+	<!-- 1 字段类型  string-->
+	<type name="stringField" label="字符"  isAppendable="false" defaultComponent="stringEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+		<properties>
+			<property name="fieldType" label="类型" type="string" allowBlank="false" info="" default="" enabled="false"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFieldsTypeOfForm" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="用于绑定数据的字段名"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题"/>
+			<property name="renderType" label="生成方式" type="string" default="rela" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'append',text:'生成标题、输入域'
+				},{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="高度" type="string" allowBlank="true" default="22px" info="字段高度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params=""/>
+		</events>
+	</type>
+	<!-- 2 字段类型  text-->
+	<type name="textField" label="字符"  isAppendable="false" defaultComponent="textareaEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+		<properties>
+			<property name="fieldType" label="类型" type="string" allowBlank="false" info="" default="" enabled="false"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFieldsTypeOfForm" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="用于绑定数据的字段名"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题"/>
+			<property name="renderType" label="生成方式" type="string" default="rela" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'append',text:'生成标题、输入域'
+				},{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="高度" type="string" allowBlank="true" default="22px" info="字段高度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params=""/>
+		</events>
+	</type>
+	<!-- 3字段类型  boolean-->
+	<type name="booleanField" label="逻辑"  isAppendable="false" defaultComponent="booleanCheckEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+		<properties>
+			<property name="fieldType" label="类型" type="string" allowBlank="false" info="" default="" enabled="false"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFieldsTypeOfForm" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="用于绑定数据的字段名"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题"/>
+			<property name="renderType" label="生成方式" type="string" default="rela" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'append',text:'生成标题、输入域'
+				},{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="高度" type="string" allowBlank="true" default="22px" info="字段高度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params=""/>
+		</events>
+	</type>
+	<!-- 4字段类型  int-->
+	<type name="intField" label="整数"  isAppendable="false" defaultComponent="intEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+		<properties>
+			<property name="fieldType" label="类型" type="string" allowBlank="false" info="" default="" enabled="false"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFieldsTypeOfForm" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="用于绑定数据的字段名"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题"/>
+			<property name="renderType" label="生成方式" type="string" default="rela" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'append',text:'生成标题、输入域'
+				},{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="高度" type="string" allowBlank="true" default="22px" info="字段高度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params=""/>
+		</events>
+	</type>
+	<!-- 5字段类型  double-->
+	<type name="doubleField" label="小数"  isAppendable="false" defaultComponent="doubleEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+		<properties>
+			<property name="fieldType" label="类型" type="string" allowBlank="false" info="" default="" enabled="false"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFieldsTypeOfForm" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="用于绑定数据的字段名"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题"/>
+			<property name="renderType" label="生成方式" type="string" default="rela" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'append',text:'生成标题、输入域'
+				},{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="高度" type="string" allowBlank="true" default="22px" info="字段高度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params=""/>
+		</events>
+	</type>
+	<!-- 6字段类型  date-->
+	<type name="dateField" label="日期"  isAppendable="false" defaultComponent="dateEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+		<properties>
+			<property name="fieldType" label="类型" type="string" allowBlank="false" info="" default="" enabled="false"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFieldsTypeOfForm" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="用于绑定数据的字段名"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题"/>
+			<property name="renderType" label="生成方式" type="string" default="rela" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'append',text:'生成标题、输入域'
+				},{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="高度" type="string" allowBlank="true" default="22px" info="字段高度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params=""/>
+		</events>
+	</type>
+	<!-- 7字段类型  object-->
+	<type name="objectField" label="对象"  isAppendable="false" defaultComponent="objectSelectEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+		<properties>
+			<property name="fieldType" label="类型" type="string" allowBlank="false" info="" default="" enabled="false"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFieldsTypeOfForm" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="用于绑定数据的字段名"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题"/>
+			<property name="renderType" label="生成方式" type="string" default="rela" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'append',text:'生成标题、输入域'
+				},{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+			
+		</properties>
+		<extensions>
+		</extensions>
+		<structure>
+		</structure>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params=""/>
+		</events>
+	</type>
+	<!-- 8字段类型  set-->
+	<type name="setField" label="集合"  isAppendable="false" defaultComponent="setGridEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+		<properties>
+			<property name="fieldType" label="类型" type="string" allowBlank="false" info="" default="" enabled="false"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFieldsTypeOfForm" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="用于绑定数据的字段名"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="高度" type="string" allowBlank="true" default="22px" info="字段高度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+	</type>
+</type-def>

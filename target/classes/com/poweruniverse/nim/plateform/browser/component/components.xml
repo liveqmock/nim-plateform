@@ -1,0 +1,1433 @@
+<component-def>
+	<!-- .......1页面.......... -->
+	<component name="page" xmlElName="page" type="page" label="页面" isEditable="true" isRemovable="false" iconClass="ui-icon-copy" isArray="false">
+		<events>
+		</events>
+	</component>
+	<component name="subpage" xmlElName="page" type="page" label="子页面" isEditable="true" isRemovable="false" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="name" label="名称" type="string" allowBlank="false" info="组件名称"/>
+			<property name="width" label="宽度" type="string" allowBlank="false" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="高度" type="string" allowBlank="false" default="22px" info="字段高度，使用css格式定义：12px 100% "/>
+		</properties>
+		<events>
+		</events>
+	</component>
+	
+	<!-- .......1引入/包含 import............ -->
+	<component name="importSubpage" xmlElName="import" type="import" label="子页面" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="目标元素" enabled="true" widget="textChooseElEditor"  droppable=".target"/>
+			<property name="pageURL" label="子页面地址" type="string" allowBlank="true" info="生成目标内容的模板" widget="urlEditor" enabled="true" />
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+	
+	<!-- .......流程图............ -->
+	<component name="workflowImg" xmlElName="image" type="image" label="流程图" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="目标元素" enabled="true" widget="textChooseElEditor"  droppable=".target"/>
+			<property name="xiTongDH" label="系统代号" type="string" allowBlank="false" widget="textSelectEditor" info="" enabled="true" dataGetter="getXiTongOptions"  onChange="setGongNengOptions"/>
+			<property name="gongNengDH" label="流程功能代号" type="string" allowBlank="false"  widget="textSelectEditor" info="" enabled="true" allowSearch="true" dataGetter="getRelaGongNengOptions"/>
+			<property name="id" label="主键值" type="string" allowBlank="false" info="主键值"/>
+			<property name="autoRender" label="自动生成" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" info="表单的宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="高度" type="string" allowBlank="true" info="表单的高度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+
+	<!-- .......2定时任务 timmer............ -->
+	<component name="javascriptTimer" xmlElName="timmer" type="timmer" label="定时任务-javascript" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="functionName" label="函数名称" type="string" allowBlank="false"  info="定时执行的函数名称"/>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+	<!-- .......3.1 sql字段值...(数据源)variable.... -->
+	<component name="sqlVariable" xmlElName="variable" type="variable" label="变量-sql" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" />
+			<property name="sql" label="sql语句" type="text" widget="textareaEditor"  allowBlank="false" default="" info="得到变量值的sql语句"/>
+			<property name="ziDuanLXDH" label="字段类型" type="string" allowBlank="false" default="string" widget="textSelectEditor" dataGetter="getZiDuanLXOptions" info="字段类型"/>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor"  droppable=".data" onChange="setVariableRenderTemplate"/>
+			<property name="renderTemplate" widget="textareaEditor"  label="内容表达式" type="text" allowBlank="true" info="生成目标内容的模板" enabled="true" />
+			<property name="showThousand" 		label="显示千分符" type="boolean" allowBlank="false" />
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+	<!-- .......3.2 实体类数据字段值...(数据源)variable.... -->
+	<component name="stlVariable" xmlElName="variable" type="variable" label="变量-stl" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="shiTiLeiDH" label="实体类" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" dataGetter="getRelaShiTiLeiOptions" info="" enabled="true" onChange="setZiDuanOptions"/>
+			<property name="id" label="主键值" type="string" allowBlank="false" info="主键值[为空时尝试从url中解析{$name.id}]"/>
+			<property name="ziDuanDH" label="字段" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getRelaZiDuanOptions"  allowSearch="true" info="字段代号" onChange="setShiTiLeiZDLX"/>
+			<property name="ziDuanLXDH" label="字段类型" type="string" allowBlank="false" default="string" widget="textSelectEditor" dataGetter="getZiDuanLXOptions" info="字段类型"/>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor"  droppable=".data" onChange="setVariableRenderTemplate"/>
+			<property name="renderTemplate" widget="textareaEditor" label="内容表达式" type="text" allowBlank="true" info="生成目标内容的模板" enabled="true" />
+			<property name="showThousand" 		label="显示千分符" type="boolean" allowBlank="false" />
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+	<!-- .......3.3 功能数据字段值...(数据源)variable.... -->
+	<component name="gnVariable" xmlElName="variable" type="variable" label="变量-gn" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setGongNengOptions"/>
+			<property name="gongNengDH" label="功能" type="string" allowBlank="false"  widget="textSelectEditor" info="" enabled="true" dataGetter="getRelaGongNengOptions" onChange="setCaoZuoZiDuanOptions"/>
+			<property name="caoZuoDH" label="操作" type="string" allowBlank="false"  widget="textSelectEditor" info="" enabled="true" dataGetter="getRelaCaoZuoOptions"/>
+			<property name="id" label="主键值" type="string" allowBlank="false"  info="主键值"/>
+			<property name="ziDuanDH" label="字段" type="string" allowBlank="false" widget="textSelectEditor" allowSearch="true" info="字段代号" dataGetter="getRelaGnZiDuanOptions" onChange="setGongNengZDLX"/>
+			<property name="ziDuanLXDH" label="字段类型" type="string" allowBlank="false" default="string" widget="textSelectEditor" dataGetter="getZiDuanLXOptions" info="字段类型"/>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor"  droppable=".data" onChange="setVariableRenderTemplate"/>
+			<property name="renderTemplate" widget="textareaEditor" label="内容表达式" type="text" allowBlank="true" info="生成目标内容的模板" enabled="true" />
+			<property name="showThousand" 		label="显示千分符" type="boolean" allowBlank="false" />
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+	<!-- .......4.1 sql集合数据...(数据源)dataset.... -->
+	<component name="sqlDataset" xmlElName="dataset" type="dataset" label="数据集-sql" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" />
+			<property name="autoLoad" label="自动加载" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" />
+			<property name="sql" label="sql语句" type="text" widget="textareaEditor"  allowBlank="false" default="" info="得到变量值的sql语句"/>
+			<property name="start" label="开始行数" type="int" default="0" allowBlank="false"  info="开始行[分页时使用]"/>
+			<property name="limit" label="最大行数" type="int" default="0" allowBlank="false"  info="最大行数[分页时使用]"/>
+		</properties>
+		<structure>
+			<item component-name="properties" />
+		</structure>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+	<!-- .......4.2 实体类对象数据...(数据源)dataset.... -->
+	<component name="stlDataset" xmlElName="dataset" type="dataset" label="数据集-stl" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" />
+			<property name="autoLoad" label="自动加载" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setShiTiLeiOptions"/>
+			<property name="shiTiLeiDH" label="实体类" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" dataGetter="getRelaShiTiLeiOptions" info="" enabled="true" />
+			<property name="start" label="开始行数" type="int" default="0" allowBlank="false"  info="开始行[分页时使用]"/>
+			<property name="limit" label="最大行数" type="int" default="0" allowBlank="false"  info="最大行数[分页时使用]"/>
+		</properties>
+		<structure>
+			<item component-name="properties" />
+			<item component-name="filters"/>
+			<item component-name="sorts"/>
+		</structure>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+	<!-- .......4.3 功能对象数据...(数据源)dataset.... -->
+	<component name="gnDataset" xmlElName="dataset" type="dataset" label="数据集-gn" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" />
+			<property name="autoLoad" label="自动加载" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setGongNengOptions"/>
+			<property name="gongNengDH" label="功能" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" info="" enabled="true" dataGetter="getRelaGongNengOptions" onChange="setCaoZuoOptions"/>
+			<property name="caoZuoDH" label="操作" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" info="" enabled="true" dataGetter="getRelaCaoZuoOptions"/>
+			<property name="start" label="开始行数" type="int" default="0" allowBlank="false"  info="开始行[分页时使用]"/>
+			<property name="limit" label="最大行数" type="int" default="0" allowBlank="false"  info="最大行数[分页时使用]"/>
+		</properties>
+		<structure>
+			<item component-name="properties" />
+			<item component-name="filters"/>
+			<item component-name="sorts"/>
+		</structure>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+	<!-- .......4.4 待办数据...(数据源)dataset.... -->
+	<component name="todoDataset" xmlElName="dataset" type="dataset" label="数据集-待办" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" />
+			<property name="autoLoad" label="自动加载" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="todoOnly" label="仅代办" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="start" label="开始行数" type="int" default="0" allowBlank="false"  info="开始行[分页时使用]"/>
+			<property name="limit" label="最大行数" type="int" default="0" allowBlank="false"  info="最大行数[分页时使用]"/>
+		</properties>
+		<events>
+		</events>
+		<structure>
+			<item component-name="properties" />
+			<item component-name="workflows" />
+			<item component-name="sorts" />
+			<item component-name="filters" />
+		</structure>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+	<!-- .......4.5 程序数据...(数据源)dataset.... -->
+	<component name="javaDataset" xmlElName="dataset" type="dataset" label="数据集-java" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" />
+			<property name="autoLoad" label="自动加载" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="className" label="全类名" type="string" default="" allowBlank="false"  info="带包名的全类名"/>
+			<property name="start" label="开始行数" type="int" default="0" allowBlank="false"  info="开始行[分页时使用]"/>
+			<property name="limit" label="最大行数" type="int" default="0" allowBlank="false"  info="最大行数[分页时使用]"/>
+		</properties>
+		<structure>
+			<item component-name="properties" />
+			<item component-name="parameters" />
+		</structure>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+	<!-- .......5.3 流程检视数据...(数据源)record.... -->
+	<component name="workflowDataset" xmlElName="dataset" type="dataset" label="数据集-流程检视" isEditable="true" isRemovable="false" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" />
+			<property name="autoLoad" label="自动加载" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor"  default="hdzg" dataGetter="getXiTongOptions" info="" enabled="false" onChange="setShiTiLeiOptions"/>
+			<property name="shiTiLeiDH" label="实体类" type="string" allowBlank="false"  widget="textSelectEditor"  default="SYS_LiuChengJS" dataGetter="getRelaShiTiLeiOptions" info="" enabled="false" />
+		</properties>
+		<structure>
+			<item component-name="properties" />
+			<item component-name="filters"/>
+			<item component-name="sorts"/>
+		</structure>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+	<!-- .......5.1 实体类对象数据...(数据源)record.... -->
+	<component name="stlRecord" xmlElName="record" type="record" label="对象-stl" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" />
+			<property name="autoLoad" label="自动加载" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setShiTiLeiOptions"/>
+			<property name="shiTiLeiDH" label="实体类" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" dataGetter="getRelaShiTiLeiOptions" info="" enabled="true" />
+			<property name="id" label="主键值" type="string" allowBlank="true"  info=""/>
+		</properties>
+		<structure>
+			<item component-name="properties" />
+		</structure>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+	<!-- .......5.2  sql对象数据...(数据源)record.... -->
+	<component name="sqlRecord" xmlElName="record" type="record" label="对象-sql" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" />
+			<property name="autoLoad" label="自动加载" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" />
+			<property name="sql" label="sql语句" type="text" widget="textareaEditor"  allowBlank="false" default="" info="得到变量值的sql语句"/>
+		</properties>
+		<structure>
+			<item component-name="properties" />
+		</structure>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+	<!-- .......5.3 功能对象数据...(数据源)record.... -->
+	<component name="gnRecord" xmlElName="record" type="record" label="对象-gn" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="" />
+			<property name="name" label="名称" type="string" allowBlank="false" info="" />
+			<property name="autoLoad" label="自动加载" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setGongNengOptions"/>
+			<property name="gongNengDH" label="功能" type="string" allowBlank="false"  widget="textSelectEditor" dataGetter="getRelaGongNengOptions" allowSearch="true" info="" enabled="true" onChange="setCaoZuoOptions"/>
+			<property name="caoZuoDH" label="操作" type="string" allowBlank="false"  widget="textSelectEditor" dataGetter="getRelaCaoZuoOptions" info="" enabled="true" />
+			<property name="id" label="主键值" type="string" allowBlank="true"  info="主键值"/>
+		</properties>
+		<structure>
+			<item component-name="properties" />
+		</structure>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+
+	<!-- .......6.1  标签页 tab-->
+	<component name="tabSelector" xmlElName="tab" type="tab" label="标签页选择" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setTabSelectorRenderTo" droppable=".tab"/>
+			<property name="activeClass" label="css类(active)" type="string" allowBlank="true" info="选中效果" enabled="true" />
+			<property name="hoverClass" label="css类(hover)" type="string" allowBlank="true" info="hover效果" enabled="true" />
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+		<comment>
+			<![CDATA[
+			页面上用于生成标签页的结构建议为:
+			<div>
+				<ul id="tab_selector_container">
+					<li class="activeClass" href="#rela_div_id1">
+					<li class="hoverClass"  href="#rela_div_id2">
+				</ul>
+				<div id="rela_div_id1" style="display:block;">content1</div>
+				<div id="rela_div_id2" style="display:none;">content2</div>
+			</div>
+			
+			其中 1、标签页必须使用<ul>元素
+			    2、<li>元素中 必须通过 href属性，指定关联的div
+			    3、在设计标签时，需要对选中和hover的标签效果定义相应的 css 类
+			]]>
+		</comment>
+	</component>
+	<!-- .......6.2  标签页生成  tab-->
+	<component name="tabGenerator" xmlElName="tab" type="tab" label="标签页生成" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="datasourceName" label="数据源" type="string" allowBlank="false" info="数据源"  widget="textSelectEditor" dataGetter="getDatasetOptions" />
+			<property name="labelField" label="显示字段名" type="string" allowBlank="false" default="" info="数据中用于显示的字段名"/>
+			<property name="codeField" label="代号字段名" type="string" allowBlank="false" default="" info="数据中用于标签代号的字段名"/>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setTabSelectorRenderTo" droppable=".tab"/>
+			<property name="renderTemplate" widget="textareaEditor" label="构建模板" type="text" allowBlank="true" info="生成目标内容的模板" enabled="true" />
+			<property name="activeClass" label="css类(active)" type="string" allowBlank="true" info="选中效果" enabled="true" />
+			<property name="hoverClass" label="css类(hover)" type="string" allowBlank="true" info="hover效果" enabled="true" />
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+		<comment>
+			<![CDATA[
+			页面上用于生成标签页的结构建议为:
+			<div>
+				<ul id="tab_selector_container">
+					<li class="activeClass" href="#rela_div_id1">
+					<li class="hoverClass"  href="#rela_div_id2">
+				</ul>
+				<div id="rela_div_id1" style="display:block;">content1</div>
+				<div id="rela_div_id2" style="display:none;">content2</div>
+			</div>
+			
+			其中 1、标签页必须使用<ul>元素
+			    2、<li>元素中 必须通过 href属性，指定关联的div
+			    3、在设计标签时，需要对选中和hover的标签效果定义相应的 css 类
+			]]>
+		</comment>
+	</component>
+	<!-- .......7.1单表编辑表单singleEditForm............ -->
+	<component name="singleEditForm" xmlElName="form" type="form" label="单表编辑表单" isEditable="true" isRemovable="true"  iconClass="ui-icon-contact" isArray="false">
+		<properties>
+			<property name="datasourceType" label="数据来源" type="string" default="private" allowBlank="false" info="生成方式" 
+					enabled="true" widget="textSelectEditor" options="[{
+					value:'public',text:'公共数据源'
+				},{
+					value:'private',text:'私有数据源'
+				}]" onChange="changeDataSourceType"/>
+		
+			<property name="datasourceName" label="数据源" type="string" allowBlank="false" info="数据源"  widget="textSelectEditor" dataGetter="getDataRecordOptions" />
+			<property name="autoLoad" label="自动加载" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="renderto" label="目标表单" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" droppable=".form"/>
+			<property name="renderType" label="生成方式" type="string" default="rela" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'append',text:'生成标题、表单'
+				},{
+					value:'insert',text:'生成表单'
+				},{
+					value:'replace',text:'替换表单'
+				},{
+					value:'rela',text:'关联表单'
+				}]"/>				
+			<property name="autoRender" label="自动生成" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+				
+			<property name="xiTongDH" label="系统代号" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setGongNengOptions"/>
+			<property name="gongNengDH" label="功能代号" type="string" allowBlank="false"  widget="textSelectEditor" dataGetter="getRelaGongNengOptions" info="" enabled="true" allowSearch="true" onChange="setCaoZuoOptions"/>
+			<property name="caoZuoDH" label="操作代号" type="string" allowBlank="false"  widget="textSelectEditor" dataGetter="getRelaCaoZuoOptions" info=""  allowSearch="true" enabled="true" />
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" info="表单的宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="高度" type="string" allowBlank="true" info="表单的高度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+		<structure>
+			<item component-name="gnRecord" />
+			<item component-name="formFields" />
+			<item component-name="buttons" />
+		</structure>
+		
+	</component>
+	<!-- .......7.2数据展示表单 form............ -->
+	<component name="dataDisplayForm" xmlElName="form" type="form" label="数据展示表单" isEditable="true" isRemovable="true"  iconClass="ui-icon-contact" isArray="false">
+		<properties>
+			<property name="datasourceType" label="数据来源" type="string" default="private" allowBlank="false" info="生成方式" 
+					enabled="true" widget="textSelectEditor" options="[{
+					value:'public',text:'公共数据源'
+				},{
+					value:'private',text:'私有数据源'
+				}]" onChange="changeDataSourceType"/>
+		
+			<property name="datasourceName" label="数据源" type="string" allowBlank="false" info="数据源"  widget="textSelectEditor" dataGetter="getDataRecordOptions" />
+			<property name="autoLoad" label="自动加载" type="string" allowBlank="false" default="true" widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="renderto" label="目标表单" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" droppable=".form"/>
+			<property name="renderType" label="生成方式" type="string" default="rela" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'append',text:'生成标题、表单'
+				},{
+					value:'insert',text:'生成表单'
+				},{
+					value:'replace',text:'替换表单'
+				},{
+					value:'rela',text:'关联表单'
+				}]"/>				
+			<property name="autoRender" label="自动生成" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+				
+		</properties>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+		<structure>
+			<item component-name="gnRecord" />
+			<item component-name="formFields" />
+			<item component-name="buttons" />
+		</structure>
+	</component>
+	<!-- .......7.2流程检视表单 form............ -->
+	<component name="workflowForm" xmlElName="form" type="form" label="流程检视表单" isEditable="true" isRemovable="true"  iconClass="ui-icon-contact" isArray="false">
+		<properties>
+			<property name="datasourceType" label="数据来源" type="string" default="private" allowBlank="false" info="生成方式" 
+					enabled="true" widget="textSelectEditor" options="[{
+					value:'public',text:'公共数据源'
+				},{
+					value:'private',text:'私有数据源'
+				}]" onChange="changeDataSourceType"/>
+		
+			<property name="datasourceName" label="数据源" type="string" allowBlank="false" info="数据源"  widget="textSelectEditor" dataGetter="getWorkflowDatasetOptions" />
+			<property name="autoLoad" label="自动加载" type="string" allowBlank="false" default="true" widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="renderto" label="生成目标" type="string" allowBlank="true" info="要清除的目标ul" enabled="true" widget="textChooseElEditor" />
+			<property name="renderType" label="生成方式" type="string" default="rela" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'append',text:'生成标题、表单'
+				},{
+					value:'insert',text:'生成表单'
+				},{
+					value:'replace',text:'替换表单'
+				},{
+					value:'rela',text:'关联表单'
+				}]"/>				
+			<property name="autoRender" label="自动生成" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="hideNullValue" label="隐藏空值字段" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="xiTongDH" label="系统代号" type="string" allowBlank="false" widget="textSelectEditor" info="" enabled="true" dataGetter="getXiTongOptions"  onChange="setGongNengOptions"/>
+			<property name="gongNengDH" label="流程功能代号" type="string" allowBlank="false"  widget="textSelectEditor" info="" enabled="true" allowSearch="true" dataGetter="getRelaGongNengOptions"/>
+			<property name="gongNengObjId" label="业务对象Id" type="string" allowBlank="false"  info="" enabled="true"/>
+		</properties>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+		<structure>
+			<item component-name="formFields" />
+			<item component-name="forms" />
+		</structure>
+	</component>
+	
+	<component name="workflowSubForm" xmlElName="form" type="form" label="流程检视子表单" isEditable="true" isRemovable="true"  iconClass="ui-icon-contact" isArray="false">
+		<properties>
+			<property name="caoZuoDH" label="操作代号" type="string" allowBlank="false"  widget="textSelectEditor" info=""  allowSearch="true" enabled="true" dataGetter="getWorkflowCaoZuoOptions"/>
+			<property name="renderto" label="目标表单" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" droppable=".form"/>
+			<property name="hideNullValue" label="隐藏空值字段" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+
+			<property name="showUndefined" label="显示未定义字段" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+
+		</properties>
+		<dependencies>
+			<dependency type-name="forms"/>
+		</dependencies>
+		<structure>
+			<item component-name="formFields" />
+		</structure>
+	</component>
+	<!-- .......7.3查询表单(新页面) form............ -->
+	<component name="searchToPage" xmlElName="form" type="form" label="查询表单(新页面)" isEditable="true" isRemovable="true"  iconClass="ui-icon-contact" isArray="false">
+		<properties>
+			<property name="autoRender" label="自动生成" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="renderto" label="目标表单" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setSearchToPageRenderTo" droppable=".form"/>
+			<property name="target" label="目标页面" type="string" allowBlank="false" default="" info="目标页面"  />
+			<property name="renderType" label="生成方式" type="string" default="none" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+		</properties>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+		<structure>
+			<item component-name="searchFilters" />
+			<item component-name="buttons" />
+		</structure>
+	</component>
+	<!-- .......7.4查询表单(列表) form............ -->
+	<component name="searchToGrid" xmlElName="form" type="form" label="查询表单(列表)" isEditable="true" isRemovable="true"  iconClass="ui-icon-contact" isArray="false">
+		<properties>
+			<property name="autoSearch" label="自动查询" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+			}]" />
+			<property name="datasourceName" label="数据源" type="string" allowBlank="false" info="数据源"  widget="textSelectEditor" dataGetter="getDatasetOptions" />
+			<property name="autoRender" label="自动生成" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="renderto" label="目标表单" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setSearchToGridRenderTo" droppable=".form"/>
+			<property name="renderType" label="生成方式" type="string" default="none" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+		</properties>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+		<events>
+			<event name="beforeSearch" type="string" label="查询之前" params=""/>
+		</events>
+		<structure>
+			<item component-name="searchFilters" />
+			<item component-name="buttons" />
+		</structure>
+	</component>
+	<!-- .......8.1表格显示 grid .......... -->
+	<component name="displayGrid" xmlElName="grid" type="grid" label="表格显示" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="autoRender" label="自动生成" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="headerLines" label="表头行数" type="string" allowBlank="false" info="是否有表头" default="0" enabled="true" 
+				widget="textSelectEditor" options="[{value:'0',text:'无'},{value:'1',text:'一行'},{value:'2',text:'两行'}]"/>
+			<property name="footerLines" label="表尾行数" type="string" allowBlank="false" info="是否有表尾" default="0" enabled="true" 
+				widget="textSelectEditor" options="[{value:'0',text:'无'},{value:'1',text:'一行'},{value:'2',text:'两行'}]"/>
+			<property name="renderto" label="目标表格" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" droppable=".grid"/>
+			<!--
+				<property name="renderTemplate" widget="textareaEditor" label="构建模板" type="text" allowBlank="true" info="生成目标内容的模板" enabled="true" />
+			-->
+			<property name="pagiTarget" label="分页栏" type="string" allowBlank="true" info="分页栏" enabled="true" widget="textChooseElEditor"  droppable=".page"/>
+		</properties>
+		<events>
+			<event name="onPagiRendered" type="string" label="分页栏显示完成" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+		<structure>
+		</structure>
+	</component>
+	<!-- .......8.2表格编辑 grid .......... -->
+	<component name="editGrid" xmlElName="grid" type="grid" label="表格编辑" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="autoRender" label="自动生成" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="headerLines" label="表头行数" type="string" allowBlank="false" info="是否有表头" default="0" enabled="true" 
+				widget="textSelectEditor" options="[{value:'0',text:'无'},{value:'1',text:'一行'},{value:'2',text:'两行'}]"/>
+			<property name="footerLines" label="表尾行数" type="string" allowBlank="false" info="是否有表尾" default="0" enabled="true" 
+				widget="textSelectEditor" options="[{value:'0',text:'无'},{value:'1',text:'一行'},{value:'2',text:'两行'}]"/>
+			<property name="renderto" label="目标表格" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" droppable=".grid"/>
+		</properties>
+		<events>
+			<event name="onLoad" type="string" label="数据加载" params=""/>
+			<event name="onSave" type="string" label="数据保存" params=""/>
+			<event name="onSubmit" type="string" label="数据提交" params=""/>
+			<event name="onChange" type="string" label="数据变化" params=""/>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+		<structure>
+		</structure>
+	</component>
+	<!-- .......8.1表格显示 grid .......... -->
+	<component name="treeDisplayGrid" xmlElName="grid" type="grid" label="树型表格显示" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="loadMode" label="加载方式" type="string" allowBlank="false" default="local" widget="textSelectEditor" options="[{
+					value:'local',text:'本地'
+				},{
+					value:'remote',text:'远程'
+				}]" />
+			<property name="autoRender" label="自动生成" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="headerLines" label="表头行数" type="string" allowBlank="false" info="是否有表头" default="0" enabled="true" 
+				widget="textSelectEditor" options="[{value:'0',text:'无'},{value:'1',text:'一行'},{value:'2',text:'两行'}]"/>
+			<property name="footerLines" label="表尾行数" type="string" allowBlank="false" info="是否有表尾" default="0" enabled="true" 
+				widget="textSelectEditor" options="[{value:'0',text:'无'},{value:'1',text:'一行'},{value:'2',text:'两行'}]"/>
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="目标元素" enabled="true" widget="textChooseElEditor" droppable=".widget"/>
+		</properties>
+		<events>
+			<event name="onTreeRender" 		type="string" label="显示完成" params="" />
+			<event name="onNodeRender" 		type="string" label="节点/行显示完成" params="" />
+			<event name="onNodeAppend"		type="string" label="新增节点" params="" />
+			<event name="onNodeRemove"		type="string" label="删除节点" params="" />
+			<event name="onNodeClick"		type="string" label="点击节点" params="" />
+			<event name="onNodeSelect"		type="string" label="选中节点" params="" />
+			<event name="onNodeUnselect"	type="string" label="取消选中" params="" />
+			<event name="onNodeCheck"		type="string" label="勾选节点" params="" />
+			<event name="onNodeUncheck"		type="string" label="取消勾选" params="" />
+			<event name="onNodeExpand"		type="string" label="展开节点" params="" />
+			<event name="onNodeCollapse"	type="string" label="收起节点" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+		<structure>
+			<item component-name="subtree" />
+		</structure>
+		
+	</component>
+	<!-- .......8.3表格操作 grid .......... -->
+	<component name="treeEditGrid" xmlElName="grid" type="grid" label="树型表格编辑" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="loadMode" label="加载方式" type="string" allowBlank="false" default="local" widget="textSelectEditor" options="[{
+					value:'local',text:'本地'
+				},{
+					value:'remote',text:'远程'
+				}]" />
+			<property name="autoRender" label="自动生成" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="目标元素" enabled="true" widget="textChooseElEditor" droppable=".widget"/>
+			<property name="renderType" label="生成方式" type="string" default="replace" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'insert',text:'插入'
+				},{
+					value:'replace',text:'替换'
+				}]"/>				
+		</properties>
+		<events>
+			<event name="onTreeRender" 		type="string" label="显示完成" params="" />
+			<event name="onNodeRender" 		type="string" label="节点/行显示完成" params="" />
+			<event name="onNodeAppend"		type="string" label="新增节点" params="" />
+			<event name="onNodeRemove"		type="string" label="删除节点" params="" />
+			<event name="onNodeClick"		type="string" label="点击节点" params="" />
+			<event name="onNodeSelect"		type="string" label="选中节点" params="" />
+			<event name="onNodeUnselect"	type="string" label="取消选中" params="" />
+			<event name="onNodeCheck"		type="string" label="勾选节点" params="" />
+			<event name="onNodeUncheck"		type="string" label="取消勾选" params="" />
+			<event name="onNodeExpand"		type="string" label="展开节点" params="" />
+			<event name="onNodeCollapse"	type="string" label="收起节点" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+		<structure>
+			<item component-name="subtree" />
+		</structure>
+	</component>
+	
+	
+	<!-- .......8.3子表格 subGrid 有工具条.......... -->
+	<component name="subGrid" xmlElName="grid" type="subGrid" label="子表格" isEditable="true" isRemovable="false"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency component-name="setGridEditor"/>
+		</dependencies>
+		<structure>
+		</structure>
+	</component>
+	
+	
+	<!-- .......9树状显示 tree .......... -->
+	<component name="tree" xmlElName="tree" type="tree" label="树" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="datasourceType" label="数据来源" type="string" default="private" allowBlank="false" info="生成方式" 
+					enabled="true" widget="textSelectEditor" options="[{
+					value:'public',text:'公共数据源'
+				},{
+					value:'private',text:'私有数据源'
+				}]" onChange="changeDataSourceType"/>
+		
+			<property name="datasourceName" label="数据源" type="string" allowBlank="false" info="数据源"  widget="textSelectEditor" dataGetter="getDatasetOptions" />
+			<property name="autoLoad" label="自动加载" type="string" allowBlank="false" default="true" widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="loadMode" label="加载方式" type="string" allowBlank="false" default="local" widget="textSelectEditor" options="[{
+					value:'local',text:'本地'
+				},{
+					value:'remote',text:'远程'
+				}]" />
+			<property name="autoRender" label="自动生成" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="目标元素" enabled="true" widget="textChooseElEditor" droppable=".widget"/>
+			<property name="renderType" label="生成方式" type="string" default="replace" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'insert',text:'插入'
+				},{
+					value:'replace',text:'替换'
+				}]"/>				
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="levelType" label="分级类型" type="string" allowBlank="false" default="parent"  widget="textSelectEditor" options="[{
+					value:'parent',text:'关联上级'
+				},{
+					value:'section',text:'编码分级'
+				}]" onChange="changeLevelType"/>
+			<property name="levelField" label="分级字段" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" dataGetter="getLevelFieldOptions" info="" enabled="true" onChange="setLevelFieldProperty"/>
+			<property name="levelSectionFormat" label="编码格式" type="string" allowBlank="false" default="2-2-2"  />
+			<property name="multiSeleect" 	label="允许多选" type="boolean" allowBlank="false" />
+			<property name="checkable" 		label="允许勾选" type="boolean" allowBlank="false" />
+
+		</properties>
+		<structure>
+			<item component-name="gnDataset" />
+		</structure>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+	<!-- .......9树状显示 tree .......... -->
+	<component name="subtree" xmlElName="tree" type="tree" label="树" isEditable="true" isRemovable="false"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="loadMode" label="加载方式" type="string" allowBlank="false" default="local" widget="textSelectEditor" options="[{
+					value:'local',text:'本地'
+				},{
+					value:'remote',text:'远程'
+				}]" />
+			<property name="levelField" label="分级字段" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" dataGetter="getRelaDatasourcePropertyOptions" info="" enabled="true" />
+			<property name="levelType" label="分级类型" type="string" allowBlank="false" default="parent"  widget="textSelectEditor" options="[{
+					value:'parent',text:'关联上级'
+				},{
+					value:'section',text:'编码分级'
+				}]" onChange="changeLevelType"/>
+			<property name="levelSectionFormat" label="编码格式" type="string" allowBlank="false" default="2-2-2"  />
+			<property name="multiSeleect" 	label="允许多选" type="boolean" allowBlank="false" />
+			<property name="checkable" 		label="允许勾选" type="boolean" allowBlank="false" />
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="treeGrid"/>
+			<dependency type-name="objectTreeSelectEditor"/>
+		</dependencies>
+	</component>
+	<!-- .......10.1  链接  action-->
+	<component name="link" xmlElName="action" type="action" label="打开页面" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setLinkRenderTo" droppable=".action"/>
+			<property name="target" label="目标" type="string" allowBlank="false" default="_blank" info="目标"  widget="textSelectEditor" options="[{value:'_blank',text:'新页面'},{value:'_parent',text:'父页面'},{value:'_top',text:'顶层页面'},{value:'_self',text:'当前页面'}]" />
+			<property name="href" label="地址" type="string" allowBlank="false" default="#" info=""/>
+		</properties>
+		<extensions>
+		</extensions>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+	<!-- .......10.2  操作  action-->
+	<component name="operation" xmlElName="action" type="action" label="执行操作" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" droppable=".action"/>
+			<property name="xiTongDH" label="系统代号" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setGongNengOptions"/>
+			<property name="gongNengDH" label="功能代号" type="string" allowBlank="false"  widget="textSelectEditor" info="" enabled="true" allowSearch="true" onChange="setCaoZuoOptions"/>
+			<property name="caoZuoDH" label="操作代号" type="string" allowBlank="false"  widget="textSelectEditor" info=""  allowSearch="true" enabled="true" />
+		</properties>
+		<extensions>
+		</extensions>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+	<!-- .......10.2  函数  action-->
+	<component name="jsFunction" xmlElName="action" type="action" label="调用Javascript函数" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" droppable=".action"/>
+			<property name="jsFuncName" label="函数名称" type="text" allowBlank="true" info="Javascript函数名称" widget="textareaEditor" enabled="true" />
+		</properties>
+		<extensions>
+		</extensions>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+	<!-- .......10.3  显示/隐藏 action-->
+	<component name="showHide" xmlElName="action" type="action" label="显示/隐藏" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setShowHideRenderTo" droppable=".action"/>
+			<property name="showClass" label="显示(css类)" type="string" allowBlank="true" info="显示状态" enabled="true"  />
+			<property name="hiddenClass" label="隐藏(css类)" type="string" allowBlank="true" info="隐藏状态" enabled="true" />
+			<property name="targetEl" label="显示/隐藏元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" droppable=".action"/>
+		</properties>
+		<extensions>
+		</extensions>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="page"/>
+		</dependencies>
+	</component>
+	<!-- .......10.4  滚动到顶部固定 action-->
+	<component name="topFixed" xmlElName="action" type="action" label="滚动到顶部固定" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" droppable=".action"/>
+		</properties>
+		<extensions>
+		</extensions>
+		<events>
+		</events>
+	</component>
+	
+	
+	<!-- 集合与子项  -->
+	<!-- 1.1 属性集合  properties  （用于数据源的属性集合 之下的节点 可根据功能相关的数据源选取）  -->
+	<component name="properties" xmlElName="properties" type="properties" label="属性列表" isEditable="false" isRemovable="false" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency component-name="gnRecord"/>
+			<dependency component-name="gnDataset"/>
+			<dependency component-name="stlRecord"/>
+			<dependency component-name="stlDataset"/>
+			<dependency component-name="sqlRecord"/>
+			<dependency component-name="sqlDataset"/>
+			<dependency component-name="todoDataset"/>
+		</dependencies>
+	</component>
+	<!-- 2.1 todo数据源的工作流集合  -->
+	<component name="workflows" xmlElName="workflows" type="workflows" label="流程列表" isEditable="false" isRemovable="false" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency component-name="todoDataset"/>
+		</dependencies>
+	</component>
+	
+	<!-- 2.1 todo数据源的工作流节点  -->
+	<component name="workflow" xmlElName="workflow" type="workflow" label="流程" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+		<structure>
+			<item component-name="workflowProperties" />
+			<item component-name="filters" />
+		</structure>
+		<dependencies>
+			<dependency component-name="workflows"/>
+		</dependencies>
+	</component>
+	
+	<!-- 2.1 todo数据源的工作流属性集合  -->
+	<component name="workflowProperties" xmlElName="properties" type="properties" label="流程属性列表" isEditable="false" isRemovable="false" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency component-name="workflow"/>
+		</dependencies>
+	</component>
+	
+	<!-- 2.1 todo数据源的工作流属性  -->
+	<component name="workflowProperty" xmlElName="property" type="workflowProperty" label="属性" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+			<property name="todoProperty" label="待办属性" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" dataGetter="getTodoPropertyOptions" info="" enabled="true" onChange="setWorkflowPropertyLabel"/>
+			<property name="freemarker" label="Freemarker模板" type="text" allowBlank="false" info="Freemarker模板" enabled="true" widget="textareaEditor" />
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency component-name="workflowProperties"/>
+		</dependencies>
+	</component>
+	
+	
+	<!-- 2.1 数据源的复杂属性(有结构)   -->
+	<component name="complexProperty" xmlElName="property" type="complexProperty" label="结构属性" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency component-name="properties"/>
+		</dependencies>
+		<structure>
+			<item component-name="properties" />
+		</structure>
+	</component>
+	<!-- 2.3 数据源简单属性(无结构)   -->
+	<component name="simpleProperty" xmlElName="property" type="simpleProperty" label="简单属性" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency component-name="properties"/>
+		</dependencies>
+	</component>
+
+	<!-- 3.1 字段集合  formFields （用于form的字段集合 之下的字段从数据源选取）   -->
+	<component name="formFields" xmlElName="fields" type="fields" label="字段列表" isEditable="false" isRemovable="false" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="form"/>
+		</dependencies>
+	</component>
+	<!-- 3.2 字段集合  searchFormFields （用于searchform的字段集合 之下的字段手工添加）   -->
+	<component name="searchFilters" xmlElName="filters" type="filters" label="条件列表" isEditable="false" isRemovable="false" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency component-name="searchToPage"/>
+			<dependency component-name="searchToGrid"/>
+		</dependencies>
+	</component>
+	<!-- 4查询  字段条件  field  无结构的节点  -->
+	<component name="searchFieldFilter" xmlElName="filter" type="searchFilter" label="字段查询条件" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+			<property name="assist" label="辅助字段" type="string" allowBlank="true" default="" info="辅助字段"/>
+			<property name="operator" label="操作符" type="string" allowBlank="false" default="eq" info="操作符" widget="textSelectEditor" 
+				options="[{
+					value:'eq',text:'等于'
+				},{
+					value:'ne',text:'不等于'
+				},{
+					value:'gt',text:'大于'
+				},{
+					value:'ge',text:'大于等于'
+				},{
+					value:'lt',text:'小于'
+				},{
+					value:'le',text:'小于等于'
+				},{
+					value:'like',text:'like'
+				},{
+					value:'nlike',text:'nlike'
+				},{
+					value:'between',text:'between'
+				}]" />
+			<property name="value" label="值" type="string" allowBlank="true" info="比较值" enabled="true"  />
+		</properties>
+		<extensions>
+			<property name="renderType" label="生成方式" type="string" default="none" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'append',text:'生成标题、输入域'
+				},{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>				
+			<property name="fieldType" label="数值类型" type="string" allowBlank="false" widget="textSelectEditor" info="" default="" enabled="true" dataGetter="getEditorTypesOptions" onChange="setWidgetOptions"/>/>
+			<property name="widget" label="编辑控件" type="string" allowBlank="false" widget="textSelectEditor" info="" enabled="true" dataGetter="getRelaWidgetOptions"/>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor"  droppable=".field" />
+		</extensions>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="searchFilters"/>
+		</dependencies>
+	</component>
+	
+	<component name="searchSqlFilter" xmlElName="filter" type="searchFilter" label="sql查询条件" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+			<property name="value" label="SQL" type="text" allowBlank="true" widget="textareaEditor" info="sql查询条件" enabled="true"  />
+		</properties>
+		<extensions>
+		</extensions>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="searchFilters"/>
+		</dependencies>
+	</component>
+	
+	<!-- 4 字段  field  无结构的节点  
+	<component name="simpleField" xmlElName="field" type="simpleField" label="字段" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor"  droppable=".data" onChange="setVariableRenderTemplate"/>
+			<property name="renderTemplate" widget="textareaEditor" label="内容表达式" type="text" allowBlank="true" info="生成目标内容的模板" enabled="true" />
+			<property name="showThousand" 		label="显示千分符" type="boolean" allowBlank="false" />
+			<property name="showTips" 		label="显示提示信息" type="boolean" allowBlank="false" />
+			<property name="tipsTemplate" widget="textareaEditor" label="信息表达式" type="text" allowBlank="true" info="生成目标tips的模板" enabled="true" />
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="fields"/>
+		</dependencies>
+	</component>
+	-->
+	<!-- 4 字段  field 有结构的字段
+	<component name="complexField" xmlElName="field" type="complexField" label="字段" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor"  droppable=".data" onChange="setVariableRenderTemplate"/>
+			<property name="renderTemplate" widget="textareaEditor" label="内容表达式" type="text" allowBlank="true" info="生成目标内容的模板" enabled="true" />
+			<property name="showTips" 		label="显示提示信息" type="boolean" allowBlank="false" />
+			<property name="tipsTemplate" widget="textareaEditor" label="信息表达式" type="text" allowBlank="true" info="生成目标tips的模板" enabled="true" />
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="fields"/>
+		</dependencies>
+		<structure>
+			<item component-name="formFields" />
+		</structure>
+	</component>
+	-->
+	<!-- 5 表列集合  gridColumns （用于grid的列集合 之下的字段手工添加）   -->
+	<component name="gridColumns" xmlElName="columns" type="columns" label="表列集合" isEditable="false" isRemovable="false" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency component-name="displayGrid"/>
+			<dependency component-name="editGrid"/>
+			<dependency component-name="operateGrid"/>
+			<dependency component-name="subOperateGrid"/>
+		</dependencies>
+	</component>	
+	<!-- 7.1 条件集合  filters （数据源过滤条件集合 之下的节点 可根据功能相关的数据源选取）  -->
+	<component name="filters" xmlElName="filters" type="filters" label="过滤条件" isEditable="false" isRemovable="false" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency component-name="gnDataset"/>
+			<dependency component-name="stlDataset"/>
+		</dependencies>
+	</component>
+	<!-- 8.1  条件 propertyFilter （按属性过滤）  -->
+	<component name="propertyFilter" xmlElName="filter" type="filter" label="属性过滤条件" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+			<property name="type" label="字段类型" type="string" allowBlank="false" default="" info="字段类型"/>
+			<property name="property" label="字段" type="string" allowBlank="false" default="" info="字段"/>
+			<property name="assist" label="辅助字段" type="string" allowBlank="true" default="" info="辅助字段"/>
+			<property name="operator" label="操作符" type="string" allowBlank="false" default="eq" info="操作符" widget="textSelectEditor" 
+				options="[{
+					value:'eq',text:'等于'
+				},{
+					value:'ne',text:'不等于'
+				},{
+					value:'gt',text:'大于'
+				},{
+					value:'ge',text:'大于等于'
+				},{
+					value:'lt',text:'小于'
+				},{
+					value:'le',text:'小于等于'
+				},{
+					value:'like',text:'like'
+				},{
+					value:'nlike',text:'nlike'
+				},{
+					value:'between',text:'between'
+				}]" />
+			<property name="value" label="值" type="string" allowBlank="false" default="" info="值"/>
+		</properties>
+		<extensions>
+		</extensions>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="filters"/>
+		</dependencies>
+	</component>
+	<!-- 8.2 条件 sqlFilter （sql过滤条件）  -->
+	<component name="sqlFilter" xmlElName="filter" type="filter" label="sql过滤条件" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+			<property name="sql" label="过滤条件" type="text" widget="textareaEditor"  allowBlank="false" default="" info="过滤条件"/>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="filters"/>
+		</dependencies>
+	</component>
+	
+	<!-- 9.1  排序条件集合  sorts （功能、实体类 dataset类型数据源的结构）  -->
+	<component name="sorts" xmlElName="sorts" type="sorts" label="排序条件" isEditable="false" isRemovable="false" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="dataset"/>
+		</dependencies>
+	</component>
+	<!-- 10.1  排序条件  propertySort-->
+	<component name="propertySort" xmlElName="sort" type="sort" label="属性排序条件" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题"/>
+			<property name="property" label="字段" type="string" allowBlank="false" default="" info="字段"/>
+			<property name="dir" label="排序方式" type="string" allowBlank="false" widget="textSelectEditor"  default="ASC" options="[{value:'ASC',text:'顺序'},{value:'DESC',text:'逆序'}]" info="排序方式"/>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="sorts"/>
+		</dependencies>
+	</component>
+	<!-- 10.2  排序条件  sqlSort-->
+	<component name="sqlSort" xmlElName="sort" type="dataSort" label="sql排序条件" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+			<property name="sql" label="排序条件" type="string" allowBlank="false" default="" info="排序条件"/>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="sorts"/>
+		</dependencies>
+	</component>
+	
+	<!-- 11.1 表单集合 上级元素为workflowForm类型......... -->
+	<component name="forms" xmlElName="forms" type="forms" label="表单列表" isEditable="false" isRemovable="false" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency component-name="workflowForm"/>
+		</dependencies>
+	</component>
+	
+
+	
+	<!-- 11.1 按钮集合 第1个component .上级元素为所有form类型......... -->
+	<component name="buttons" xmlElName="buttons" type="buttons" label="按钮列表" isEditable="false" isRemovable="false" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="form"/>
+		</dependencies>
+	</component>
+	
+	<!-- 11.1 集合字段工具按钮集合 ......... -->
+	<component name="tools" xmlElName="buttons" type="buttons" label="工具按钮" isEditable="false" isRemovable="false" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="grid"/>
+			<dependency component-name="setGridEditor"/>
+		</dependencies>
+	</component>
+	<!-- 12.1 按钮......... -->
+	<component name="button" xmlElName="button" type="button" label="自定义按钮" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="renderType" label="生成方式" type="string" default="none" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'insert',text:'生成按钮'
+				},{
+					value:'replace',text:'替换按钮'
+				},{
+					value:'rela',text:'关联按钮'
+				}]"/>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" droppable=".button"/>
+		</properties>
+		<events>
+			<event name="onClick" type="string" label="点击" params=""/>
+		</events>
+		<dependencies>
+			<dependency type-name="buttons"/>
+		</dependencies>
+	</component>
+	<!-- 12.1 提交按钮......... -->
+	<component name="submitButton" xmlElName="submit" type="button" label="提交按钮" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="renderType" label="生成方式" type="string" default="none" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'insert',text:'生成按钮'
+				},{
+					value:'replace',text:'替换按钮'
+				},{
+					value:'rela',text:'关联按钮'
+				}]"/>			
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" droppable=".button"/>
+		</properties>
+		<events>
+			<event name="onClick" type="string" label="点击" params=""/>
+		</events>
+		<dependencies>
+			<dependency component-name="buttons"/>
+		</dependencies>
+	</component>
+	<!-- 12.2 重置按钮......... -->
+	<component name="resetButton" xmlElName="reset" type="button" label="重置按钮" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="renderType" label="生成方式" type="string" default="none" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'insert',text:'生成按钮'
+				},{
+					value:'replace',text:'替换按钮'
+				},{
+					value:'rela',text:'关联按钮'
+				}]"/>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" droppable=".button"/>
+		</properties>
+		<events>
+			<event name="onClick" type="string" label="点击" params=""/>
+		</events>
+		<dependencies>
+			<dependency component-name="buttons"/>
+		</dependencies>
+	</component>
+	
+	<!-- 12.2 新增按钮......... -->
+	<component name="appendButton" xmlElName="append" type="button" label="新增按钮" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="renderType" label="生成方式" type="string" default="none" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'insert',text:'生成按钮'
+				},{
+					value:'replace',text:'替换按钮'
+				},{
+					value:'rela',text:'关联按钮'
+				}]"/>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" droppable=".button"/>
+		</properties>
+		<events>
+			<event name="onClick" type="string" label="点击" params=""/>
+		</events>
+		<dependencies>
+			<dependency component-name="tools"/>
+		</dependencies>
+	</component>
+	
+	<!-- 12.2 删除按钮......... -->
+	<component name="removeButton" xmlElName="remove" type="button" label="删除按钮" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="renderType" label="生成方式" type="string" default="none" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'insert',text:'生成按钮'
+				},{
+					value:'replace',text:'替换按钮'
+				},{
+					value:'rela',text:'关联按钮'
+				}]"/>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" droppable=".button"/>
+		</properties>
+		<events>
+			<event name="onClick" type="string" label="点击" params=""/>
+		</events>
+		<dependencies>
+			<dependency component-name="tools"/>
+		</dependencies>
+	</component>
+	
+	<component name="parameters" xmlElName="parameters" type="parameters" label="参数列表" isEditable="false" isRemovable="false" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+		</dependencies>
+	</component>
+	
+	<component name="parameter" xmlElName="parameter" type="parameter" label="参数" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="false">
+		<properties>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="parameters"/>
+		</dependencies>
+	</component>
+</component-def>

@@ -1,0 +1,918 @@
+<component-def>
+	<!-- 6  表列 gridColumn-->
+	<component name="gridColumn" xmlElName="column" type="column" label="表列" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="构建模板" type="text" allowBlank="true" info="生成目标内容的模板" enabled="true" />
+			<property name="showThousand" 		label="显示千分符" type="boolean" allowBlank="false" />
+			<property name="showTips" 		label="显示提示信息" type="boolean" allowBlank="false" />
+			<property name="tipsTemplate" widget="textareaEditor" label="信息表达式" type="text" allowBlank="true" info="生成目标tips的模板" enabled="true" />
+			<!--
+			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'允许'},{value:'false',text:'不允许'}]"  onChange="onColumnEditorChanged"/>
+			-->
+		</properties>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency component-name="gridColumns"/>
+		</dependencies>
+	</component>
+
+	<!-- ............................................................................... -->
+	<!-- 表格列控件 仅记录 用于选择 不会手动添加到页面结构树中-->
+	<!-- 6  表列 gridColumn
+	<component name="gridColumn" xmlElName="column" type="column" label="表列" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="showThousand" 		label="显示千分符" type="boolean" allowBlank="false" />
+			<property name="showTips" 		label="显示提示信息" type="boolean" allowBlank="false" />
+			<property name="tipsTemplate" widget="textareaEditor" label="信息表达式" type="text" allowBlank="true" info="生成目标tips的模板" enabled="true" />
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency component-name="gridColumns"/>
+		</dependencies>
+	</component>
+	-->
+	<!-- ............................................................................... -->
+	<!-- 1.1 字符列 stringDisplayColumn-->
+	<component name="stringDisplayColumn" type="stringColumn" label="显示" xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="showTips"  label="显示提示信息" type="boolean" allowBlank="false" />
+			<property name="tipsTemplate" widget="textareaEditor" label="信息表达式" type="text" allowBlank="true" info="生成目标tips的模板" enabled="true" />
+		</properties>
+		<extensions>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+
+	<!-- 1.2 字符编辑列 stringColumn-->
+	<component name="stringColumn" type="stringColumn" label="字符" xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="prompt" label="提示文字" type="string" allowBlank="true" info="提示文字"/>
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+			<property name="minLength" label="最少字符数" type="int" default="" allowBlank="true"  info="最少字符数"/>
+			<property name="maxLength" label="最多字符数" type="int" default="" allowBlank="true"  info="最多字符数"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+				<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<!-- 1.2 字符列 passwordColumn-->
+	<component name="passwordColumn" type="stringColumn" label="密码"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="prompt" label="提示文字" type="string" allowBlank="true" info="提示文字"/>
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+			<property name="minLength" label="最少字符数" type="int" default="" allowBlank="true"  info="最少字符数"/>
+			<property name="maxLength" label="最多字符数" type="int" default="" allowBlank="true"  info="最多字符数"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<!-- 1.2 手机号 mobileEditor-->
+	<component name="mobileColumn" type="stringColumn" label="手机号"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="prompt" label="提示文字" type="string" allowBlank="true" info="提示文字"/>
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<!-- 1.2 邮编 postCodeEditor-->
+	<component name="postCodeColumn" type="stringColumn" label="邮编"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="prompt" label="提示文字" type="string" allowBlank="true" info="提示文字"/>
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<!-- 1.2 邮箱 emailEditor-->
+	<component name="emailColumn" type="stringColumn" label="邮箱"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="prompt" label="提示文字" type="string" allowBlank="true" info="提示文字"/>
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+			<property name="minLength" label="最少字符数" type="int" default="" allowBlank="true"  info="最少字符数"/>
+			<property name="maxLength" label="最多字符数" type="int" default="" allowBlank="true"  info="最多字符数"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<!-- 1.2 文本目标 dragdrop -->
+	<component name="chooseElColumn" type="stringColumn" label="目标选择"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="prompt" label="提示文字" type="string" allowBlank="true" info="提示文字"/>
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<!-- 1.2 文本 stringTextEditor-->
+	<component name="stringTextColumn" type="stringColumn" label="文本"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="prompt" label="提示文字" type="string" allowBlank="true" info="提示文字"/>
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+			<property name="minLength" label="最少字符数" type="int" default="" allowBlank="true"  info="最少字符数"/>
+			<property name="maxLength" label="最多字符数" type="int" default="" allowBlank="true"  info="最多字符数"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="高度" type="string" allowBlank="true" default="150px" info="字段高度，使用css格式定义：12px"/>
+		</extensions>
+		<events>
+				<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	
+	<!-- 1.3 文本区域 textarea-->
+	<component name="textDisplayColumn" type="textColumn" label="文本内容"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="showTips" 		label="显示提示信息" type="boolean" allowBlank="false" />
+			<property name="tipsTemplate" widget="textareaEditor" label="信息表达式" type="text" allowBlank="true" info="生成目标tips的模板" enabled="true" />
+		</properties>
+		<extensions>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<!-- 1.3 文本区域 textarea-->
+	<component name="textColumn" type="textColumn" label="文本内容"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="prompt" label="提示文字" type="string" allowBlank="true" info="提示文字"/>
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+			<property name="minLength" label="最少字符数" type="int" default="" allowBlank="true"  info="最少字符数"/>
+			<property name="maxLength" label="最多字符数" type="int" default="" allowBlank="true"  info="最多字符数"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="高度" type="string" allowBlank="true" default="50px" info="字段高度，使用css格式定义：12px"/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	
+	<!-- 2.1 form中的字段 boolean-->
+	<component name="booleanDisplayColumn" type="booleanColumn" label="显示"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="showCheckbox" label="显示方式" type="string" allowBlank="false" info="是否显示复选框" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'文字'},{value:'true',text:'复选框'}]" />
+			<property name="trueText" label="true文字" type="string" allowBlank="true" info="值为true时显示为"/>
+			<property name="falseText" label="false文字" type="string" allowBlank="true" info="值为false时显示为"/>
+		</properties>
+		<extensions>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<!-- 2.1 form中的字段 boolean-->
+	<component name="booleanCheckColumn" type="booleanColumn" label="复选框"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+		</properties>
+		<extensions>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<!-- 2.1 form中的字段 boolean-->
+	<component name="booleanRadioColumn" type="booleanColumn" label="无线按钮"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+			<property name="trueText" label="true文字" type="string" allowBlank="true" info="值为true时显示为"/>
+			<property name="falseText" label="false文字" type="string" allowBlank="true" info="值为false时显示为"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<!-- 2.1 form中的字段 boolean-->
+	<component name="booleanSelectColumn" type="booleanColumn" label="下拉选择"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+			<property name="trueText" label="true文字" type="string" allowBlank="true" info="值为true时显示为"/>
+			<property name="falseText" label="false文字" type="string" allowBlank="true" info="值为false时显示为"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	
+	
+	<!-- 2.1 列 int-->
+	<component name="intDisplayColumn" type="intColumn" label="显示"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="textAlign" label="对齐方式" type="string" default="right" allowBlank="false" info="对齐方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'left',text:'左对齐'
+				},{
+					value:'right',text:'右对齐'
+				},{
+					value:'center',text:'居中'
+				}]"/>	
+			<property name="showThousand" label="显示千分符" type="boolean" allowBlank="false" />
+			<property name="zeroAsBlank" label="不显示0值" type="boolean"  default="true" allowBlank="false"  info="不显示0值"/>
+
+		</properties>
+		<extensions>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<!-- 2.1 列-编辑 int-->
+	<component name="intColumn" type="intColumn" label="整数"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+			<property name="textAlign" label="对齐方式" type="string" default="right" allowBlank="false" info="对齐方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'left',text:'左对齐'
+				},{
+					value:'right',text:'右对齐'
+				},{
+					value:'center',text:'居中'
+				}]"/>	
+			<property name="showThousand" label="显示千分符" type="boolean" allowBlank="false" />
+			<property name="zeroAsBlank" label="不显示0值" type="boolean"  default="true" allowBlank="false"  info="不显示0值"/>
+
+			<property name="minValue" label="最小值" type="int" default="" allowBlank="true"  info="最小值"/>
+			<property name="maxValue" label="最大值" type="int" default="" allowBlank="true"  info="最大值"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	
+	
+	<!-- 2.1 列-编辑 double-->
+	<component name="doubleDisplayColumn" type="doubleColumn" label="显示" xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="textAlign" label="对齐方式" type="string" default="right" allowBlank="false" info="对齐方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'left',text:'左对齐'
+				},{
+					value:'right',text:'右对齐'
+				},{
+					value:'center',text:'居中'
+				}]"/>	
+			<property name="zeroAsBlank" label="不显示0值" type="boolean"  default="true" allowBlank="false"  info="不显示0值"/>
+			<property name="showThousand" label="显示千分符" type="boolean" allowBlank="false" />
+			<property name="decLength" label="小数位数" type="string" default="0" allowBlank="false" info="小数位数" enabled="true" widget="textSelectEditor" options="[{
+					value:'0',text:'不限制'
+				},{
+					value:'1',text:'1位小数'
+				},{
+					value:'2',text:'2位小数'
+				},{
+					value:'3',text:'3位小数'
+				},{
+					value:'4',text:'4位小数'
+				},{
+					value:'5',text:'5位小数'
+				},{
+					value:'6',text:'6位小数'
+				}]"/>	
+		</properties>
+		<extensions>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<!-- 2.1 列-编辑 double-->
+	<component name="doubleColumn" type="doubleColumn" label="小数" xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+			<property name="textAlign" label="对齐方式" type="string" default="right" allowBlank="false" info="对齐方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'left',text:'左对齐'
+				},{
+					value:'right',text:'右对齐'
+				},{
+					value:'center',text:'居中'
+				}]"/>	
+			<property name="zeroAsBlank" label="不显示0值" type="boolean"  default="true" allowBlank="false"  info="不显示0值"/>
+			<property name="showThousand" label="显示千分符" type="boolean" allowBlank="false" />
+			<property name="decLength" label="小数位数" type="string" default="0" allowBlank="false" info="小数位数" enabled="true" widget="textSelectEditor" options="[{
+					value:'0',text:'不限制'
+				},{
+					value:'1',text:'1位小数'
+				},{
+					value:'2',text:'2位小数'
+				},{
+					value:'3',text:'3位小数'
+				},{
+					value:'4',text:'4位小数'
+				},{
+					value:'5',text:'5位小数'
+				},{
+					value:'6',text:'6位小数'
+				}]"/>	
+			<property name="minValue" label="最小值" type="double" default="" allowBlank="true"  info="最小值"/>
+			<property name="maxValue" label="最大值" type="double" default="" allowBlank="true"  info="最大值"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	
+	
+	<!-- 2.1 列-查看 date-->
+	<component name="dateDisplayColumn" type="dateColumn" label="显示"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+		</properties>
+		<extensions>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<!-- 2.1 列-编辑 date-->
+	<component name="dateColumn" type="dateColumn" label="日期"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+			<property name="minDate" label="最小日期" type="date" default="" allowBlank="true"  info="最小日期"/>
+			<property name="maxDate" label="最大日期" type="date" default="" allowBlank="true"  info="最大日期"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<component name="timeColumn" type="dateColumn" label="时间"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<component name="monthColumn" type="dateColumn" label="月份"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+
+	
+	
+	<!-- 2.1 列-编辑 object-->
+	<component name="objectDisplayColumn" type="objectColumn" label="显示"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+		</properties>
+		<extensions>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<structure>
+		</structure>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<!-- 2.1 列-编辑 object-->
+	<component name="objectSelectColumn" type="objectColumn" label="下拉选择"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+			<property name="datasourceType" label="数据来源" type="string" default="private" allowBlank="false" info="生成方式" 
+					enabled="true" widget="textSelectEditor" options="[{
+					value:'public',text:'公共数据源'
+				},{
+					value:'private',text:'私有数据源'
+				}]" onChange="changeFieldSourceType"/>
+		
+			<property name="datasourceName" label="数据源" type="string" allowBlank="false" info="数据源"  widget="textSelectEditor" dataGetter="getDatasetOptions" />
+			<property name="searchMode" label="查询方式" type="string" default="local" allowBlank="false" info="查询方式" 
+					enabled="true" widget="textSelectEditor" options="[{
+					value:'local',text:'本地（客户端）'
+				},{
+					value:'remote',text:'远程（服务器端）'
+				}]"/>			
+			<property name="minLength" label="最少查询字数" type="string" allowBlank="false" info="最少查询字数" default="0" enabled="true" 
+				widget="textSelectEditor" options="[{value:'0',text:'不限'},{value:'1',text:'一个字符'},{value:'2',text:'两个字符'},{value:'3',text:'三个字符'}]"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="下拉选框高度" type="string" allowBlank="true" default="150px" info="下拉选框最大高度，使用css格式定义：12px"/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<structure>
+			<item component-name="gnDataset" />
+		</structure>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<!-- 2.1 列-编辑 object-->
+	<component name="objectRadioColumn" type="objectColumn" label="无线按钮选择"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+			<property name="datasourceType" label="数据来源" type="string" default="private" allowBlank="false" info="生成方式" 
+					enabled="true" widget="textSelectEditor" options="[{
+					value:'public',text:'公共数据源'
+				},{
+					value:'private',text:'私有数据源'
+				}]" onChange="changeFieldSourceType"/>
+		
+			<property name="datasourceName" label="数据源" type="string" allowBlank="false" info="数据源"  widget="textSelectEditor" dataGetter="getDatasetOptions" />
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<structure>
+			<item component-name="gnDataset" />
+		</structure>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<!-- 2.1 列-编辑 object-->
+	<component name="fileUploaderColumn" type="objectColumn" label="文件上传"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	
+	<component name="setDisplayColumn" type="setColumn" label="显示"  xmlElName="field" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+		</properties>
+		<extensions>
+		</extensions>
+		<structure>
+		</structure>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	
+	<component name="setCheckboxColumn" type="setColumn" label="集合复选框"  xmlElName="field" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+			<property name="datasourceType" label="数据来源" type="string" default="private" allowBlank="false" info="生成方式" 
+					enabled="true" widget="textSelectEditor" options="[{
+					value:'public',text:'公共数据源'
+				},{
+					value:'private',text:'私有数据源'
+				}]" onChange="changeFieldSourceType"/>
+		
+			<property name="datasourceName" label="数据源" type="string" allowBlank="false" info="数据源"  widget="textSelectEditor" dataGetter="getDatasetOptions" />
+			<property name="keyProperty" label="关键字段" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" dataGetter="getKeyPropertyOptions" info="" enabled="true" onChange="setKeyProperty"/>
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<structure>
+			<item component-name="gnDataset" />
+		</structure>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<component name="setGridColumn" type="setColumn" label="集合表格"  xmlElName="field" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="rela" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+			<!--生成目标只与集合表格控件的表格、工具按钮有关 
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" droppable=".field,.data"/>
+			-->
+		</properties>
+		<structure>
+			<item component-name="tools" />
+			<item component-name="subGrid" />
+		</structure>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<component name="setFileColumn" type="setColumn" label="集合附件"  xmlElName="field" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<!--暂时只允许附件表格以“替换输入域”的方式生成-->
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				}]"/>
+			<property name="keyProperty" label="附件字段" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" dataGetter="getKeyPropertyOptions" info="" enabled="true" onChange="setKeyFJProperty"/>
+			<property name="uploaderEl" label="上传按钮" type="string" allowBlank="true" info="上传按钮" enabled="true" widget="textChooseElEditor" droppable=".action" />
+			
+		</properties>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+</component-def>

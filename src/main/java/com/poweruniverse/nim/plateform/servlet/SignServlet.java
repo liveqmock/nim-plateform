@@ -45,6 +45,7 @@ public class SignServlet extends BasePlateformServlet{
 		
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
+			
 //			String targetCmpName = req.getParameter("component");
 //			String targetWsName = req.getParameter("service");
 			String targetMtdName = req.getParameter("method");
@@ -125,31 +126,37 @@ public class SignServlet extends BasePlateformServlet{
 				resp.getWriter().write(result.toString());
 			}else if("login".equals(targetMtdName)){
 				//检查登录
-				String parameters = req.getParameter("parameters");
+				String arguments = req.getParameter("arguments");
 				Result result = null;
-				JSONObject paramterJsonObj = null;
-				if(parameters!=null){
-					paramterJsonObj = JSONObject.fromObject(parameters);
+				JSONObject argumentsJsonObj = null;
+				
+				String ip = getServletClientIp(req);
+				if(arguments!=null ){
+					argumentsJsonObj = JSONObject.fromObject(arguments);
 					//
-					String validCode = paramterJsonObj.getString("validCode");
-					if(!checkValidCode(validCode,req)){
-						result = new JSONMessageResult("验证码错误"); 
-					}else{
-						InvokeEnvelope invokeEnvelope = new InvokeEnvelope("nim-plateform", null, "nim-data", "auth", "checkLogin", paramterJsonObj);
-						//先根据ip地址 判断源和目标组件之间 是否允许调用
-						result = InvokeUtils.invokeService(invokeEnvelope);
+					if(argumentsJsonObj.has("validCode")){
+						String validCode = argumentsJsonObj.getString("validCode");
+						if(!checkValidCode(validCode,req)){
+							resp.setCharacterEncoding("utf-8");         
+							resp.setContentType("text/html; charset=utf-8"); 
+							resp.getWriter().write(new JSONMessageResult("验证码错误").toString());
+						}
 					}
+					argumentsJsonObj.put("clientIP", ip);
+					InvokeEnvelope invokeEnvelope = new InvokeEnvelope("nim-plateform", null, "nim-data", "verify", "userAuth", argumentsJsonObj);
+					result = InvokeUtils.invokeService(invokeEnvelope);
 				}else{
 					result = new JSONMessageResult("未提供登录信息");
 				}
 				//登录成功 需要在
 				if(result.isSuccess()){
+					JSONMessageResult jRet = (JSONMessageResult)result;
 					//从返回信息中 取得当前登录成功用户的信息
-					UserInfo loginUser = null;
+					UserInfo loginUser = new UserInfo((Integer)jRet.get("yongHuDM"), (String)jRet.get("yongHuMC"), (String)jRet.get("dengLuDH"), (String)jRet.get("dengLuMM"), ip);
 					//记录当前登录用户
 					Environment env = (Environment)req.getSession().getAttribute(Environment.ENV);
 					if(env==null){
-						env = new Environment(loginUser,getServletClientIp(req));
+						env = new Environment(loginUser);
 						req.getSession().setMaxInactiveInterval(3600); 
 						req.getSession().setAttribute(Environment.ENV,env);
 					}else{
@@ -157,12 +164,11 @@ public class SignServlet extends BasePlateformServlet{
 					}
 					
 					//是否需要保存cookie
-					boolean saveCookie = paramterJsonObj.getBoolean("saveCookie");
+					boolean saveCookie = argumentsJsonObj.getBoolean("saveCookie");
 					
-					String md5Password = MD5Utils.MD5(loginUser.getPassword());
-					Cookie cookie1 = new Cookie("dengLuDH",URLEncoder.encode(loginUser.getCode(),"utf-8"));
+					Cookie cookie1 = new Cookie("dengLuDH",URLEncoder.encode(loginUser.getDengLuDH(),"utf-8"));
 		    		cookie1.setPath("/");
-		        	Cookie cookie2 = new Cookie("dengLuMM",URLEncoder.encode(md5Password,"utf-8"));
+		        	Cookie cookie2 = new Cookie("dengLuMM",URLEncoder.encode(MD5Utils.MD5(loginUser.getDengLuMM()),"utf-8"));
 		    		cookie2.setPath("/");
 		    		if(!saveCookie){
 		    			cookie1.setMaxAge(0);

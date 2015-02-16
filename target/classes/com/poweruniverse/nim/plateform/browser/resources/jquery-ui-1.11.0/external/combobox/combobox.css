@@ -1,0 +1,53 @@
+ .custom-combobox {
+	position: relative;
+	display: inline-block;
+	line-height: 26px;
+}
+.custom-combobox-toggle {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	margin-left: -1px;
+	padding: 0;
+	/*margin-bottom: -1px;*/
+   /* margin-top: 1px;*/
+	/* support: IE7 */
+	*height: 1.7em;
+	*top: 0.1em;
+}
+.custom-combobox-input,.custom-combobox .custom-combobox-input {
+	margin: 0;
+	padding: 4px;
+	background:none repeat scroll 0 0 #FFFFFF;
+	font-size: 1em;
+	line-height: 17px;
+}
+
+.custom-combobox .ui-autocomplete {
+	max-height: 100px;
+	font-size: 1em;
+	overflow-y: auto;
+	/* prevent horizontal scrollbar */
+	overflow-x: hidden;
+}
+
+.custom-combobox .ui-menu .ui-menu-item {
+    padding: 1px 1em 1px 0.4em;
+}
+
+ .custom-combobox .ui-button{
+ 	background:none repeat scroll 0 0 #FFFFFF;
+ }
+ 
+ .custom-combobox-invalid .custom-combobox-input{
+	border-top: 1px solid #FF0000;
+	border-bottom: 1px solid #FF0000;
+	border-left: 1px solid #FF0000;
+}
+ .custom-combobox-invalid .custom-combobox-toggle{
+	border-top: 1px solid #FF0000;
+	border-bottom: 1px solid #FF0000;
+	border-right: 1px solid #FF0000;
+}
+
+

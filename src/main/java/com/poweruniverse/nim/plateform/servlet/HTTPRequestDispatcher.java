@@ -1,31 +1,22 @@
 package com.poweruniverse.nim.plateform.servlet;
 
 import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-import javax.jws.WebParam;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.BindingProvider;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.poweruniverse.nim.base.bean.Environment;
 import com.poweruniverse.nim.base.bean.UserInfo;
-import com.poweruniverse.nim.base.description.RemoteWebservice;
 import com.poweruniverse.nim.base.message.InvokeEnvelope;
 import com.poweruniverse.nim.base.message.JSONMessageResult;
 import com.poweruniverse.nim.base.message.Result;
 import com.poweruniverse.nim.base.servlet.BasePlateformServlet;
 import com.poweruniverse.nim.base.utils.InvokeUtils;
-import com.poweruniverse.nim.base.webservice.BasePlateformWebservice;
 
 /**
  * 用于过滤客户端通过servlet方式对webservice的访问请求
@@ -62,16 +53,38 @@ public class HTTPRequestDispatcher extends BasePlateformServlet{
 	 * @return
 	 */
 	private Result dispatch(HttpServletRequest req, HttpServletResponse resp){
-		String targetCmpName = req.getParameter("component");
-		String targetWsName = req.getParameter("service");
-		String targetMtdName = req.getParameter("method");
 		Result ret = null;
 		try {
-			JSONObject paramterJsonObj = null;
-			String parameters = req.getParameter("parameters");
-			if(parameters!=null){
-				paramterJsonObj = JSONObject.fromObject(parameters);
+			String targetCmpName = req.getParameter("component");
+			String targetWsName = req.getParameter("service");
+			String targetMtdName = req.getParameter("method");
+			
+			JSONObject argumentsJsonObj = null;
+			String arguments = req.getParameter("arguments");
+			if(arguments!=null){
+				argumentsJsonObj = JSONObject.fromObject(arguments);
+			}else{
+				argumentsJsonObj = new JSONObject();
 			}
+			//补充定义 允许 component/service/method/page 的形式 传递参数
+			String reqPathInfo = req.getPathInfo();
+			if(reqPathInfo.length()>1 && targetCmpName==null ){
+				String[] pathParams = reqPathInfo.split("/");
+				targetCmpName = pathParams[1];
+				targetWsName = pathParams[2];
+				targetMtdName = pathParams[3];
+				
+				if(pathParams.length >4){
+					String[] pathParam2 = new String[pathParams.length -4];
+					System.arraycopy(pathParams, 4, pathParam2, 0, pathParams.length -4); 
+					String pageUrl = StringUtils.join(pathParam2, "/");
+					argumentsJsonObj.put("pageUrl", pageUrl);
+				}
+				   
+			}
+
+			//当前系统的运行目录
+			argumentsJsonObj.put("contextPath", this.ContextPath);
 			
 			UserInfo user = null;
 			Environment env = (Environment)req.getSession().getAttribute(Environment.ENV);
@@ -81,12 +94,12 @@ public class HTTPRequestDispatcher extends BasePlateformServlet{
 			
 			//客户端ip
 			String clientIp = getServletClientIp(req);
-			InvokeEnvelope invokeEnvelope = new InvokeEnvelope(SourceComponentName, user, targetCmpName, targetWsName, targetMtdName, paramterJsonObj);
+			InvokeEnvelope invokeEnvelope = new InvokeEnvelope(SourceComponentName, user, targetCmpName, targetWsName, targetMtdName, argumentsJsonObj);
 			//先根据ip地址 判断源和目标组件之间 是否允许调用
 			if(hasIPPermission(invokeEnvelope)){
 				ret = InvokeUtils.invokeService(invokeEnvelope);
 			}else{
-				ret = new JSONMessageResult("当前用户("+user.getCode()+")无权限从此ip("+clientIp+")访问组件服务("+targetCmpName+"."+targetWsName+")！");
+				ret = new JSONMessageResult("当前用户("+user.getDengLuDH()+")无权限从此ip("+clientIp+")访问组件服务("+targetCmpName+"."+targetWsName+")！");
 			}
 			
 		} catch (Exception e) {
