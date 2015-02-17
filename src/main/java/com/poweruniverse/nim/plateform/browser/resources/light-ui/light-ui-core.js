@@ -248,7 +248,6 @@
 					 close:function(){
 						 $(this).dialog( "destroy" );
 						 $(this).remove();
-//						 $('#_pageContent').css('overflow','auto');
 					 },
 					 open:function(){
 						$(".ui-dialog-titlebar-close", $(this).parent()).hide();

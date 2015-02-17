@@ -10,10 +10,14 @@ LUI.Page = {
 			isModified:false,
 			isSilenced:false,
 			listenerDefs:{},
+			maskMaxId:0,
+			masks:LUI.Map.createNew(), 
 			ready:function(){
 				if(this.title!=null && this.title.length >0){
 					document.title= this.title;
 				}
+				//关闭显示页面时 打开的mask
+				
 				//页面加载完成
 				if(this.listenerDefs!=null && this.listenerDefs.onLoad!=null){
 					var onLoadFunc = window[this.listenerDefs.onLoad];
@@ -40,6 +44,39 @@ LUI.Page = {
 			},
 			setModified:function(mo){
 				this.isModified = mo;
+			},
+			mask:function(info){
+				var maskId = this.maskMaxId;
+				this.maskMaxId = this.maskMaxId+1;
+				this.masks.put(maskId,info);
+				if(this.masks.size() == 1){
+					//显示mask
+					$('#_pageContent').mask(info);
+				}else{
+					//更新mask
+					var maskInfo = "";
+					var keys = this.masks.keySet();
+					for(var i=0;i<keys.length;i++){
+						maskInfo += '\n'+this.masks.get(keys[i]);
+					}
+					$('#_pageContent').message(maskInfo);
+				}
+				return maskId;
+			},
+			unmask:function(maskid){
+				this.masks.remove(maskid);
+				if(this.masks.size() == 0){
+					//关闭mask
+					$('#_pageContent').unmask();
+				}else{
+					//更新mask
+					var maskInfo = "";
+					var keys = this.masks.keySet();
+					for(var i=0;i<keys.length;i++){
+						maskInfo += '\n'+this.masks.get(keys[i]);
+					}
+					$('#_pageContent').message(maskInfo);
+				}
 			},
 			redirect:function(url){
 				this.setSilence(true);
@@ -232,7 +269,7 @@ LUI.ImportPage = {
 				this.lastParams = subpageParam;
 				
 				var pageContainer = $(this.renderto);
-				pageContainer.mask('正在加载页面，请稍候...');
+				var loadingImportMsgId = LUI.Page.instance.mask('正在加载页面('+this.label+')...');
 				
 				var _this = this;
 				
@@ -277,7 +314,7 @@ LUI.ImportPage = {
 									//父页面的import控件加载完成事件
 									_this._onLoad(subpageParam);
 									//
-									pageContainer.unmask();
+									LUI.Page.instance.unmask(loadingImportMsgId);
 								});
 				        	}
 						});
@@ -289,7 +326,7 @@ LUI.ImportPage = {
 								//父页面的import控件加载完成事件
 								_this._onLoad(subpageParam);
 								//
-								pageContainer.unmask();
+								LUI.Page.instance.unmask(loadingImportMsgId);
 							});
 			        	}
 					}
@@ -371,130 +408,128 @@ LUI.PageUtils = {
 			var parameters = "{pageUrl:'"+ htmlPage+"',params:"+unescape(LUI.Util.stringify(componentPageParam))+"}";
 			
 			
-			$('#_pageContent').mask('正在加载子页面，请稍候...');
+			var loadingPopupMsgId = LUI.Page.instance.mask('正在加载弹出窗口...');
 			
 			loadHTML(htmlPage,componentPageParam,function(data){
-					//加载css
-					if(data.cssExists){
-						loadCSS(cssPage);
-					}
-					//加载子页面内容
-					if(data.success || (data.needsLogin && _urlInfo.relative == loginPageUrl)){
+				//加载css
+				if(data.cssExists){
+					loadCSS(cssPage);
+				}
+				//加载子页面内容
+				if(data.success || (data.needsLogin && _urlInfo.relative == loginPageUrl)){
 
-						var pageContainer = $('<div id="'+htmlPage.replace(/\//g,"_").replace(/\./g,'_')+'"></div>')
-						pageContainer.appendTo($(document.body));
-						
-						var pageContent = data.content;
-						//取得html中的script标记内容
-						var scriptSrcReg = /\<script[^\>]+src[\s\r\n]*=[\s\r\n]*([\'\"])([^\>\1]+)\1[^\>]*>/;
-						var scriptReg = /<script.*>*?<\/script>/;
-						var scripts = pageContent.match(scriptReg);
-						if(scripts!=null){
-							for(var i=0;i<scripts.length;i++){
-								$(scripts[i]).appendTo($('head'));
-							}
-							//清除html中的script标记
-							pageContent = pageContent.replace(scriptReg ,'');
+					var pageContainer = $('<div id="'+htmlPage.replace(/\//g,"_").replace(/\./g,'_')+'"></div>')
+					pageContainer.appendTo($(document.body));
+					
+					var pageContent = data.content;
+					//取得html中的script标记内容
+					var scriptSrcReg = /\<script[^\>]+src[\s\r\n]*=[\s\r\n]*([\'\"])([^\>\1]+)\1[^\>]*>/;
+					var scriptReg = /<script.*>*?<\/script>/;
+					var scripts = pageContent.match(scriptReg);
+					if(scripts!=null){
+						for(var i=0;i<scripts.length;i++){
+							$(scripts[i]).appendTo($('head'));
 						}
-						//取得link css标记内容
-						var linkReg = /<link.*?\/>/;
-						var links = pageContent.match(linkReg);
-						if(links!=null){
-							for(var i=0;i<links.length;i++){
-								$(links[i]).appendTo($('head'));
-							}
-							//清除html中的script标记
-							pageContent = pageContent.replace(linkReg ,'');
+						//清除html中的script标记
+						pageContent = pageContent.replace(scriptReg ,'');
+					}
+					//取得link css标记内容
+					var linkReg = /<link.*?\/>/;
+					var links = pageContent.match(linkReg);
+					if(links!=null){
+						for(var i=0;i<links.length;i++){
+							$(links[i]).appendTo($('head'));
 						}
-						pageContent = $($.parseHTML(pageContent));
-						pageContent.appendTo(pageContainer);
-						
-						options.title = data.title;
-						
-						var width = $(window).width();
-						if(data.width == null ){
-							width = width/2;
-						}else if(data.width.endWith('%') ){
-							width = width * parseInt(data.width) / 100;
-						}else{
-							width = parseInt(data.width);
+						//清除html中的script标记
+						pageContent = pageContent.replace(linkReg ,'');
+					}
+					pageContent = $($.parseHTML(pageContent));
+					pageContent.appendTo(pageContainer);
+					
+					options.title = data.title;
+					
+					var width = $(window).width();
+					if(data.width == null ){
+						width = width/2;
+					}else if(data.width.endWith('%') ){
+						width = width * parseInt(data.width) / 100;
+					}else{
+						width = parseInt(data.width);
+					}
+					options.width = width;
+					
+					var height = $(window).height(); 
+					if(data.height == null ){
+						height = height/2;
+					}else if(data.width.endWith('%') ){
+						height = height * parseInt(data.height) / 100;
+					}else{
+						height = parseInt(data.height);
+					}
+					options.height = height;
+					
+					var openFunction = options.open;//调用时在配置中提供的open事件处理代码
+					options.open = function(){
+						//先执行页面组件的onload事件
+						LUI.Subpage.getInstance(data.name).ready();
+						//再执行配置中可能存在的open事件处理代码
+						if(openFunction!=null){
+							openFunction.apply(this,[]);
 						}
-						options.width = width;
-						
-						var height = $(window).height(); 
-						if(data.height == null ){
-							height = height/2;
-						}else if(data.width.endWith('%') ){
-							height = height * parseInt(data.height) / 100;
-						}else{
-							height = parseInt(data.height);
-						}
-						options.height = height;
-						
-						var openFunction = options.open;//调用时在配置中提供的open事件处理代码
-						options.open = function(){
-							//先执行页面组件的onload事件
-							LUI.Subpage.getInstance(data.name).ready();
-							//再执行配置中可能存在的open事件处理代码
-							if(openFunction!=null){
-								openFunction.apply(this,[]);
-							}
-						}
-						
-						var closeFunction = options.close;//调用时在配置中提供的close事件处理代码
-						options.close = function(){
-							try{
-								//先执行配置中可能存在的close事件处理代码
-								if(closeFunction!=null){
-									closeFunction.apply(this,[]);
-								}
-								
-								var pageIns = LUI.Subpage.getInstance(data.name);
-								//再执行页面组件的onClose事件
-								pageIns.close();
-							}catch(e){
-								console.error(e);
+					}
+					
+					var closeFunction = options.close;//调用时在配置中提供的close事件处理代码
+					options.close = function(){
+						try{
+							//先执行配置中可能存在的close事件处理代码
+							if(closeFunction!=null){
+								closeFunction.apply(this,[]);
 							}
 							
-							//最后销毁对象
-							$(this).dialog( "destroy" );
-							pageContainer.remove();
+							var pageIns = LUI.Subpage.getInstance(data.name);
+							//再执行页面组件的onClose事件
+							pageIns.close();
+						}catch(e){
+							console.error(e);
 						}
-						//设计模式下 添加一个button
-						if(_isDesignMode){
-							if(options.buttons == null){
-								options.buttons = {};
-							}
-							options.buttons['在新窗口打开'] = function(){
-								window.open('http://'+_urlInfo.host+':'+_urlInfo.port+'/nim.html?_pt_='+htmlPage+'&_ps_='+unescape(LUI.Util.stringify(componentPageParam)));
-							}
-						}
-						//
 						
-						options.autoOpen = false;
-						pageContent.dialog(options);
-						
-				    	//加载当前js文件（必须在后面的javascript之前加载）
-			        	loadJS(jsPage,function(){
-					    	//加载自动生成的javascript代码(在代码底部 会关闭#_pageContent层的mask)
-							pageContent.dialog("open");
-							$('#_pageContent').unmask();
-			        	});
-					}else if (data.needsLogin){
-						alert('请登录！');
-						$('#_pageContent').unmask();
-					}else{
-						alert("加载弹出子页面失败:"+data.errorMsg);
-						$('#_pageContent').unmask();
+						//最后销毁对象
+						$(this).dialog( "destroy" );
+						pageContainer.remove();
 					}
-				
-				
+					//设计模式下 添加一个button
+					if(_isDesignMode){
+						if(options.buttons == null){
+							options.buttons = {};
+						}
+						options.buttons['在新窗口打开'] = function(){
+							window.open('http://'+_urlInfo.host+':'+_urlInfo.port+'/nim.html?_pt_='+htmlPage+'&_ps_='+unescape(LUI.Util.stringify(componentPageParam)));
+						}
+					}
+					//
+					
+					options.autoOpen = false;
+					pageContent.dialog(options);
+					
+			    	//加载当前js文件（必须在后面的javascript之前加载）
+		        	loadJS(jsPage,function(){
+				    	//加载自动生成的javascript代码(在代码底部 会关闭#_pageContent层的mask)
+						pageContent.dialog("open");
+						LUI.Page.instance.unmask(loadingPopupMsgId);
+		        	});
+				}else if (data.needsLogin){
+					alert('请登录！');
+					LUI.Page.instance.unmask(loadingPopupMsgId);
+				}else{
+					alert("加载弹出子页面失败:"+data.errorMsg);
+					LUI.Page.instance.unmask(loadingPopupMsgId);
+				}
 				//加载xml
 				loadXML(xmlPage,subpageParam,false,function(xmlResult){
 					//父页面的import控件加载完成事件
 					_this._onLoad(subpageParam);
 					//
-					pageContainer.unmask();
+					LUI.Page.instance.unmask(loadingPopupMsgId);
 				});
 			});
 		}

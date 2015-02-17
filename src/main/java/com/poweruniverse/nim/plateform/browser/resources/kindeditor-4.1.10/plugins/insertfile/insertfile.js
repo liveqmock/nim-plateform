@@ -34,7 +34,7 @@ KindEditor.plugin('insertfile', function(K) {
 			
 			'<span style="display:inline-block;width: 240px;" class="nim-field-wrapper" id="">',
 			'<input type="text" class="ui-widget-content ui-corner-all nim-field-el" style="width: 200px;" readonly id="_input" name="url">',
-			'<img style="margin-left: 4px;vertical-align: middle;cursor:pointer;" src="resources/plateformlight-ui/images/file-upload-icon.gif" id="_handler" title="上传">',
+			'<img style="margin-left: 4px;vertical-align: middle;cursor:pointer;" src="resources/plateform/light-ui/images/file-upload-icon.gif" id="_handler" title="上传">',
 			'</span>',
 			//-----------
 			

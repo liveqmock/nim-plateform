@@ -65,7 +65,7 @@ LUI.Datasource = {
 				//每次重新查询 都从0开始
 				currentParams.start = 0;
 				
-				$('#_pageContent').mask('正在加载数据，请稍候...');
+				var loadingMsgId = LUI.Page.instance.mask('数据源('+this.label+')加载数据...');
 				
 				var _this = this;
 				this.doLoad(currentParams,function(params,result){
@@ -88,7 +88,7 @@ LUI.Datasource = {
 						_this.onLoad(params,result);
 					}
 					
-					$('#_pageContent').unmask();
+					LUI.Page.instance.unmask(loadingMsgId);
 				});
 			},
 			page:function(pageNum){
@@ -237,7 +237,7 @@ LUI.Datasource = {
 					isCommit = isCommit_p;
 				}
 				//显示等待mask
-				$('#_pageContent').mask('正在保存，请稍候...');
+				var dsSavingMsgId = LUI.Page.instance.mask('数据源('+this.label+')正在保存...');
 				var submitData = [];
 				var submitCount = 0;
 				for(var i=0;i<this.records.size();i++){
@@ -255,7 +255,7 @@ LUI.Datasource = {
 				if(submitCount ==0 && !isCommit_p){
 					//无待提交的数据
 					//关闭等待的mask
-					$("#_pageContent").unmask();
+					LUI.Page.instance.unmask(dsSavingMsgId);
 					if(callback!=null){
 						callback.apply(this,[{success:true,info:'未修改数据'}])
 					}else{
@@ -307,12 +307,12 @@ LUI.Datasource = {
 						}
 						this.fireEvent(this.events.save,result,this);
 						//关闭等待的mask
-						$("#_pageContent").unmask();
+						LUI.Page.instance.unmask(dsSavingMsgId);
 					},
 					error:function(){
 						LUI.Message.info("登陆失败","访问服务器失败！");
 						//关闭等待的mask
-						$("#_pageContent").unmask();
+						LUI.Page.instance.unmask(dsSavingMsgId);
 					}
 				});
 				
