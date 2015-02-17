@@ -3399,9 +3399,9 @@ LUI.Form.Field.File = {
 						
 						this.addListener(this.events.change,this._observer,function(eventSource,eventTarget,event,eventOriginal){
 							if(contextThis.getValue()!=null){
-								contextThis.handler.attr('src','resources/nim/light-ui/images/file-uoload-remove.gif').attr( "title", "删除" );
+								contextThis.handler.attr('src','resources/plateformlight-ui/images/file-uoload-remove.gif').attr( "title", "删除" );
 							}else{
-								contextThis.handler.attr('src','resources/nim/light-ui/images/file-upload-icon.gif').attr( "title", "上传" );
+								contextThis.handler.attr('src','resources/plateformlight-ui/images/file-upload-icon.gif').attr( "title", "上传" );
 							}
 							if(contextThis.onChangeFunction!=null){
 								contextThis.onChangeFunction.apply(eventTarget,[eventSource,eventTarget,event,eventOriginal]);

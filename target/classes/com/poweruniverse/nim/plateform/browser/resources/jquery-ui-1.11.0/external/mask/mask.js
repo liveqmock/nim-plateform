@@ -42,7 +42,7 @@
                 maskDiv.addClass(maskDivClass);
             }
             if(msg){
-                var msgDiv=$('<div style="position:absolute;padding:2px;background:#ccca"><div style="line-height:50px;height:50px;border:#a3bad9 1px solid;background:white;padding:2px 10px 2px 10px"><img style="display: inline;float: left;margin: 10px 15px;" src="resources/nim/light-ui/images/loading.gif">'+msg+'</div></div>');
+                var msgDiv=$('<div style="position:absolute;padding:2px;background:#ccca"><div style="line-height:50px;height:50px;border:#a3bad9 1px solid;background:white;padding:2px 10px 2px 10px"><img style="display: inline;float: left;margin: 10px 15px;" src="resources/plateformlight-ui/images/loading.gif">'+msg+'</div></div>');
                 msgDiv.appendTo(maskDiv);
                 var widthspace=(maskDiv.width()-msgDiv.width());
                 var heightspace=(maskDiv.height()-msgDiv.height());

@@ -408,8 +408,8 @@ LUI.Mapping = {
 						var contentString = "";
 						//检查此对象是否已生成 
 						var name = this._gridNode.data.name
-						if(_page_widget!=null && name!=null && _page_widget.hasRegister(componentType,name)){
-							var gridInst = _page_widget.getWidget(componentType,name);
+						if(name!=null && LUI.Page.instance.hasRegister(componentType,name)){
+							var gridInst = LUI.Page.instance.getWidget(componentType,name);
 							contentString = gridInst.gridLineContent;
 						}else{
 							var gridHederLines = 0;

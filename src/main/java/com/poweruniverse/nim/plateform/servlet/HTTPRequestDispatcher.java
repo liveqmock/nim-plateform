@@ -19,7 +19,7 @@ import com.poweruniverse.nim.base.servlet.BasePlateformServlet;
 import com.poweruniverse.nim.base.utils.InvokeUtils;
 
 /**
- * 用于过滤客户端通过servlet方式对webservice的访问请求
+ * 用于过滤客户端通过servlet方式对webservice的访问请求 （不可以用此servlet 获取css 附件等）
  * 将请求转发到适当的服务类中
  * @author Administrator
  *

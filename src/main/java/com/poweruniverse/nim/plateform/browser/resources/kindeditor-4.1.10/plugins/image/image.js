@@ -54,7 +54,7 @@ KindEditor.plugin('image', function(K) {
 			
 			'<span style="display:inline-block;width: 240px;" class="nim-field-wrapper" id="">',
 			'<input type="text" class="field-disabled" style="width: 200px;background-color: #EEEEEE;" readonly id="_input" name="url">',
-			'<img style="margin-left: 4px;vertical-align: middle;cursor:pointer;" src="resources/nim/light-ui/images/file-upload-icon.gif" id="_handler" title="上传">',
+			'<img style="margin-left: 4px;vertical-align: middle;cursor:pointer;" src="resources/plateformlight-ui/images/file-upload-icon.gif" id="_handler" title="上传">',
 			'</span>',
 			//-----------
 			

@@ -7,6 +7,8 @@ LUI.Page = {
 			title:null,
 			onLoad:null,
 			widgets:[],
+			isModified:false,
+			isSilenced:false,
 			listenerDefs:{},
 			ready:function(){
 				if(this.title!=null && this.title.length >0){
@@ -33,6 +35,16 @@ LUI.Page = {
 					}
 				}
 			},
+			setSilence:function(si){
+				this.isSilenced = si;
+			},
+			setModified:function(mo){
+				this.isModified = mo;
+			},
+			redirect:function(url){
+				this.setSilence(true);
+				window.location = url;
+			},
 			register:function(widgetType,widget){
 				if(this.hasRegister(widgetType,widget.name)){
 					LUI.Message.warn('警告','同名控件('+widgetType+':'+widget.name+')已存在！');
@@ -58,6 +70,8 @@ LUI.Page = {
 				return false;
 			}
 		},config);
+		//
+		LUI.Page.instance.ready();
 		return LUI.Page.instance;
 	}
 }
@@ -81,20 +95,15 @@ LUI.Subpage = {
 			pageUrl:null,
 			widgets:[],
 			ready:function(loadParam){
-				//子页面同名的js文件 要在xml解析的script之后 并且在页面的onLoad事件之前加载！
-				var _this = this;
-//				var jsPageUrl = this.pageUrl.substr(0,this.pageUrl.lastIndexOf('.'))+'.js';
-//			    loadJS(jsPageUrl,function(){
-				    //子页面解析出的script加载完成
-					if(_this.listenerDefs!=null && _this.listenerDefs.onLoad!=null){
-						var onLoadFunc = window[_this.listenerDefs.onLoad];
-						if(onLoadFunc==null){
-							LUI.Message.warn('警告','子页面onLoad事件的处理函数('+_this.listenerDefs.onLoad+')不存在！');
-						}else{
-							onLoadFunc.apply(_this,[loadParam]);
-						}
+			    //子页面加载完成
+				if(this.listenerDefs!=null && this.listenerDefs.onLoad!=null){
+					var onLoadFunc = window[this.listenerDefs.onLoad];
+					if(onLoadFunc==null){
+						LUI.Message.warn('警告','子页面onLoad事件的处理函数('+this.listenerDefs.onLoad+')不存在！');
+					}else{
+						onLoadFunc.apply(this,[loadParam]);
 					}
-//			    });
+				}
 			},
 			close:function(){
 				//页面关闭完成 子页面作为弹出窗口使用时 关闭后触发此事件
@@ -148,9 +157,8 @@ LUI.Subpage = {
 			LUI.Message.warn('警告','同名子页面(LUI.Subpage:'+cmpInstance.name+')已存在！');
 		}
 		LUI.Subpage.instances.put(cmpInstance);
-		
 		//子页面的加载完成事件
-//		cmpInstance.ready(this.params);
+		cmpInstance.ready();
 		return cmpInstance;
 	},
 	hasInstance:function(cmpName){
@@ -196,6 +204,7 @@ LUI.ImportPage = {
 			id:'_import_page_'+ (++LUI.ImportPage.uniqueId),
 			loaded:false,
 			lastParams:{},
+			autoLoad:"true",
 			load:function(config){
 				var loadCfg = config||{};
 				

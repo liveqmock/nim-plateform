@@ -7,7 +7,7 @@
  */
 (function ($) {
     if($.fn.ajaxForm == undefined) {
-        $.getScript( "http://"+_urlInfo.host+":"+_urlInfo.port+"/resources/nim/jquery-upload-file-master/js/jquery.form.js");
+        $.getScript( "http://"+_urlInfo.host+":"+_urlInfo.port+"/resources/plateform/jquery-upload-file-master/js/jquery.form.js");
     }
     var feature = {};
     feature.fileapi = $("<input type='file'/>").get(0).files !== undefined;

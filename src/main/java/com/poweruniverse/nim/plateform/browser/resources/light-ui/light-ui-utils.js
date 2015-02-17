@@ -80,7 +80,8 @@
 				dataType:"json",
 				context:this,
 				success: function(result){
-					window.location = loginPageUrl;
+					//跳转至登录页面
+					LUI.Page.instance.redirect(loginPageUrl);
 				},
 				error:function(){
 					LUI.Message.info("错误","访问服务器失败！");

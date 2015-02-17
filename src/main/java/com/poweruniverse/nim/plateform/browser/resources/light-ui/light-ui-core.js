@@ -229,6 +229,9 @@
 
 		LUI.Message = {
 			info:function(title,message,type,option){
+				if(LUI.Page.instance.isSilenced){
+					return;
+				}
 				var divEl = $(
 					'<div title="'+title+'">'+
 						'<p>'+
@@ -278,6 +281,9 @@
 				});
 			},
 			warn:function(title,message,type,option){
+				if(LUI.Page.instance.isSilenced){
+					return;
+				}
 				var divEl = $('<div title="'+title+'">'+
 					'<p>'+
 						'<span class="ui-icon ui-icon-'+(type||'notice')+'" style="float:left; margin:0 7px 50px 0;"></span>'+
@@ -321,6 +327,9 @@
 
 			},
 			error:function(title,message,type,option){
+				if(LUI.Page.instance.isSilenced){
+					return;
+				}
 				var divEl = $('<div title="'+title+'">'+
 					'<p>'+
 						'<span class="ui-icon ui-icon-'+(type||'notice')+'" style="float:left; margin:0 7px 50px 0;"></span>'+
