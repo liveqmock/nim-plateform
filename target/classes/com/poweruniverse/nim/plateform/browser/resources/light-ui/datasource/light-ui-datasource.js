@@ -424,6 +424,7 @@ LUI.Datasource.javaDataset = {
 					params.className,
 					params.start,
 					params.limit,
+					params.filters,
 					params.parameters,
 					function(result){
 						callback.apply(this,[params,result]);

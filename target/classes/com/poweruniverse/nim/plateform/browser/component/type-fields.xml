@@ -3,7 +3,7 @@
 	<!-- 编辑控件类型  -->
 	<!-- ...................................................................................................  -->
 	<!-- 1 字段类型  string-->
-	<type name="stringField" label="字符"  isAppendable="false" defaultComponent="stringEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+	<type name="stringField" label="字符"  isAppendable="false" sequence="62" defaultComponent="stringEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="" default="" enabled="false"/>
 			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFieldsTypeOfForm" info="" enabled="true" onChange="refreshExtendForm"/>
@@ -30,7 +30,7 @@
 		</events>
 	</type>
 	<!-- 2 字段类型  text-->
-	<type name="textField" label="字符"  isAppendable="false" defaultComponent="textareaEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+	<type name="textField" label="字符"  isAppendable="false" sequence="63" defaultComponent="textareaEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="" default="" enabled="false"/>
 			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFieldsTypeOfForm" info="" enabled="true" onChange="refreshExtendForm"/>
@@ -57,7 +57,7 @@
 		</events>
 	</type>
 	<!-- 3字段类型  boolean-->
-	<type name="booleanField" label="逻辑"  isAppendable="false" defaultComponent="booleanCheckEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+	<type name="booleanField" label="逻辑"  isAppendable="false" sequence="64" defaultComponent="booleanCheckEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="" default="" enabled="false"/>
 			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFieldsTypeOfForm" info="" enabled="true" onChange="refreshExtendForm"/>
@@ -84,7 +84,7 @@
 		</events>
 	</type>
 	<!-- 4字段类型  int-->
-	<type name="intField" label="整数"  isAppendable="false" defaultComponent="intEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+	<type name="intField" label="整数"  isAppendable="false" sequence="65" defaultComponent="intEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="" default="" enabled="false"/>
 			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFieldsTypeOfForm" info="" enabled="true" onChange="refreshExtendForm"/>
@@ -111,7 +111,7 @@
 		</events>
 	</type>
 	<!-- 5字段类型  double-->
-	<type name="doubleField" label="小数"  isAppendable="false" defaultComponent="doubleEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+	<type name="doubleField" label="小数"  isAppendable="false" sequence="66" defaultComponent="doubleEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="" default="" enabled="false"/>
 			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFieldsTypeOfForm" info="" enabled="true" onChange="refreshExtendForm"/>
@@ -138,7 +138,7 @@
 		</events>
 	</type>
 	<!-- 6字段类型  date-->
-	<type name="dateField" label="日期"  isAppendable="false" defaultComponent="dateEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+	<type name="dateField" label="日期"  isAppendable="false" sequence="67" defaultComponent="dateEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="" default="" enabled="false"/>
 			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFieldsTypeOfForm" info="" enabled="true" onChange="refreshExtendForm"/>
@@ -165,7 +165,7 @@
 		</events>
 	</type>
 	<!-- 7字段类型  object-->
-	<type name="objectField" label="对象"  isAppendable="false" defaultComponent="objectSelectEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+	<type name="objectField" label="对象"  isAppendable="false" sequence="68" defaultComponent="objectSelectEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="" default="" enabled="false"/>
 			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFieldsTypeOfForm" info="" enabled="true" onChange="refreshExtendForm"/>
@@ -193,7 +193,7 @@
 		</events>
 	</type>
 	<!-- 8字段类型  set-->
-	<type name="setField" label="集合"  isAppendable="false" defaultComponent="setGridEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+	<type name="setField" label="集合"  isAppendable="false" sequence="69" defaultComponent="setGridEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="" default="" enabled="false"/>
 			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFieldsTypeOfForm" info="" enabled="true" onChange="refreshExtendForm"/>

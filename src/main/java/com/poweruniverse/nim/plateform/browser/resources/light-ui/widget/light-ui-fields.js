@@ -1476,16 +1476,16 @@ LUI.Form.Field.StringChooseEl = {
 										_this.lastChoosedEl = null;
 										var parentRenerto = "#_pageContent ";
 										//显示原始页面
-										if(_isOriginalChoose){
+										if($("#_original").css("height") != "0px"){
 											parentRenerto = "#_original ";
-											$("#_original")
-												.css("height","100%")
-												.css("width",$("#_pageContent").width()+"px")
-												.css("top","0")
-												.css("z-index","99")
-												.append(_orginalContent)
-												.scrollTop($("#_pageContent").scrollTop());
-											$("#_pageContent").css("overflow","hidden").css("opacity","0");
+//											$("#_original")
+//												.css("height","100%")
+//												.css("width",$("#_pageContent").width()+"px")
+//												.css("top","0")
+//												.css("z-index","99")
+//												.append(_orginalContent)
+//												.scrollTop($("#_pageContent").scrollTop());
+//											$("#_pageContent").css("overflow","hidden").css("opacity","0");
 										}
 										
 										//input失去焦点
@@ -1549,10 +1549,10 @@ LUI.Form.Field.StringChooseEl = {
 												//如果只选择了一个元素 而且内部没有有id的子元素 无需选择
 												field.setValue("#"+_this.lastChoosedEl.id,false,false,null);
 												field.inputEl[0].focus();
-												if(_isOriginalChoose){
-													$("#_pageContent").css("overflow","auto").css("opacity","1");
-													$("#_original").css("height","0").css("width","0").css("z-index","-1").empty();
-												}
+//												if(_isOriginalChoose){
+//													$("#_pageContent").css("overflow","auto").css("opacity","1");
+//													$("#_original").css("height","0").css("width","0").css("z-index","-1").empty();
+//												}
 											}else{
 												//以选中元素为基础 向上创建树
 												LUI.Widget.elWin.select(_this.firstChoosedEl,_this.lastChoosedEl,function(nodeDatas){
@@ -1566,18 +1566,18 @@ LUI.Form.Field.StringChooseEl = {
 														}
 													}
 													//隐藏原始页面
-													if(_isOriginalChoose){
-														$("#_pageContent").css("overflow","auto").css("opacity","1");
-														$("#_original").css("height","0").css("width","0").css("z-index","-1").empty();
-													}
+//													if(_isOriginalChoose){
+//														$("#_pageContent").css("overflow","auto").css("opacity","1");
+//														$("#_original").css("height","0").css("width","0").css("z-index","-1").empty();
+//													}
 												});
 											}
 											
 										}else{
-											if(_isOriginalChoose){
-												$("#_pageContent").css("overflow","auto").css("opacity","1");
-												$("#_original").css("height","0").css("width","0").css("z-index","-1").empty();
-											}
+//											if(_isOriginalChoose){
+//												$("#_pageContent").css("overflow","auto").css("opacity","1");
+//												$("#_original").css("height","0").css("width","0").css("z-index","-1").empty();
+//											}
 										}
 									}
 								});
@@ -1654,8 +1654,34 @@ LUI.Form.Field.URLField = {
 						if(this.createFieldEl(LUI.Template.Field.urlEditor)){
 							this.fieldWidth = this.inputEl.width();
 							this.resize(this.fieldWidth);
-							//允许drag
+							
 							var _this = this;
+							//点击打开模板文件选择窗口
+							this.el.find( 'img#_explorer').first()
+								.click(function(){
+									//弹出文件选择窗口
+									LUI.PageUtils.popup({
+										page:'system/moduleFileList.html',
+										buttons: {
+											"确定": function() {
+												var tree = LUI.Tree.getInstance('moduleFileTree');
+												var selectedNode = tree.getSelectNode();
+												var selectedNodeData = selectedNode.data.data;
+												
+												if(selectedNode!=null && selectedNode.isLeaf ){
+													_this.setValue(selectedNodeData.parent.id + selectedNodeData.fileName);
+													$( this ).dialog( "close" );
+												}else{
+													LUI.Message.info("信息","请选择有效的模板文件!");
+												}
+											},
+											"取消": function() {
+												$( this ).dialog( "close" );
+											}
+										}
+									});
+								});
+							//点击打开新页面
 							this.el.find( 'img#_handler').first()
 								.click(function(){
 									//打开新页面
@@ -1691,7 +1717,7 @@ LUI.Form.Field.URLField = {
 					this.validate(this.rawValue);
 				},
 				resize:function(fieldWidth){
-					this.inputEl.outerWidth(fieldWidth  -20);
+					this.inputEl.outerWidth(fieldWidth  -20 -20);
 				},
 				enable:function(){
 					//按钮不可点击 拖拽

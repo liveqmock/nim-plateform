@@ -87,7 +87,7 @@ public class ApplicationInitialServlet extends BasePlateformServlet{
 			String serverPort = appEl.attributeValue("port");
 			String serverWebservicePort = appEl.attributeValue("webservicePort");
 			String serverWebserviceSrc = appEl.attributeValue("webserviceSrc");
-			app = Application.init(serverName, serverTitle, serverSrcPath,serverModule,serverJdkPath, serverIp, serverPort, serverWebservicePort, serverWebserviceSrc);
+			app = Application.init(contextPath,serverName, serverTitle, serverSrcPath,serverModule,serverJdkPath, serverIp, serverPort, serverWebservicePort, serverWebserviceSrc);
 
 			Element pagesEl = appEl.element("pages");
 			Element loginPageEl = pagesEl.element("login");

@@ -36,6 +36,7 @@
 			rootNodes:LUI.Set.createNew(),//全部根节点
 			selectedNodes:LUI.Set.createNew(),//选中的节点
 			checkedNodes:LUI.Set.createNew(),//复选框选中的节点
+			leafExpression:null,
 			events:{
 				treeRender:'tree_render',
 				nodeRender:'node_render',
@@ -108,7 +109,7 @@
 			getRootNodes:function(){
 				return this.rootNodes.all;
 			},
-			getFirstRootNode:function(){
+			getRootNode:function(){
 				var node = null;
 				if(this.rootNodes.size()>0){
 					node =  this.rootNodes.get(0);
@@ -147,8 +148,8 @@
 					for(var i =0;i<this.rootNodes.size();i++){
 						this.rootNodes.get(i).select(true,true);
 					}
-				}else if(this.rootNodes.size()>0){
-					this.getFirstRootNode().select(false,false);
+				}else if(this.getRootNode()!=null){
+					this.getRootNode().select(false,false);
 				}
 				
 			},
@@ -359,6 +360,7 @@
 	}
 };
 
+//从数据源得到数据的树型控件
 LUI.Tree.DatasourceTree = {
 	createNew:function(config){
 		var autoLoad = true;
@@ -474,7 +476,8 @@ LUI.Tree.DatasourceTree = {
 							var childRecords = [];
 							for(var i=0;i<result.rows.length;i++){
 								var rowData = result.rows[i];
-								var r = this.getRecordById(rowData._record_id);
+								var rowPkValue = rowData[this.primaryFieldName];
+								var r = this.getRecordByPKValue(rowPkValue);
 								childRecords[childRecords.length] = r;
 							}
 							callback.apply(node,[childRecords]);
@@ -520,16 +523,28 @@ LUI.Tree.DatasourceTree = {
 					for(var i=0;i<this.datasource.size();i++){
 						var record = this.datasource.getRecord(i);
 						var codeVal = record.getFieldValue(this.levelField);
+						
+						var isLeaf = false;
+						//根据条件判断
+						if(this.leafExpression!=null && this.leafExpression.length > 0){
+							//Handlebars表达式先执行
+							var _expression_template = Handlebars.compile(this.leafExpression);
+							var _expression_value = _expression_template(record.data);
+							//再执行javascript表达式的计算
+							if(_expression_value != null && _expression_value.replace(/(^\s*)|(\s*$)/g, "") == 'true'){
+								isLeaf = true;
+							}
+						}
 						if(this.levelType == 'parent'){
 							if(codeVal == null){
-								this.appendRootNode(false,record);
+								this.appendRootNode(isLeaf,record);
 							}
 						}else if(this.levelType == 'section'){
 							//根据编号分级 将当前数据源中 满足条件的数据 添加为根节点
 							var levelPartArray = this.levelSectionFormat.split('-');
 							var thisCodeLength = parseInt(levelPartArray[0]);
 							if(codeVal!=null && codeVal.length == thisCodeLength){
-								this.appendRootNode(false,record);
+								this.appendRootNode(isLeaf,record);
 							}
 						}
 					}
@@ -633,7 +648,17 @@ LUI.Tree.JSONTree = {
 				//非叶子节点 创建下级节点
 				if(!isLeaf){
 					for(var i=0;i<children.length;i++){
-						node.appendChildNode(children[i]);
+						var isChildLeaf = false;
+						//根据条件判断
+						if(this.leafExpression!=null && this.leafExpression.length > 0){
+							//Handlebars表达式先执行
+							var _expression_template = Handlebars.compile(this.leafExpression);
+							var _expression_value = _expression_template(children[i]);
+							if(_expression_value != null && _expression_value.replace(/(^\s*)|(\s*$)/g, "") == 'true'){
+								isChildLeaf = true;
+							}
+						}
+						node.appendChildNode(isChildLeaf,children[i]);
 					}
 				}
 				//
@@ -778,7 +803,7 @@ LUI.Tree.Node = {
 				}
 				return null;
 			},
-			appendChildNode:function(data){
+			appendChildNode:function(isLeaf,data){
 				alert('Lui.Tree.Node的后代实现类必须覆盖此方法:appendChildNode！');
 			},
 			removeChildNode:function(node){
@@ -911,7 +936,17 @@ LUI.Tree.Node = {
 								_this.el.children('ul').css("display","block");
 								//添加子节点
 								for(var i=0;i<records.length;i++){
-									var node = _this.appendChildNode(records[i]);
+									var isChildLeaf = false;
+									//根据条件判断
+									if(_this.tree.leafExpression!=null && _this.tree.leafExpression.length > 0){
+										//Handlebars表达式先执行
+										var _expression_template = Handlebars.compile(_this.tree.leafExpression);
+										var _expression_value = _expression_template(records[i].data);
+										if(_expression_value != null && _expression_value.replace(/(^\s*)|(\s*$)/g, "") == 'true'){
+											isChildLeaf = true;
+										}
+									}
+									var node = _this.appendChildNode(isChildLeaf,records[i]);
 									node.render();
 									if(deep && node.initialed){
 										node.expand(true);
@@ -968,7 +1003,7 @@ LUI.Tree.Node = {
 LUI.Tree.JSONNode = {
 	createNew:function(config){
 		var nodeInstance = $.extend(LUI.Tree.Node.createNew(config),{
-			appendChildNode:function(data){
+			appendChildNode:function(isLeaf,data){
 				var hasChildren = false;
 				var children = data.children;
 				if(children!=null){
@@ -982,7 +1017,7 @@ LUI.Tree.JSONNode = {
 					parent:this,
 					previousNode:lastChildNode,//前一节点
 					nextNode:null,//下一节点
-					isLeaf:!hasChildren,
+					isLeaf:isLeaf,
 					data:data,
 					level:this.level+1,
 					initialed:hasChildren
@@ -1005,7 +1040,17 @@ LUI.Tree.JSONNode = {
 				//非叶子节点 创建下级节点
 				if(hasChildren){
 					for(var i=0;i<children.length;i++){
-						node.appendChildNode(children[i]);
+						var isChildLeaf = false;
+						//根据条件判断
+						if(this.tree.leafExpression!=null && this.tree.leafExpression.length > 0){
+							//Handlebars表达式先执行
+							var _expression_template = Handlebars.compile(this.tree.leafExpression);
+							var _expression_value = _expression_template(children[i]);
+							if(_expression_value != null && _expression_value.replace(/(^\s*)|(\s*$)/g,"") == 'true'){
+								isChildLeaf = true;
+							}
+						}
+						node.appendChildNode(isChildLeaf,children[i]);
 					}
 				}
 				
@@ -1031,15 +1076,14 @@ LUI.Tree.JSONNode = {
 LUI.Tree.DatasourceNode = {
 	createNew:function(config){
 		var nodeInstance = $.extend(LUI.Tree.Node.createNew(config),{
-			appendChildNode:function(record){
-				
+			appendChildNode:function(isLeaf,record){
 				var lastChildNode = this.getLastChild();
 				var node = LUI.Tree.DatasourceNode.createNew({
 					tree:this.tree,
 					parent:this,
 					previousNode:lastChildNode,//前一节点
 					nextNode:null,//下一节点
-					isLeaf:false,
+					isLeaf:isLeaf,
 					data:record,
 					level:this.level+1
 				});
@@ -1088,9 +1132,9 @@ LUI.Tree.Template = {
 			'</ul>' +
 		'</div>',
 	node:'<li id="node" class="nim-tree-node">'+
-			'<span id="switch" class="nim-tree-node-switch nim-tree-node-switch-{{nodeSwitchType}}-collapse" title=""></span>'+
+			'<span id="switch" class="nim-tree-node-switch nim-tree-node-switch-{{nodeSwitchType}}{{#unless isLeaf}}-collapse{{/unless}}" title=""></span>'+
 			'<a class="nim-tree-node-label" onclick="">'+
-				'<span id="icon" class="nim-tree-node-icon nim-tree-node-icon-close"></span>'+
+				'<span id="icon" class="nim-tree-node-icon {{#if isLeaf}}nim-tree-node-icon-leaf{{else}}nim-tree-node-icon-close{{/if}}"></span>'+
 				'<span id="text" class="nim-tree-node-text">{{{nodeText}}}</span>'+
 			'</a>'+
 			'<ul id="children" class="nim-tree-children-container {{#notEqual nodeSwitchType "bottom"}}nim-tree-line{{/notEqual}} ">'+

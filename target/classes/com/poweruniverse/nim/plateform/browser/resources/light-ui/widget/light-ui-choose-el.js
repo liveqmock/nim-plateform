@@ -78,7 +78,7 @@ LUI.Widget.elWin = {
 		});
 
 		_elTreeObj.load([elTreeData]);
-		_elTreeObj.getFirstRootNode().expand(true);
+		_elTreeObj.getRootNode().expand(true);
 //		_elTreeObj.render(containerEl);
 		this.el.dialog( "open" );
 		

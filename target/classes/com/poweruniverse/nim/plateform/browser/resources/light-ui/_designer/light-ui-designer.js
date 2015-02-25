@@ -596,7 +596,20 @@ LUI.PageDesigner = {
 							primary: "ui-icon-script"
 						} 
 					}).click(function () {
-				        _isOriginalChoose = this.checked;
+						if(this.checked){
+							$("#_original")
+								.css("height","100%")
+								.css("width",$("#_pageContent").width()+"px")
+								.css("top","0")
+								.css("z-index","99")
+								.append(_orginalContent)
+								.scrollTop($("#_pageContent").scrollTop());
+							$("#_pageContent").css("overflow","hidden").css("opacity","0");
+						}else{
+							$("#_pageContent").css("overflow","auto").css("opacity","1");
+							$("#_original").css("height","0").css("width","0").css("z-index","-1").empty();
+						}
+//				        _isOriginalChoose = this.checked;
 				    });
 					//从服务器端加载预定义的控件信息
 					//创建树 创建弹出菜单...
@@ -684,16 +697,25 @@ LUI.PageDesigner = {
 					node.data._isValid = true;
 				},
 				createTypeMenu:function(addComponentBtn){
+					//根据控件定义 创建下拉菜单 显示所有可用控件
 					var menuHtml = '';
 					for(var typeKey in this._types){
 						if(this._types[typeKey].isAppendable != 'false'){
-							menuHtml+='<li _type_name="'+typeKey+'">';
+							var _typeSequence = '9990';
+							if(this._types[typeKey].sequence!=null){
+								_typeSequence = this._types[typeKey].sequence;
+							}
+							menuHtml+='<li _type_name="'+typeKey+'" _sequence="'+_typeSequence+'">';
 							menuHtml+='<a href="#"><span class="ui-icon '+this._types[typeKey].iconClass+'"></span>'+this._types[typeKey].label+'</a>';
 							
 							var cmpText = '';
 							for( var cmpKey in this._components){
 								if(this._components[cmpKey].type == typeKey && this._components[cmpKey].isAppendable != 'false'){
-									cmpText +='<li  _type_name="'+typeKey+'" _component_name="'+cmpKey+'"><a href="#"><span class="ui-icon '+this._components[cmpKey].iconClass+'"></span>'+this._components[cmpKey].label+'</a></li>';
+									var _cmpSequence = '9999';
+									if(this._components[cmpKey].sequence!=null){
+										_cmpSequence = this._components[cmpKey].sequence;
+									}
+									cmpText +='<li  _sequence="'+_cmpSequence+'"  _type_name="'+typeKey+'" _component_name="'+cmpKey+'"><a href="#"><span class="ui-icon '+this._components[cmpKey].iconClass+'"></span>'+this._components[cmpKey].label+'</a></li>';
 								}
 							}
 							if(cmpText.length >0){
@@ -716,9 +738,17 @@ LUI.PageDesigner = {
 							}]
 						};
 					//添加字段选项
-					menuHtml+='<li _type_name="_field"><a href="#"><span class="ui-icon"></span>字段</a></li>';
+					menuHtml+='<li _type_name="_field" _sequence="9999"><a href="#"><span class="ui-icon"></span>字段</a></li>';
+					//排序
+					var newMenuItems = $(menuHtml).sort(function (a,b){
+						var aa = $(a).attr('_sequence');
+						var bb = $(b).attr('_sequence');
+					    return parseInt(aa) > parseInt(bb) ? 1 : -1;
+					});
 					
-					this._addComponentMenu = $("#_designer-tools-add-menu").html(menuHtml).hide().menu({
+					newMenuItems.appendTo($("#_designer-tools-add-menu"));
+					
+					this._addComponentMenu = $("#_designer-tools-add-menu").hide().menu({
 						select: function( event, ui ) {
 							//检查当前组件树的选中情况
 							var treeObj = LUI.PageDesigner.instance._pageCmpTree;
@@ -2373,20 +2403,20 @@ LUI.PageDesigner = {
 		return LUI.PageDesigner.instance;
 	},
 	_designerContent:'<div class="ui-layout-north" style="overflow: hidden;">'+
-						'<button id="_designer-tools-add-node" >+</button>'+
+						'<button id="_designer-tools-add-node" title="新增...">+</button>'+
+						'<button id="_designer-tools-remove-node">删除</button>'+
+						'<button id="_designer-tools-save">保存</button>'+
+						'<button id="_designer-tools-gn-node">新增功能</button>'+
+						'<button id="_designer-tools-stl-node">新增实体类</button>'+
 						'<input id="_designer-tools-property-toggle" type="checkbox" checked  >' +
 						'	<label for="_designer-tools-property-toggle" style="height:24px" title="显示/隐藏属性窗口"></label>'+
 						'<input id="_designer-tools-orginal-toggle" type="checkbox" >' +
 						'	<label for="_designer-tools-orginal-toggle" style="height:24px" title="切换原始页面选择"></label>'+
-						'<button id="_designer-tools-remove-node">删除</button>'+
-						'<button id="_designer-tools-save">保存</button>'+
-						'<button id="_designer-tools-gn-node">功能</button>'+
-						'<button id="_designer-tools-stl-node">实体类</button>'+
 						'<span style="float:right;">'+
-							'<button id="_designer-tools-edit-html-btn">H</button>'+
-							'<button id="_designer-tools-edit-css-btn">C</button>'+
-							'<button id="_designer-tools-edit-js-btn">J</button>'+
-							'<button id="_designer-tools-edit-xml-btn">X</button>'+
+							'<button id="_designer-tools-edit-html-btn" title="编辑HTML文件">H</button>'+
+							'<button id="_designer-tools-edit-css-btn" title="编辑CSS文件">C</button>'+
+							'<button id="_designer-tools-edit-js-btn" title="编辑JS文件">J</button>'+
+							'<button id="_designer-tools-edit-xml-btn" title="编辑XML文件">X</button>'+
 						'</span>'+
 					'</div>'+
 					'<div class="ui-layout-center" style="border-bottom:1px solid #8db2e3;padding: 0px;">'+
@@ -2429,7 +2459,7 @@ LUI.PageDesigner = {
 
 
 /**
- * 重新选择了Component时 需要做如下处理
+ * 监听Component字段的变化  需要做如下处理
  * @param oldComponentName
  * @param newComponentName
  */
@@ -2439,8 +2469,10 @@ function refreshExtendForm(eventSource,eventTarget,event,eventOriginal){
 	if(!event.params.isInitial){
 		var selectedNodes = LUI.PageDesigner.instance._pageCmpTree.getSelectedNodes();
 		var node = selectedNodes[0];
+		node.data.component = newComponentName;
 		node.component = LUI.PageDesigner.instance._components[newComponentName];
-		
+		//record对Component字段的监听和对值的更新 有可能晚于本事件 需要手动设置
+		node.record.setFieldValue('component',newComponentName,true);
 		////////////////////////////////////////////////////////////
 		//更新节点的显示值
 		var nodeText = node.data.label||node.data.name;
@@ -2857,6 +2889,46 @@ function setWorkflowPropertyLabel(eventSource,eventTarget,event,eventOriginal){
 		//name设置为功能代号
 		selectedNode.record.setFieldValue('freemarker',"${data."+newVal+"!''}");
 	}
+}
+
+//为数据集节点, 取得下级属性列表 供选择
+function getDatasourcePropertyOptions(){
+	var options = [];
+	//当前选中的节点
+	var selectedNodes = LUI.PageDesigner.instance._pageCmpTree.getSelectedNodes();
+	//当前选中节点为数据源节点
+	var datasourceNode = selectedNodes[0];
+	
+	//查找数据源节点下的属性列表节点
+	if(datasourceNode!=null){
+		var propertiesNode = null;
+		if(datasourceNode.children!=null){
+			for(var i=0;i<datasourceNode.children.length;i++ ){
+				var cNode = datasourceNode.children[i];
+				if(cNode.component.type == 'properties'){
+					propertiesNode= cNode;
+					break;
+				}
+			}
+		}
+		
+		if(propertiesNode==null){
+			LUI.Message.error("取属性选项失败","未找到properties节点！");
+		}else{
+			//循环所有属性节点
+			if(propertiesNode.children!=null){
+				for(var i=0;i<propertiesNode.children.length;i++ ){
+					options[options.length] = {
+						text:propertiesNode.children[i].data.label,
+						value:propertiesNode.children[i].data.name,
+						type:propertiesNode.children[i].data.fieldType
+					};
+				}
+			}
+		}
+	}
+	
+	return options;
 }
 
 //为集合节点, 取得关联公有数据源或下级私有数据源的属性列表 供选择

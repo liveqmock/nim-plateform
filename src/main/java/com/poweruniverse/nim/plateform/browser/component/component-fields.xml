@@ -7,7 +7,7 @@
 	<component name="stringDisplay" type="stringField" label="显示" xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" />
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 		</properties>
 		<events>
 		</events>
@@ -19,7 +19,7 @@
 	<component name="stringEditor" type="stringField" label="字符" xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -42,7 +42,7 @@
 	<component name="passwordEditor" type="stringField" label="密码"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -65,7 +65,7 @@
 	<component name="textSelectEditor" type="stringField" label="下拉选择"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -86,7 +86,7 @@
 	<component name="mobileEditor" type="stringField" label="手机号"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -107,7 +107,7 @@
 	<component name="postCodeEditor" type="stringField" label="邮编"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -128,7 +128,7 @@
 	<component name="stringTextEditor" type="stringField" label="文本"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -151,7 +151,7 @@
 	<component name="stringHTMLEditor" type="stringField" label="HTML文本"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -176,7 +176,7 @@
 	<component name="emailEditor" type="stringField" label="邮箱"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -199,7 +199,7 @@
 	<component name="urlEditor" type="stringField" label="子页面"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -221,7 +221,7 @@
 	<component name="textChooseElEditor" type="stringField" label="目标选择"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -243,7 +243,7 @@
 	<component name="textDisplay" type="textField" label="显示"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" />
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 		</properties>
 		<events>
 		</events>
@@ -255,7 +255,7 @@
 	<component name="textareaEditor" type="textField" label="文本内容"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -278,7 +278,7 @@
 	<component name="htmlEditor" type="textField" label="HTML内容"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -303,7 +303,7 @@
 	<component name="eventScriptEditor" type="textField" label="事件内容"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -327,7 +327,7 @@
 	<component name="booleanDisplay" type="booleanField" label="显示"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" />
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="trueText" label="true文字" type="string" allowBlank="true" info="值为true时显示为"/>
 			<property name="falseText" label="false文字" type="string" allowBlank="true" info="值为false时显示为"/>
 		</properties>
@@ -338,7 +338,7 @@
 	<component name="booleanRadioDisplay" type="booleanField" label="无线按钮显示"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" />
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="trueText" label="true文字" type="string" allowBlank="true" info="值为true时显示为"/>
 			<property name="falseText" label="false文字" type="string" allowBlank="true" info="值为false时显示为"/>
 		</properties>
@@ -349,7 +349,7 @@
 	<component name="booleanCheckDisplay" type="booleanField" label="选择框显示"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" />
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 		</properties>
 		<events>
 		</events>
@@ -358,7 +358,7 @@
 	<component name="booleanCheckEditor" type="booleanField" label="选择框"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -376,7 +376,7 @@
 	<component name="booleanRadioEditor" type="booleanField" label="无线按钮"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -399,7 +399,7 @@
 	<component name="intDisplay" type="intField" label="显示"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" />
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="textAlign" label="对齐方式" type="string" default="right" allowBlank="false" info="对齐方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'left',text:'左对齐'
 				},{
@@ -419,7 +419,7 @@
 	<component name="intEditor" type="intField" label="整数"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -453,7 +453,7 @@
 	<component name="doubleDisplay" type="doubleField" label="显示" xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" />
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="textAlign" label="对齐方式" type="string" default="right" allowBlank="false" info="对齐方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'left',text:'左对齐'
 				},{
@@ -489,7 +489,7 @@
 	<component name="doubleEditor" type="doubleField" label="小数" xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -539,7 +539,7 @@
 	<component name="dateDisplay" type="dateField" label="日期显示"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" />
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 		</properties>
 		<events>
 		</events>
@@ -550,7 +550,7 @@
 	<component name="dateTimeDisplay" type="dateField" label="日期时间显示"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" />
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 		</properties>
 		<events>
 		</events>
@@ -561,7 +561,7 @@
 	<component name="timeDisplay" type="dateField" label="时间显示"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" />
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 		</properties>
 		<events>
 		</events>
@@ -573,7 +573,7 @@
 	<component name="dateEditor" type="dateField" label="日期"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -595,7 +595,7 @@
 	<component name="timeEditor" type="dateField" label="时间"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -615,7 +615,7 @@
 	<component name="datetimeEditor" type="dateField" label="日期/时间"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -637,7 +637,7 @@
 	<component name="objectDisplay" type="objectField" label="显示"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" />
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 		</properties>
 		<extensions>
 		</extensions>
@@ -667,7 +667,7 @@
 	<component name="objectSelectEditor" type="objectField" label="下拉选择"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -710,7 +710,7 @@
 	<component name="objectRadioEditor" type="objectField" label="无线按钮"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -741,7 +741,7 @@
 	<component name="fileUploaderEditor" type="objectField" label="文件上传"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
 			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
@@ -828,7 +828,7 @@
 		
 			<property name="datasourceName" label="数据源" type="string" allowBlank="false" info="数据源"  widget="textSelectEditor" dataGetter="getDatasetOptions" />
 			<property name="keyProperty" label="关键字段" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" dataGetter="getKeyPropertyOptions" info="" enabled="true" onChange="setKeyProperty"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 		</properties>
 		<structure>
 			<item component-name="gnDataset" />

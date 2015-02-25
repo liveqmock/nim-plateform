@@ -1,6 +1,6 @@
 <type-def>
 	<!-- .......6表列 field............ -->
-	<type name="column" label="表列" isAppendable="false"  iconClass="ui-icon-copy" isArray="false">
+	<type name="column" label="表列" isAppendable="false" sequence="72"  iconClass="ui-icon-copy" isArray="false">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="数值类型" default="" enabled="false"/>
 			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
@@ -15,7 +15,7 @@
 	<!-- 表格列类型  -->
 	<!-- ...................................................................................................  -->
 	<!-- 1 列类型  string-->
-	<type name="stringColumn" label="字符"  isAppendable="false" defaultComponent="stringDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+	<type name="stringColumn" label="字符"  isAppendable="false" sequence="73" defaultComponent="stringDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="类型" default="" enabled="false"/>
 			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
@@ -28,7 +28,7 @@
 		</events>
 	</type>
 	<!-- 2 列类型  text-->
-	<type name="textColumn" label="字符"  isAppendable="false" defaultComponent="textDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+	<type name="textColumn" label="字符"  isAppendable="false" sequence="74" defaultComponent="textDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="类型" default="" enabled="false"/>
 			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
@@ -41,7 +41,7 @@
 		</events>
 	</type>
 	<!-- 3列类型  boolean-->
-	<type name="booleanColumn" label="逻辑"  isAppendable="false" defaultComponent="booleanDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+	<type name="booleanColumn" label="逻辑"  isAppendable="false" sequence="75" defaultComponent="booleanDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="类型" default="" enabled="false"/>
 			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
@@ -54,7 +54,7 @@
 		</events>
 	</type>
 	<!-- 4列类型  int-->
-	<type name="intColumn" label="整数"  isAppendable="false" defaultComponent="intDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+	<type name="intColumn" label="整数"  isAppendable="false" sequence="76" defaultComponent="intDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="类型" default="" enabled="false"/>
 			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
@@ -67,7 +67,7 @@
 		</events>
 	</type>
 	<!-- 5列类型  double-->
-	<type name="doubleColumn" label="小数"  isAppendable="false" defaultComponent="doubleDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+	<type name="doubleColumn" label="小数"  isAppendable="false" sequence="77" defaultComponent="doubleDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="类型" default="" enabled="false"/>
 			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
@@ -80,7 +80,7 @@
 		</events>
 	</type>
 	<!-- 6列类型  date-->
-	<type name="dateColumn" label="日期"  isAppendable="false" defaultComponent="dateDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+	<type name="dateColumn" label="日期"  isAppendable="false" sequence="78" defaultComponent="dateDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="类型" default="" enabled="false"/>
 			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
@@ -93,7 +93,7 @@
 		</events>
 	</type>
 	<!-- 7列类型  object-->
-	<type name="objectColumn" label="对象"  isAppendable="false" defaultComponent="objectDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+	<type name="objectColumn" label="对象"  isAppendable="false" sequence="79" defaultComponent="objectDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="类型" default="" enabled="false"/>
 			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
@@ -108,7 +108,7 @@
 		</events>
 	</type>
 	<!-- 8列类型  set-->
-	<type name="setColumn" label="集合"  isAppendable="false" defaultComponent="setDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+	<type name="setColumn" label="集合"  isAppendable="false" sequence="80" defaultComponent="setDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="类型" default="" enabled="false"/>
 			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>

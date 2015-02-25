@@ -104,7 +104,7 @@ LUI.Template = {
 					'<td width="*" style="font-size: 1em important!;">'+
 						'<span id="{{form.name}}_{{name}}_field_container" class="nim-field-wrapper" style="display:inline-block;width:{{#if width}}{{width}}{{else}}220px{{/if}};">'+
 							'<input type="text" id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="width:{{#if width}}{{width}}{{else}}220px{{/if}};" class=" text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless isValid}}nim-field-invalid{{/unless}}" >'+
-							'<img id="_handler" src="resources/plateform/light-ui/images/indicator.png" style="margin-left: 4px;vertical-align: middle;">'+
+							'<img id="_handler" src="resources/plateform/light-ui/images/indicator.png" style="margin-left: 4px;vertical-align: middle;" title="拖动选择目标元素">'+
 						'</span>'+
 					'</td>'+
 			        '</tr>'+
@@ -120,7 +120,8 @@ LUI.Template = {
 					'<td width="*" style="font-size: 1em important!;">'+
 						'<span id="{{form.name}}_{{name}}_field_container" class="nim-field-wrapper" style="display:inline-block;width:{{#if width}}{{width}}{{else}}220px{{/if}};">'+
 							'<input type="text" id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="width:{{#if width}}{{width}}{{else}}220px{{/if}};" class=" text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless isValid}}nim-field-invalid{{/unless}}" >'+
-							'<img id="_handler" src="resources/plateform/light-ui/images/ie.png" style="cursor:pointer;width:16px;height:16px;margin-left: 4px;vertical-align: middle;">'+
+							'<img id="_explorer" src="resources/plateform/light-ui/images/file-upload-icon.gif" style="cursor:pointer;width:16px;height:16px;margin-left: 4px;vertical-align: middle;"  title="选择模板文件">'+
+							'<img id="_handler" src="resources/plateform/light-ui/images/ie.png" style="cursor:pointer;width:16px;height:16px;margin-left: 4px;vertical-align: middle;"  title="在新窗口打开子页面">'+
 						'</span>'+
 					'</td>'+
 			        '</tr>'+
@@ -170,7 +171,7 @@ LUI.Template = {
 						'</td>'+
 						'<td width="*" style="font-size: 1em important!;">'+
 							'<span id="{{form.name}}_{{name}}_field_container" class="nim-field-wrapper" style="display:inline-block;width:{{#if width}}{{width}}{{else}}220px{{/if}};">'+
-								'<textarea id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="height:{{#if height}}{{height}}{{else}}50px{{/if}};width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="ui-corner-all nim-field-el {{#unless isValid}}nim-field-invalid{{/unless}}">'+
+								'<textarea id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="height:{{#if height}}{{height}}{{else}}50px{{/if}};width:{{#if width}}{{width}}{{else}}220px{{/if}};" title="{{info}}" class="ui-corner-all nim-field-el {{#unless isValid}}nim-field-invalid{{/unless}}">'+
 								'</textarea>'+
 								'<img title="编辑" id="_handler" src="resources/plateform/light-ui/images/icon-text.jpg" style="position: relative;margin-left: 4px;cursor:hand;cursor:pointer;">'+
 							'</span>'+

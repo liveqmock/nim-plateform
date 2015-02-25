@@ -4,7 +4,5 @@
 	<webservice name="designer" class="com.poweruniverse.nim.plateform.webservice.DesignerWebserviceImpl" />
 	<!-- 提供页面文件服务 -->
 	<webservice name="page" class="com.poweruniverse.nim.plateform.webservice.PageWebserviceImpl" />
-	<!-- 提供资源文件服务 -->
-	<webservice name="plugin" class="com.poweruniverse.nim.plateform.webservice.PluginWebserviceImpl" />
 </component>
 

@@ -247,7 +247,7 @@ LUI.Grid.TreeGrid.Tree.Node = {
 				this.tree._onNodeRender(this);
 			},
 			_createNodeEl:function(){
-				if(this.level == 0 && this.tree.getFirstRootNode().id == this.id){
+				if(this.level == 0 && this.tree.getRootNode().id == this.id){
 					//树中的第一个根节点
 					if(this.tree.grid.headerLines>0){
 						this.el = $(this.tree.grid.gridLineContent).insertAfter($(this.tree.grid.renderto+' li').eq(this.tree.grid.headerLines -1));

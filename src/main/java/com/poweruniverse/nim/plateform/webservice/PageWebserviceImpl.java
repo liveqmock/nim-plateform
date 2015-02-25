@@ -10,6 +10,9 @@ import javax.xml.ws.WebServiceContext;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.io.FileUtils;
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 import org.hibernate.Session;
 
 import com.poweruniverse.nim.base.bean.UserInfo;
@@ -73,6 +76,7 @@ public class PageWebserviceImpl extends BasePlateformWebservice{
 	 */
 	public StringResult analyse(
 			@WebParam(name="contextPath") String contextPath,
+			@WebParam(name="pageName") String pageName,
 			@WebParam(name="pageUrl") String pageUrl,
 			@WebParam(name="isIndependent") boolean isIndependent,
 			@WebParam(name="params") String params){
@@ -102,6 +106,7 @@ public class PageWebserviceImpl extends BasePlateformWebservice{
 					pageContent = FileUtils.readFileToString(cfgFile, "utf-8");
 				}
 				argument.put("pageContent", pageContent);//xml文件字符串
+				argument.put("pageName", pageName);//page文件名
 				argument.put("pageUrl", pageUrl);//xml文件字符串
 				argument.put("isIndependent", isIndependent);//是否独立打开 （主要用于确定是否独立打开子页面）
 				argument.put("params", params);//url传递来的参数
@@ -134,7 +139,7 @@ public class PageWebserviceImpl extends BasePlateformWebservice{
 				Integer yongHuDM = this.getYongHuDM(wsContext, false);
 				msg.put("isLogged", !(yongHuDM==null));
 
-				//读取页面xml文件定义
+				//读取页面html文件定义
 				String htmlContent = null;
 				File htmlFile = new File(contextPath+app.getModulePath()+"/"+pageUrl);
 				if(htmlFile.exists()){
@@ -152,7 +157,7 @@ public class PageWebserviceImpl extends BasePlateformWebservice{
 					msg.put("cssExists", false);
 				}
 				
-				//检查css文件是否存在
+				//检查js文件是否存在
 				File jsFile = new File(contextPath+app.getModulePath()+"/"+pageUrl.substring(0,pageUrl.lastIndexOf("."))+".js");
 				if(jsFile.exists()){
 					msg.put("jsExists", true);
@@ -160,6 +165,32 @@ public class PageWebserviceImpl extends BasePlateformWebservice{
 					msg.put("jsExists", false);
 				}
 				
+				//取得xml文件中的title name width height定义（ 如果是page name = pageUrl)
+				File xmlFile = new File(contextPath+app.getModulePath()+"/"+pageUrl.substring(0,pageUrl.lastIndexOf("."))+".xml");
+				JSONObject pageObj = new JSONObject();
+				if(xmlFile.exists()){
+					SAXReader reader = new SAXReader();
+					reader.setEncoding("utf-8");
+					Document doc = reader.read(xmlFile);
+					Element pageEl = doc.getRootElement();
+					
+					String pageTitle = pageEl.attributeValue("title");
+					String pageName = pageEl.attributeValue("name");
+					//独立页面被作为子页面加载时 需要用url生成一个name
+					if(pageName==null){
+						pageName = (pageUrl.substring(0,pageUrl.lastIndexOf("."))+".xml").replaceAll("/", "_").replaceAll("\\.", "_").replaceAll("-", "_");
+					}
+					String needsLogin = pageEl.attributeValue("needsLogin");
+					String pageWidth = pageEl.attributeValue("width");
+					String pageHeight = pageEl.attributeValue("height");
+					
+					pageObj.put("title", pageTitle);
+					pageObj.put("name", pageName);
+					pageObj.put("needsLogin", "true".equalsIgnoreCase(needsLogin));
+					pageObj.put("width", pageWidth);
+					pageObj.put("height", pageHeight);
+				}
+				msg.put("currentPage", pageObj);
 				msg.put("loginPage", app.getLoginPage());
 				msg.put("homePage", app.getHomePage());
 				

@@ -65,7 +65,7 @@
 				contains : function(obj){
 					var exists = false;
 					for(var i=0;i<this.array.length;i++){
-						if(this.array[i].id == obj.id){
+						if(LUI.Set.objectEqual(this.array[i],obj)){
 							exists = true;
 							break;
 						}
@@ -83,7 +83,7 @@
 				indexOf : function(obj){
 					var index = -1;
 					for(var i=0;i<this.array.length;i++){
-						if(this.array[i].id == obj.id){
+						if(LUI.Set.objectEqual(this.array[i],obj)){
 							index = i;
 							break;
 						}
@@ -92,7 +92,7 @@
 				},
 				remove : function(obj){
 					for(var i=0;i<this.array.length;i++){
-						if(this.array[i].id == obj.id){
+						if(LUI.Set.objectEqual(this.array[i],obj)){
 							this.array.splice(i,1);
 							break;
 						}
@@ -108,6 +108,14 @@
 					return this.array.length;
 				}
 			};
+		},
+		objectEqual:function(obj1,obj2){
+			if(obj1.id!=null && obj2.id!=null && obj1.id == obj2.id){
+				return true;
+			}else if((obj1.id!=null && obj2.id==null) || (obj1.id==null && obj2.id!=null)){
+				return false;
+			}
+			return obj1 == obj2;
 		}
 	};
 	

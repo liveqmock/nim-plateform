@@ -1,7 +1,7 @@
 <type-def>
 	<!-- 类型中定义的属性 在基本属性页面中编辑 -->
 	<!-- .......页面 page............ -->
-	<type name="page" label="页面" isAppendable="false" iconClass="ui-icon-copy" isArray="false">
+	<type name="page" label="页面" isAppendable="false" sequence="-1" iconClass="ui-icon-copy" isArray="false" >
 		<properties>
 			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="needsLogin" label="需要登录" type="boolean" allowBlank="false" />
@@ -13,7 +13,7 @@
 		</events>
 	</type>
 	<!-- .......1引入/包含 import............ -->
-	<type name="import" label="引入" isAppendable="true" defaultComponent="importSubpage" iconClass="ui-icon-copy" isArray="false">
+	<type name="import" label="引入" isAppendable="true" sequence="10" defaultComponent="importSubpage" iconClass="ui-icon-copy" isArray="false">
 		<properties>
 			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="label" label="标题" type="string" allowBlank="false" info="" />
@@ -32,7 +32,7 @@
 		</structure>
 	</type>
 	<!-- .......图形............ -->
-	<type name="image" label="图形" isAppendable="true" defaultComponent="workflowImg" iconClass="ui-icon-copy" isArray="false">
+	<type name="image" label="图形" isAppendable="true" sequence="9" defaultComponent="workflowImg" iconClass="ui-icon-copy" isArray="false">
 		<properties>
 			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="label" label="标题" type="string" allowBlank="false" info="" />
@@ -45,7 +45,7 @@
 		</structure>
 	</type>
 	<!-- .......2定时任务 timmer............ -->
-	<type name="timmer" label="定时任务" isAppendable="true" defaultComponent="javascriptTimer" iconClass="ui-icon-copy" isArray="false">
+	<type name="timmer" label="定时任务" isAppendable="false" sequence="-1" defaultComponent="javascriptTimer" iconClass="ui-icon-copy" isArray="false">
 		<properties>
 			<property name="component" label="定时任务类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="label" label="标题" type="string" allowBlank="false" info="" />
@@ -55,7 +55,7 @@
 		</events>
 	</type>
 	<!-- .......3变量-数据源 variable............ -->
-	<type name="variable" label="变量" isAppendable="true" defaultComponent="gnVariable" iconClass="ui-icon-copy" isArray="false">
+	<type name="variable" label="数据变量" isAppendable="true" sequence="11" defaultComponent="gnVariable" iconClass="ui-icon-copy" isArray="false">
 		<properties>
 			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="label" label="标题" type="string" allowBlank="false" info="" />
@@ -71,7 +71,7 @@
 		</events>
 	</type>
 	<!-- .......4对象-数据源 record............ -->
-	<type name="record" label="对象" isAppendable="true" defaultComponent="gnRecord" iconClass="ui-icon-copy" isArray="false">
+	<type name="record" label="数据对象" isAppendable="true" sequence="12" defaultComponent="gnRecord" iconClass="ui-icon-copy" isArray="false">
 		<properties>
 		</properties>
 		<events>
@@ -82,7 +82,7 @@
 		</events>
 	</type>
 	<!-- .......5数据集-数据源 dataset........... -->
-	<type name="dataset" label="数据集" isAppendable="true" defaultComponent="gnDataset" iconClass="ui-icon-copy" isArray="false">
+	<type name="dataset" label="数据集" isAppendable="true" sequence="13" defaultComponent="gnDataset" iconClass="ui-icon-copy" isArray="false">
 		<properties>
 			
 		</properties>
@@ -94,7 +94,7 @@
 		</events>
 	</type>
 	<!-- .......6标签 tab............ -->
-	<type name="tab" label="标签页" isAppendable="true" defaultComponent="tabSelector" iconClass="ui-icon-copy" isArray="false" isDragable="true" dropable="ul">
+	<type name="tab" label="标签页" isAppendable="true" sequence="1" defaultComponent="tabSelector" iconClass="ui-icon-copy" isArray="false" isDragable="true" dropable="ul">
 		<properties>
 			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="label" label="标题" type="string" allowBlank="false" info="" />
@@ -106,7 +106,7 @@
 		</events>
 	</type>
 	<!-- .......7表单 form............ -->
-	<type name="form" label="表单" isAppendable="true" defaultComponent="singleEditForm" iconClass="ui-icon-contact" isArray="false" isDragable="true">
+	<type name="form" label="表单" isAppendable="true" sequence="5" defaultComponent="singleEditForm" iconClass="ui-icon-contact" isArray="false" isDragable="true">
 		<properties>
 			<property name="component" label="表单类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="false" />
 			<property name="label" label="标题" type="string" allowBlank="false" info="" />
@@ -118,7 +118,7 @@
 		</events>
 	</type>
 	<!-- .......8列表 grid............ -->
-	<type name="grid" label="表格" isAppendable="true" defaultComponent="displayGrid" iconClass="ui-icon-copy" isArray="false" isDragable="true" dropable="ul"><!-- treeGrid应该归类到表格 是对表格的扩展  -->
+	<type name="grid" label="表格" isAppendable="true" sequence="3" defaultComponent="displayGrid" iconClass="ui-icon-copy" isArray="false" isDragable="true" dropable="ul"><!-- treeGrid应该归类到表格 是对表格的扩展  -->
 		<properties>
 			<property name="component" label="表格类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshGridExtendForm"/>
 			<property name="datasourceType" label="数据来源" type="string" default="private" allowBlank="false" info="生成方式" 
@@ -156,7 +156,7 @@
 		</events>
 	</type>
 	<!-- .......8子表格 subGrid 用于集合字段的显示 操作 不直接关联数据源  不直接设置尺寸............ -->
-	<type name="subGrid" label="表格" isAppendable="false" defaultComponent="subGrid" iconClass="ui-icon-copy" isArray="false" isDragable="true" dropable="ul"><!-- treeGrid应该归类到表格 是对表格的扩展  -->
+	<type name="subGrid" label="表格" isAppendable="false" sequence="41" defaultComponent="subGrid" iconClass="ui-icon-copy" isArray="false" isDragable="true" dropable="ul"><!-- treeGrid应该归类到表格 是对表格的扩展  -->
 		<properties>
 			<property name="component" label="表格类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="label" label="标题" type="string" allowBlank="false" info="" />
@@ -179,7 +179,7 @@
 		</events>
 	</type>
 	<!-- .......9树tree............ -->
-	<type name="tree" label="树" isAppendable="true" defaultComponent="treeDisplay" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+	<type name="tree" label="树" isAppendable="true" sequence="7" defaultComponent="treeDisplay" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="component" label="树类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="label" label="标题" type="string" allowBlank="false" info="" />
@@ -211,7 +211,7 @@
 		</events>
 	</type>
 	<!-- .......10 动作 action............ -->
-	<type name="action" label="动作" isAppendable="true" defaultComponent="link" iconClass="ui-icon-copy" isArray="false" isDragable="true" dropable="ul">
+	<type name="action" label="动作" isAppendable="false" sequence="-1" defaultComponent="link" iconClass="ui-icon-copy" isArray="false" isDragable="true" dropable="ul">
 		<properties>
 			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="label" label="标题" type="string" allowBlank="false" info="" />
@@ -223,14 +223,14 @@
 	
 	<!-- 集合与子项  -->
 	<!-- .......1 属性列表 properties............ -->
-	<type name="properties" label="属性列表" isAppendable="false" iconClass="ui-icon-copy" isArray="true">
+	<type name="properties" label="属性列表" isAppendable="false" sequence="51" iconClass="ui-icon-copy" isArray="true">
 		<properties>
 		</properties>
 		<events>
 		</events>
 	</type>	
 	<!-- .......2 属性 property............ -->
-	<type name="simpleProperty" label="属性" isAppendable="false"  iconClass="ui-icon-copy" isArray="false">
+	<type name="simpleProperty" label="属性" isAppendable="false" sequence="52" iconClass="ui-icon-copy" isArray="false">
 		<properties>
 			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="false" />
 			<property name="fieldType" label="" type="string" allowBlank="false" info="数值类型" default="" enabled="true"/>
@@ -240,7 +240,7 @@
 		<events>
 		</events>
 	</type>	
-	<type name="workflowProperty" label="流程属性" isAppendable="false"  iconClass="ui-icon-copy" isArray="false">
+	<type name="workflowProperty" label="流程属性" isAppendable="false" sequence="53" iconClass="ui-icon-copy" isArray="false">
 		<properties>
 			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="false" />
 			<property name="name" label="名称" type="string" allowBlank="false" info="字段名"  enabled="false"/>
@@ -249,7 +249,7 @@
 		</events>
 	</type>	
 	<!-- .......3 属性 property............ -->
-	<type name="complexProperty" label="属性" isAppendable="false"  iconClass="ui-icon-copy" isArray="false">
+	<type name="complexProperty" label="属性" isAppendable="false" sequence="54" iconClass="ui-icon-copy" isArray="false">
 		<properties>
 			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="false" />
 			<property name="fieldType" label="" type="string" allowBlank="false" info="数值类型" default="" enabled="false"/>
@@ -260,7 +260,7 @@
 		</events>
 	</type>	
 	<!-- .......3 字段列表 fields............ -->
-	<type name="fields" label="字段列表" isAppendable="false"  iconClass="ui-icon-copy" isArray="true">
+	<type name="fields" label="字段列表" isAppendable="false" sequence="61" iconClass="ui-icon-copy" isArray="true">
 		<properties>
 		</properties>
 		<events>
@@ -291,21 +291,21 @@
 	</type>	
 	-->
 	<!-- .......5表列集合 columns............ -->
-	<type name="columns" label="表格列" isAppendable="false"  iconClass="ui-icon-copy" isArray="true">
+	<type name="columns" label="表格列" isAppendable="false" sequence="71" iconClass="ui-icon-copy" isArray="true">
 		<properties>
 		</properties>
 		<events>
 		</events>
 	</type>	
 	<!-- .......7条件列表 filters............ -->
-	<type name="filters" label="条件列表" isAppendable="false"  iconClass="ui-icon-copy" isArray="true">
+	<type name="filters" label="条件列表" isAppendable="false" sequence="81" iconClass="ui-icon-copy" isArray="true">
 		<properties>
 		</properties>
 		<events>
 		</events>
 	</type>	
 	<!-- .......8 数据源 过滤条件 filter............ -->
-	<type name="filter" label="过滤条件" isAppendable="true"  iconClass="ui-icon-copy" isArray="false">
+	<type name="filter" label="过滤条件" isAppendable="true" sequence="82" iconClass="ui-icon-copy" isArray="false">
 		<properties>
 			<property name="component" label="过滤条件类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="label" label="标题" type="string" allowBlank="false" info="标题"/>
@@ -314,7 +314,7 @@
 		</events>
 	</type>
 	<!-- .......4 查询表单 查询条件 field............ -->
-	<type name="searchFilter" label="查询条件" isAppendable="false"  iconClass="ui-icon-copy" isArray="false">
+	<type name="searchFilter" label="查询条件" isAppendable="false" sequence="83" iconClass="ui-icon-copy" isArray="false">
 		<properties>
 			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" onChange="refreshExtendForm"/>
 			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题"/>
@@ -324,14 +324,14 @@
 		</events>
 	</type>	
 	<!-- .......9排序列表 sorts............ -->
-	<type name="sorts" label="排序列表" isAppendable="false"  iconClass="ui-icon-copy" isArray="true">
+	<type name="sorts" label="排序列表" isAppendable="false" sequence="91" iconClass="ui-icon-copy" isArray="true">
 		<properties>
 		</properties>
 		<events>
 		</events>
 	</type>	
 	<!-- .......10 排序 sort............ -->
-	<type name="sort" label="排序" isAppendable="true" iconClass="ui-icon-copy" isArray="false">
+	<type name="sort" label="排序" isAppendable="true" sequence="92" iconClass="ui-icon-copy" isArray="false">
 		<properties>
 			<property name="component" label="排序条件类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
 		</properties>
@@ -339,14 +339,14 @@
 		</events>
 	</type>	
 	<!-- .......11按钮列表 buttons............ -->
-	<type name="buttons" label="按钮列表" isAppendable="false" iconClass="ui-icon-copy" isArray="true">
+	<type name="buttons" label="按钮列表" isAppendable="false" sequence="101" iconClass="ui-icon-copy" isArray="true">
 		<properties>
 		</properties>
 		<events>
 		</events>
 	</type>
 	<!-- .......表单列表 forms(用于流程检视表单的下级)............ -->
-	<type name="forms" label="表单列表" isAppendable="false" iconClass="ui-icon-copy" isArray="true">
+	<type name="forms" label="表单列表" isAppendable="false" sequence="201" iconClass="ui-icon-copy" isArray="true">
 		<properties>
 		</properties>
 		<events>
@@ -362,7 +362,7 @@
 	</type>
 	-->
 	<!-- .......12 按钮 button............ -->
-	<type name="button" label="按钮" isAppendable="true" iconClass="ui-icon-copy" isArray="true">
+	<type name="button" label="按钮" isAppendable="true" sequence="102" iconClass="ui-icon-copy" isArray="true">
 		<properties>
 			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="name" label="名称" type="string" allowBlank="false" info="用于绑定数据的字段名"/>
@@ -372,14 +372,14 @@
 		</events>
 	</type>
 	<!-- .......13 按钮 button............ -->
-	<type name="workflows" label="流程集合" isAppendable="false" iconClass="ui-icon-copy" isArray="true">
+	<type name="workflows" label="流程集合" isAppendable="false" sequence="111" iconClass="ui-icon-copy" isArray="true">
 		<properties>
 		</properties>
 		<events>
 		</events>
 	</type>
 	<!-- .......14 功能 button............ -->
-	<type name="workflow" label="流程" isAppendable="true" iconClass="ui-icon-copy" isArray="false">
+	<type name="workflow" label="流程" isAppendable="true" sequence="112" iconClass="ui-icon-copy" isArray="false">
 		<properties>
 			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="false" />
 			<property name="name" label="名称" type="string" allowBlank="false" enabled="false" info="用于绑定数据的字段名"/>
@@ -391,14 +391,14 @@
 		</events>
 	</type>
 	<!-- .......1 参数列表 parameters............ -->
-	<type name="parameters" label="参数列表" isAppendable="false" iconClass="ui-icon-copy" isArray="true">
+	<type name="parameters" label="参数列表" isAppendable="false" sequence="121" iconClass="ui-icon-copy" isArray="true">
 		<properties>
 		</properties>
 		<events>
 		</events>
 	</type>	
 	<!-- .......2 属性 property............ -->
-	<type name="parameter" label="参数" isAppendable="true"  iconClass="ui-icon-copy" isArray="false">
+	<type name="parameter" label="参数" isAppendable="true" sequence="122" iconClass="ui-icon-copy" isArray="false">
 		<properties>
 			<property name="component" label="类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="false" />
 			<property name="parameterType" label="" type="string" allowBlank="false" info="数值类型" default="string" enabled="true"/>

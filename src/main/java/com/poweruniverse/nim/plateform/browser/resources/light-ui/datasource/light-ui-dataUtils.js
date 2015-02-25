@@ -192,7 +192,7 @@ LUI.DataUtils = {
 			}
 		});
 	},
-	listJavaData:function(className,start,limit,parameters,callback,context){
+	listJavaData:function(className,start,limit,filters,parameters,callback,context){
 		if(context==null){
 			context = this;
 		}
@@ -207,6 +207,7 @@ LUI.DataUtils = {
 					"start:'"+start+"'," +
 					"limit:'"+limit+"'," +
 					"className:'"+className+"'" +
+					(filters!=null?(",filters:" +LUI.Util.stringify(filters)):"")+
 					(parameters!=null?(",parameters:" +LUI.Util.stringify(parameters)):"")+
 				"}"
 			},

@@ -3,7 +3,7 @@
 	<component name="gridColumn" xmlElName="column" type="column" label="表列" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="构建模板" type="text" allowBlank="true" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="构建模板" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="showThousand" 		label="显示千分符" type="boolean" allowBlank="false" />
 			<property name="showTips" 		label="显示提示信息" type="boolean" allowBlank="false" />
 			<property name="tipsTemplate" widget="textareaEditor" label="信息表达式" type="text" allowBlank="true" info="生成目标tips的模板" enabled="true" />
@@ -26,7 +26,7 @@
 	<component name="gridColumn" xmlElName="column" type="column" label="表列" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="showThousand" 		label="显示千分符" type="boolean" allowBlank="false" />
 			<property name="showTips" 		label="显示提示信息" type="boolean" allowBlank="false" />
 			<property name="tipsTemplate" widget="textareaEditor" label="信息表达式" type="text" allowBlank="true" info="生成目标tips的模板" enabled="true" />
@@ -43,7 +43,7 @@
 	<component name="stringDisplayColumn" type="stringColumn" label="显示" xmlElName="column" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="showTips"  label="显示提示信息" type="boolean" allowBlank="false" />
 			<property name="tipsTemplate" widget="textareaEditor" label="信息表达式" type="text" allowBlank="true" info="生成目标tips的模板" enabled="true" />
 		</properties>
@@ -66,7 +66,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -96,7 +96,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -126,7 +126,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -154,7 +154,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -182,7 +182,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -212,7 +212,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -240,7 +240,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -267,7 +267,7 @@
 	<component name="textDisplayColumn" type="textColumn" label="文本内容"  xmlElName="column" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="showTips" 		label="显示提示信息" type="boolean" allowBlank="false" />
 			<property name="tipsTemplate" widget="textareaEditor" label="信息表达式" type="text" allowBlank="true" info="生成目标tips的模板" enabled="true" />
 		</properties>
@@ -289,7 +289,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -316,7 +316,7 @@
 	<component name="booleanDisplayColumn" type="booleanColumn" label="显示"  xmlElName="column" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="showCheckbox" label="显示方式" type="string" allowBlank="false" info="是否显示复选框" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'文字'},{value:'true',text:'复选框'}]" />
 			<property name="trueText" label="true文字" type="string" allowBlank="true" info="值为true时显示为"/>
@@ -339,7 +339,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -365,7 +365,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -394,7 +394,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -421,7 +421,7 @@
 	<component name="intDisplayColumn" type="intColumn" label="显示"  xmlElName="column" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="textAlign" label="对齐方式" type="string" default="right" allowBlank="false" info="对齐方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'left',text:'左对齐'
 				},{
@@ -450,7 +450,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -487,7 +487,7 @@
 	<component name="doubleDisplayColumn" type="doubleColumn" label="显示" xmlElName="column" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="textAlign" label="对齐方式" type="string" default="right" allowBlank="false" info="对齐方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'left',text:'左对齐'
 				},{
@@ -530,7 +530,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -581,7 +581,7 @@
 	<component name="dateDisplayColumn" type="dateColumn" label="显示"  xmlElName="column" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 		</properties>
 		<extensions>
 		</extensions>
@@ -600,7 +600,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -628,7 +628,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -654,7 +654,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -680,7 +680,7 @@
 	<component name="objectDisplayColumn" type="objectColumn" label="显示"  xmlElName="column" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 		</properties>
 		<extensions>
 		</extensions>
@@ -701,7 +701,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -748,7 +748,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -786,7 +786,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -809,7 +809,7 @@
 	<component name="setDisplayColumn" type="setColumn" label="显示"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 		</properties>
 		<extensions>
 		</extensions>
@@ -830,7 +830,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -847,7 +847,7 @@
 		
 			<property name="datasourceName" label="数据源" type="string" allowBlank="false" info="数据源"  widget="textSelectEditor" dataGetter="getDatasetOptions" />
 			<property name="keyProperty" label="关键字段" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" dataGetter="getKeyPropertyOptions" info="" enabled="true" onChange="setKeyProperty"/>
-			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 		</properties>
 		<extensions>
 			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
@@ -869,7 +869,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="renderType" label="生成方式" type="string" default="rela" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
 				},{
@@ -897,7 +897,7 @@
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
-			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成目标内容的模板" enabled="true" />
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<!--暂时只允许附件表格以“替换输入域”的方式生成-->
 			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
 					value:'insert',text:'生成输入域'
