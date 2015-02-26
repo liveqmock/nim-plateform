@@ -353,8 +353,13 @@
 	<component name="tabSelector" xmlElName="tab" type="tab" label="标签页选择" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setTabSelectorRenderTo" droppable=".tab"/>
+			<property name="autoRender" label="自动生成" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
+					value:'true',text:'是'
+				},{
+					value:'false',text:'否'
+				}]" />
 			<property name="activeClass" label="css类(active)" type="string" allowBlank="true" info="选中效果" enabled="true" />
-			<property name="hoverClass" label="css类(hover)" type="string" allowBlank="true" info="hover效果" enabled="true" />
+			<property name="disableClass" label="css类(disable)" type="string" allowBlank="true" info="disable效果" enabled="true" />
 		</properties>
 		<events>
 		</events>
@@ -379,40 +384,7 @@
 			]]>
 		</comment>
 	</component>
-	<!-- .......6.2  标签页生成  tab-->
-	<component name="tabGenerator" xmlElName="tab" type="tab" label="标签页生成" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
-		<properties>
-			<property name="datasourceName" label="数据源" type="string" allowBlank="false" info="数据源"  widget="textSelectEditor" dataGetter="getDatasetOptions" />
-			<property name="labelField" label="显示字段名" type="string" allowBlank="false" default="" info="数据中用于显示的字段名"/>
-			<property name="codeField" label="代号字段名" type="string" allowBlank="false" default="" info="数据中用于标签代号的字段名"/>
-			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setTabSelectorRenderTo" droppable=".tab"/>
-			<property name="renderTemplate" widget="textareaEditor" label="构建模板" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
-			<property name="activeClass" label="css类(active)" type="string" allowBlank="true" info="选中效果" enabled="true" />
-			<property name="hoverClass" label="css类(hover)" type="string" allowBlank="true" info="hover效果" enabled="true" />
-		</properties>
-		<events>
-		</events>
-		<dependencies>
-			<dependency type-name="page"/>
-		</dependencies>
-		<comment>
-			<![CDATA[
-			页面上用于生成标签页的结构建议为:
-			<div>
-				<ul id="tab_selector_container">
-					<li class="activeClass" href="#rela_div_id1">
-					<li class="hoverClass"  href="#rela_div_id2">
-				</ul>
-				<div id="rela_div_id1" style="display:block;">content1</div>
-				<div id="rela_div_id2" style="display:none;">content2</div>
-			</div>
-			
-			其中 1、标签页必须使用<ul>元素
-			    2、<li>元素中 必须通过 href属性，指定关联的div
-			    3、在设计标签时，需要对选中和hover的标签效果定义相应的 css 类
-			]]>
-		</comment>
-	</component>
+	
 	<!-- .......7.1单表编辑表单singleEditForm............ -->
 	<component name="singleEditForm" xmlElName="form" type="form" label="单表编辑表单" isEditable="true" isRemovable="true"  iconClass="ui-icon-contact" isArray="false">
 		<properties>

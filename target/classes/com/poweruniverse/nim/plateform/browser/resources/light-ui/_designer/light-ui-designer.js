@@ -341,36 +341,35 @@ LUI.PageDesigner = {
 						var edit_js_area = $( "#_designer-edit-html-container" );
 						if(edit_js_area.length ==0){
 							 $( "body" ).append('<div id="_designer-edit-html-container" > <textarea style="border:0px;margin:0px;width:100%;height:100%;" id="_designer-edit-html-editor"></textarea></div>');
-							 $.ajax({
-									url: "/jservice/", 
-									type: "POST", 
-									data:{
-										component:'nim-plateform',
-										service:'designer',
-										method:'readFile',
-										arguments:'{'+
-											'pageUrl:"'+LUI.PageDesigner.instance._pageInfo.htmlPage+'"'+
-										'}'
-									},
-									dataType:"text",
-									success: function(result){
-										$( "#_designer-edit-html-editor" ).text(result);
-										LUI.PageDesigner.instance.htmlCodeMirrorEdit = CodeMirror.fromTextArea(document.getElementById("_designer-edit-html-editor"), {
-										     lineNumbers: true,
-										     matchBrackets: true,
-										     continueComments: "Enter",
-										     extraKeys: {"Ctrl-Q": "toggleComment"},
-										     mode: "htmlmixed"
-										 });
-										LUI.PageDesigner.instance.openHtmlEditDialog();
-									},
-									error:function(){
-										alert("读取html文件失败："+"访问服务器失败！");
-									}
-								});
-						}else{
-							LUI.PageDesigner.instance.openHtmlEditDialog();
+							 LUI.PageDesigner.instance.htmlCodeMirrorEdit = CodeMirror.fromTextArea(document.getElementById("_designer-edit-html-editor"), {
+							     lineNumbers: true,
+							     matchBrackets: true,
+							     continueComments: "Enter",
+							     extraKeys: {"Ctrl-Q": "toggleComment"},
+							     mode: "htmlmixed"
+							 });
 						}
+						$.ajax({
+							url: "/jservice/", 
+							type: "POST", 
+							data:{
+								component:'nim-plateform',
+								service:'designer',
+								method:'readFile',
+								arguments:'{'+
+									'pageUrl:"'+LUI.PageDesigner.instance._pageInfo.htmlPage+'"'+
+								'}'
+							},
+							dataType:"text",
+							success: function(result){
+								LUI.PageDesigner.instance.htmlCodeMirrorEdit.setValue(result);
+								//$( "#_designer-edit-html-editor" ).text(result);
+								LUI.PageDesigner.instance.openHtmlEditDialog();
+							},
+							error:function(){
+								alert("读取html文件失败："+"访问服务器失败！");
+							}
+						});
 						return false;
 					});
 					//编辑css文件源代码
@@ -378,36 +377,35 @@ LUI.PageDesigner = {
 						var edit_js_area = $( "#_designer-edit-css-container" );
 						if(edit_js_area.length ==0){
 							 $( "body" ).append('<div id="_designer-edit-css-container" > <textarea style="border:0px;margin:0px;width:100%;height:100%;" id="_designer-edit-css-editor"></textarea></div>');
-							 $.ajax({
-									url: "/jservice/", 
-									type: "POST", 
-									data:{
-										component:'nim-plateform',
-										service:'designer',
-										method:'readFile',
-										arguments:'{'+
-											'pageUrl:"'+LUI.PageDesigner.instance._pageInfo.cssPage+'"'+
-										'}'
-									},
-									dataType:"text",
-									success: function(result){
-										$( "#_designer-edit-css-editor" ).text(result);
-										LUI.PageDesigner.instance.cssCodeMirrorEdit = CodeMirror.fromTextArea(document.getElementById("_designer-edit-css-editor"), {
-										     lineNumbers: true,
-										     matchBrackets: true,
-										     continueComments: "Enter",
-										     extraKeys: {"Ctrl-Q": "toggleComment"},
-										     mode: "css"
-										 });
-										LUI.PageDesigner.instance.openCssEditDialog();
-									},
-									error:function(){
-										alert("读取css文件失败："+"访问服务器失败！");
-									}
-								});
-						}else{
-							LUI.PageDesigner.instance.openCssEditDialog();
+							 LUI.PageDesigner.instance.cssCodeMirrorEdit = CodeMirror.fromTextArea(document.getElementById("_designer-edit-css-editor"), {
+							     lineNumbers: true,
+							     matchBrackets: true,
+							     continueComments: "Enter",
+							     extraKeys: {"Ctrl-Q": "toggleComment"},
+							     mode: "css"
+							 });
 						}
+						$.ajax({
+							url: "/jservice/", 
+							type: "POST", 
+							data:{
+								component:'nim-plateform',
+								service:'designer',
+								method:'readFile',
+								arguments:'{'+
+									'pageUrl:"'+LUI.PageDesigner.instance._pageInfo.cssPage+'"'+
+								'}'
+							},
+							dataType:"text",
+							success: function(result){
+								LUI.PageDesigner.instance.cssCodeMirrorEdit.setValue(result);
+								//$( "#_designer-edit-css-editor" ).text(result);
+								LUI.PageDesigner.instance.openCssEditDialog();
+							},
+							error:function(){
+								alert("读取css文件失败："+"访问服务器失败！");
+							}
+						});
 						return false;
 					});
 					//编辑js文件源代码
@@ -415,36 +413,35 @@ LUI.PageDesigner = {
 						var edit_js_area = $( "#_designer-edit-js-container" );
 						if(edit_js_area.length ==0){
 							 $( "body" ).append('<div id="_designer-edit-js-container" ><textarea style="border:0px;margin:0px;width:100%;height:100%;" id="_designer-edit-js-editor"></textarea></div>');
-							 $.ajax({
-									url: "/jservice/", 
-									type: "POST", 
-									data:{
-										component:'nim-plateform',
-										service:'designer',
-										method:'readFile',
-										arguments:'{'+
-											'pageUrl:"'+LUI.PageDesigner.instance._pageInfo.jsPage+'"'+
-										'}'
-									},
-									dataType:"text",
-									success: function(result){
-										$( "#_designer-edit-js-editor" ).text(result);
-										LUI.PageDesigner.instance.jsCodeMirrorEdit = CodeMirror.fromTextArea(document.getElementById("_designer-edit-js-editor"), {
-										     lineNumbers: true,
-										     matchBrackets: true,
-										     continueComments: "Enter",
-										     extraKeys: {"Ctrl-Q": "toggleComment"},
-										     mode: "javascript"
-										 });
-										LUI.PageDesigner.instance.openJsEditDialog();
-									},
-									error:function(){
-										LUI.Message.info("访问服务器失败！");
-									}
-								});
-						}else{
-							LUI.PageDesigner.instance.openJsEditDialog();
+							 LUI.PageDesigner.instance.jsCodeMirrorEdit = CodeMirror.fromTextArea(document.getElementById("_designer-edit-js-editor"), {
+							     lineNumbers: true,
+							     matchBrackets: true,
+							     continueComments: "Enter",
+							     extraKeys: {"Ctrl-Q": "toggleComment"},
+							     mode: "javascript"
+							 });
 						}
+						$.ajax({
+							url: "/jservice/", 
+							type: "POST", 
+							data:{
+								component:'nim-plateform',
+								service:'designer',
+								method:'readFile',
+								arguments:'{'+
+									'pageUrl:"'+LUI.PageDesigner.instance._pageInfo.jsPage+'"'+
+								'}'
+							},
+							dataType:"text",
+							success: function(result){
+								LUI.PageDesigner.instance.jsCodeMirrorEdit.setValue(result);
+								//$( "#_designer-edit-js-editor" ).text(result);
+								LUI.PageDesigner.instance.openJsEditDialog();
+							},
+							error:function(){
+								LUI.Message.info("访问服务器失败！");
+							}
+						});
 						return false;
 					});
 
@@ -453,35 +450,34 @@ LUI.PageDesigner = {
 						var edit_js_area = $( "#_designer-edit-xml-container" );
 						if(edit_js_area.length ==0){
 							 $( "body" ).append('<div id="_designer-edit-xml-container" > <textarea style="border:0px;margin:0px;width:100%;height:100%;" id="_designer-edit-xml-editor"></textarea></div>');
-							 $.ajax({
-									url: "/jservice/", 
-									type: "POST", 
-									data:{
-										component:'nim-plateform',
-										service:'designer',
-										method:'readFile',
-										arguments:'{'+
-											'pageUrl:"'+LUI.PageDesigner.instance._pageInfo.xmlPage+'"'+
-										'}'
-									},
-									dataType:"text",
-									success: function(result){
-										$( "#_designer-edit-xml-editor" ).text(result);
-										LUI.PageDesigner.instance.xmlCodeMirrorEdit = CodeMirror.fromTextArea(document.getElementById("_designer-edit-xml-editor"), {
-										     lineNumbers: true,
-										     matchBrackets: true,
-										     continueComments: "Enter",
-										     mode: "xml"
-										 });
-										LUI.PageDesigner.instance.openXmlEditDialog();
-									},
-									error:function(){
-										LUI.Message.info("访问服务器失败！");
-									}
-								});
-						}else{
-							LUI.PageDesigner.instance.openXmlEditDialog();
+							 LUI.PageDesigner.instance.xmlCodeMirrorEdit = CodeMirror.fromTextArea(document.getElementById("_designer-edit-xml-editor"), {
+							     lineNumbers: true,
+							     matchBrackets: true,
+							     continueComments: "Enter",
+							     mode: "xml"
+							 });
 						}
+						$.ajax({
+							url: "/jservice/", 
+							type: "POST", 
+							data:{
+								component:'nim-plateform',
+								service:'designer',
+								method:'readFile',
+								arguments:'{'+
+									'pageUrl:"'+LUI.PageDesigner.instance._pageInfo.xmlPage+'"'+
+								'}'
+							},
+							dataType:"text",
+							success: function(result){
+								LUI.PageDesigner.instance.xmlCodeMirrorEdit.setValue(result);
+								//$( "#_designer-edit-xml-editor" ).text(result);
+								LUI.PageDesigner.instance.openXmlEditDialog();
+							},
+							error:function(){
+								LUI.Message.info("访问服务器失败！");
+							}
+						});
 						return false;
 					});
 					
@@ -4024,11 +4020,11 @@ function setTabSelectorRenderTo(eventSource,eventTarget,event,eventOriginal){
 			selectedNode.record.setFieldValue('activeClass',firstLI.attr("class"));
 		}
 		
-		//以第二个li为准 是hover的效果
+		//以第二个li为准 是disable的效果
 		var nextLI = firstLI.next();
-		var hoverClassValue = selectedNode.record.getFieldValue('hoverClass');
-		if(hoverClassValue == null || hoverClassValue.length==0){
-			selectedNode.record.setFieldValue('hoverClass',nextLI.attr("class"));
+		var disableClassValue = selectedNode.record.getFieldValue('disableClass');
+		if(disableClassValue == null || disableClassValue.length==0){
+			selectedNode.record.setFieldValue('disableClass',nextLI.attr("class"));
 		}
 		
 		//从目标元素的href属性中 取得显示名称

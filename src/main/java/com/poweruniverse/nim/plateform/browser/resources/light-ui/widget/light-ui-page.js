@@ -283,6 +283,9 @@ LUI.Page = {
 					//如果未登录 且页面需要登录
 					if(!htmlResult.isLogged && htmlResult.currentPage.needsLogin){
 						//跳转至登录页面
+						if(LUI.Page.instance!=null){
+							LUI.Page.instance.setSilence(true);
+						}
 						window.location = htmlResult.loginPage;
 					}else{
 						//加载css
