@@ -189,6 +189,10 @@ public class PageWebserviceImpl extends BasePlateformWebservice{
 					pageObj.put("needsLogin", "true".equalsIgnoreCase(needsLogin));
 					pageObj.put("width", pageWidth);
 					pageObj.put("height", pageHeight);
+					
+					msg.put("xmlExists", true);
+				}else{
+					msg.put("xmlExists", false);
 				}
 				msg.put("currentPage", pageObj);
 				msg.put("loginPage", app.getLoginPage());
@@ -263,5 +267,31 @@ public class PageWebserviceImpl extends BasePlateformWebservice{
 		return msg;
 	}
 
-
+	/**
+	 * 读取module目录下的页面xml文件 
+	 * @return
+	 */
+	public StringResult xml(
+			@WebParam(name="contextPath") String contextPath,
+			@WebParam(name="pageUrl") String pageUrl){
+		StringResult msg = null;
+		try {
+			Application app = Application.getInstance();
+			
+			//检查pageUrl 是否合法(无.. js后缀)
+			int hasDD = pageUrl.indexOf("..");
+			if(hasDD>=0 || !pageUrl.endsWith("xml")){
+				msg = new StringResult("");
+				System.err.println("xml文件"+pageUrl+"不存在！");
+			}else{
+				File cfgFile = new File(contextPath+app.getModulePath()+"/"+pageUrl);
+				String fileContent = FileUtils.readFileToString(cfgFile,"utf-8");
+				msg = new StringResult(fileContent);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = new StringResult("");
+		}
+		return msg;
+	}
 }

@@ -1661,7 +1661,7 @@ LUI.Form.Field.URLField = {
 								.click(function(){
 									//弹出文件选择窗口
 									LUI.PageUtils.popup({
-										page:'system/moduleFileList.html',
+										page:'system/moduleFileSelect/moduleFileSelect.html',
 										buttons: {
 											"确定": function() {
 												var tree = LUI.Tree.getInstance('moduleFileTree');

@@ -537,22 +537,24 @@ LUI.PageDesigner = {
 					
 					this._gnComponentBtn = $('#_designer').find( "#_designer-tools-gn-node" ).button({
 						 text: false,
-						 disabled: true,
+//						 disabled: true,
 						 icons: {
 							 primary: "ui-icon-clipboard"
 						 }
 					}).click(function(){
 						//取得当前节点对应的系统代号及功能代号
+						window.open('nim.html?_pt_=system/gongNengList/gongNengList.html');
 					});
 					
 					this._stlComponentBtn = $('#_designer').find( "#_designer-tools-stl-node" ).button({
 						 text: false,
-						 disabled: true,
+//						 disabled: true,
 						 icons: {
 							 primary: "ui-icon-copy"
 						 }
 					}).click(function(){
 						//取得当前节点对应的系统代号及功能代号
+						window.open('nim.html?_pt_=system/shiTiLeiList/shiTiLeiList.html');
 					});
 					
 					this._propertyToggleBtn = $('#_designer').find( "#_designer-tools-property-toggle" ).button({
@@ -1803,8 +1805,8 @@ LUI.PageDesigner = {
 					//根据节点的isRemovable属性 确定删除按钮状态
 					LUI.PageDesigner.instance._removeComponentBtn.button( "disable");
 					LUI.PageDesigner.instance._addComponentBtn.button( "disable");
-					LUI.PageDesigner.instance._gnComponentBtn.button( "disable");
-					LUI.PageDesigner.instance._stlComponentBtn.button( "disable");
+//					LUI.PageDesigner.instance._gnComponentBtn.button( "disable");
+//					LUI.PageDesigner.instance._stlComponentBtn.button( "disable");
 					
 					if(selectedNode.component==null){
 						//结构节点
@@ -1814,10 +1816,10 @@ LUI.PageDesigner = {
 						LUI.PageDesigner.instance._designerPanel.close('south');
 					}else if(selectedNode.component.type!='log'){
 						//根据节点的type确定 功能 实体类 按钮的 状态
-						if(selectedNode.component.type == 'datastore'){
-							LUI.PageDesigner.instance._gnComponentBtn.button( "enable");
-							LUI.PageDesigner.instance._stlComponentBtn.button( "enable");
-						}
+//						if(selectedNode.component.type == 'datastore'){
+//							LUI.PageDesigner.instance._gnComponentBtn.button( "enable");
+//							LUI.PageDesigner.instance._stlComponentBtn.button( "enable");
+//						}
 						
 						//根据节点的isRemovable属性 确定删除按钮状态
 						if(selectedNode.component.isRemovable == "true"){
@@ -2402,8 +2404,8 @@ LUI.PageDesigner = {
 						'<button id="_designer-tools-add-node" title="新增...">+</button>'+
 						'<button id="_designer-tools-remove-node">删除</button>'+
 						'<button id="_designer-tools-save">保存</button>'+
-						'<button id="_designer-tools-gn-node">新增功能</button>'+
-						'<button id="_designer-tools-stl-node">新增实体类</button>'+
+						'<button id="_designer-tools-gn-node">打开功能列表</button>'+
+						'<button id="_designer-tools-stl-node">打开实体类列表</button>'+
 						'<input id="_designer-tools-property-toggle" type="checkbox" checked  >' +
 						'	<label for="_designer-tools-property-toggle" style="height:24px" title="显示/隐藏属性窗口"></label>'+
 						'<input id="_designer-tools-orginal-toggle" type="checkbox" >' +
