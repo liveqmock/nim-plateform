@@ -1291,6 +1291,29 @@
 			<dependency type-name="buttons"/>
 		</dependencies>
 	</component>
+	<!-- 12.1 保存按钮......... -->
+	<component name="saveButton" xmlElName="save" type="button" label="保存按钮" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
+		<properties>
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="renderType" label="生成方式" type="string" default="none" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'insert',text:'生成按钮'
+				},{
+					value:'replace',text:'替换按钮'
+				},{
+					value:'rela',text:'关联按钮'
+				}]"/>			
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" droppable=".button"/>
+		</properties>
+		<events>
+			<event name="onClick" type="string" label="点击" params=""/>
+		</events>
+		<dependencies>
+			<dependency component-name="buttons"/>
+		</dependencies>
+	</component>
 	<!-- 12.1 提交按钮......... -->
 	<component name="submitButton" xmlElName="submit" type="button" label="提交按钮" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="true">
 		<properties>

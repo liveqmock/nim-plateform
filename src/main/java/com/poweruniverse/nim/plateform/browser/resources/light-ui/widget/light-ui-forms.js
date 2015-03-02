@@ -468,6 +468,8 @@ LUI.Form.Button = {
 		if(btnType==null){
 			if(btnCfg.component == 'submitButton'){
 				btnType = 'submit';
+			}else if(btnCfg.component == 'saveButton'){
+				btnType = 'save';
 			}else if(btnCfg.component == 'resetButton'){
 				btnType = 'reset';
 			}else{
@@ -497,6 +499,21 @@ LUI.Form.Button = {
 			renderType:'none',
 			type:btnType,
 			onClickFunc:null,
+			save:function(){
+				var xiTongDH = null;
+				if(this.form.xiTongDH!=null){
+					xiTongDH = this.form.xiTongDH;
+				}
+				var gongNengDH = null;
+				if(this.form.gongNengDH!=null){
+					gongNengDH = this.form.gongNengDH;
+				}
+				var caoZuoDH = null;
+				if(this.form.caoZuoDH!=null){
+					caoZuoDH = this.form.caoZuoDH;
+				}
+				this.form.datasource.save(xiTongDH,gongNengDH,caoZuoDH);
+			},
 			submit:function(){
 				if(this.form.isValid()){
 					var xiTongDH = null;
@@ -512,7 +529,7 @@ LUI.Form.Button = {
 						caoZuoDH = this.form.caoZuoDH;
 					}
 					
-					this.form.datasource.save(xiTongDH,gongNengDH,caoZuoDH,true);
+					this.form.datasource.submit(xiTongDH,gongNengDH,caoZuoDH);
 				}else{
 					var invalidField = this.form.getFirstInvalidField();
 					
@@ -524,8 +541,6 @@ LUI.Form.Button = {
 							}
 						}
 					});
-					
-//						LUI.Message.error('提示','表单中有未检查通过的字段，请修改后重试！');
 					return ;
 				}
 			},
@@ -560,9 +575,13 @@ LUI.Form.Button = {
 						this.el = $(this.form.renderto +' ' +this.renderto).first();
 					}
 					
-					//与页面元素建立关联
+					//与页面元素建立关联(用这种方式保证上下文正确)
 					var _this = this;
-					if(this.type == 'submit'){
+					if(this.type == 'save'){
+						this.el.click(function(){
+							_this.save();
+						});
+					}else if(this.type == 'submit'){
 						this.el.click(function(){
 							_this.submit();
 						});
@@ -570,18 +589,18 @@ LUI.Form.Button = {
 						this.el.click(function(){
 							_this.reset();
 						});
-//							this.el.bind('click',this.reset);
 					}else{
 						this.el.click(function(){
 							_this.onClickFunc();
 						});
-//							this.el.bind('click',this.onClickFunc);
 					}
 					this.rendered = true;
 				}
 			},
 			//撤销对页面元素的改变
 			deRender:function(forceDeRender){
+				//取消事件关联
+				this.el.unbind();
 				//根据构建类型 确定如何derender此按钮
 				if(this.renderType == 'append'){
 					//删除新的按钮元素
@@ -597,15 +616,7 @@ LUI.Form.Button = {
 				}else if(this.renderType == 'rela'){
 					
 				}
-				
 				//与页面元素取消关联
-				if(this.type == 'submit'){
-					this.el.unbind('click',this.submit);
-				}else if(this.type == 'reset'){
-					this.el.unbind('click',this.reset);
-				}else{
-					this.el.unbind('click',this.onClickFunc);
-				}
 				this.el = null;
 				this.rendered = false;
 			},
@@ -687,19 +698,6 @@ LUI.SearchDatasourceForm = {
 						assist:assist
 					}
 				},
-//					setValue:function(fieldName,value){
-//						var fieldExists = false;
-//						for(var i=0;i<this.filters.length;i++){
-//							if(this.filters[i].name == fieldName){
-//								this.filters[i].value = value;
-//								fieldExists = true;
-//								break;
-//							}
-//						}
-//						if(!fieldExists){
-//							LUI.Message.warn('设置查询参数失败','字段('+fieldName+')不存在！');
-//						}
-//					},
 				submit:function(){
 					if(this.events!=null ){
 						var beforeSearchFunction = null;

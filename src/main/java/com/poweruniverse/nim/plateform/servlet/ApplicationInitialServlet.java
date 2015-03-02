@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import net.sf.json.JSONObject;
+
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -162,12 +164,22 @@ public class ApplicationInitialServlet extends BasePlateformServlet{
 			for(Element sessionFactoryEl : sessionFactoryEls){
 				String sessionFactoryName = sessionFactoryEl.attributeValue("name");
 				String sessionFactoryFileName = sessionFactoryEl.attributeValue("cfgFileName");
+				String srcPath = sessionFactoryEl.attributeValue("srcPath");
+				String classesPath = sessionFactoryEl.attributeValue("classesPath");
+				String entityPackage = sessionFactoryEl.attributeValue("entityPackage");
 				
+				JSONObject sessionConfig = new JSONObject();
+				sessionConfig.put("name", sessionFactoryName);
+				sessionConfig.put("cfgFileName", sessionFactoryFileName);
+				sessionConfig.put("srcPath", srcPath);
+				sessionConfig.put("classesPath", classesPath);
+				sessionConfig.put("entityPackage", entityPackage);
+
 				File sessionFactoryFile = new File(contextPath+sessionFactoryFileName);
 				if(!sessionFactoryFile.exists()){
 					System.err.println("sessionFactory "+sessionFactoryName+" 的配置文件("+sessionFactoryFile.getPath()+")不存在！");
 				}
-				HibernateSessionFactory.createSessionFactory(sessionFactoryName, sessionFactoryFile);
+				HibernateSessionFactory.createSessionFactory(sessionFactoryName, sessionFactoryFile,sessionConfig);
 				
 			}
 

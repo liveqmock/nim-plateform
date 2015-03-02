@@ -883,8 +883,24 @@ LUI.EditGrid = {
 				this.removeAllListener();
 				LUI.Grid.instances.remove(this);
 			},
-			submit:function(noCheck){
-				if(noCheck || this.isValid()){
+			save:function(){
+				var xiTongDH = null;
+				if(this.xiTongDH!=null){
+					xiTongDH = this.xiTongDH;
+				}
+				var gongNengDH = null;
+				if(this.gongNengDH!=null){
+					gongNengDH = this.gongNengDH;
+				}
+				var caoZuoDH = null;
+				if(this.caoZuoDH!=null){
+					caoZuoDH = this.caoZuoDH;
+				}
+				
+				this.datasource.save(xiTongDH,gongNengDH,caoZuoDH);
+			},
+			submit:function(){
+				if(this.isValid()){
 					var xiTongDH = null;
 					if(this.xiTongDH!=null){
 						xiTongDH = this.xiTongDH;
@@ -898,7 +914,7 @@ LUI.EditGrid = {
 						caoZuoDH = this.caoZuoDH;
 					}
 					
-					this.datasource.save(xiTongDH,gongNengDH,caoZuoDH,true);
+					this.datasource.submit(xiTongDH,gongNengDH,caoZuoDH);
 				}else{
 					var invalidField = this.getFirstInvalidField();
 					

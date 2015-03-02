@@ -227,32 +227,45 @@ LUI.Datasource = {
 					}
 				}
 			},
-			save:function(xiTongDH_p,gongNengDH_p,caoZuoDH_p,isCommit_p,callback){
-				
+			_onSave:function(xiTongDH_p,gongNengDH_p,caoZuoDH_p,isCommit,callback){
 				var xiTongDH = xiTongDH_p||this.xiTongDH;
 				var gongNengDH = gongNengDH_p||this.gongNengDH;
 				var caoZuoDH = caoZuoDH_p||this.caoZuoDH;
-				var isCommit = true;
-				if(isCommit_p !=null){
-					isCommit = isCommit_p;
-				}
 				//显示等待mask
-				var dsSavingMsgId = LUI.Page.instance.mask('数据源('+this.label+')正在保存...');
-				var submitData = [];
+				var dsSavingMsgId = LUI.Page.instance.mask('数据源('+this.label+')正在保存，请稍候...');
+				var submitData = {};
+				var insertedRows = [];
+				var modifiedRows = [];
+				var deletedRows = [];
 				var submitCount = 0;
 				for(var i=0;i<this.records.size();i++){
 					var r = this.getRecord(i);
-					if(r.isModified()){
-						submitData[submitData.length] = r.getSubmitData(true);
+					if(r.isDeleted && !r.isNew){
+						//旧数据 删除 仅传递主键值
+						var removeData = {};
+						removeData[r.primaryFieldName] = r.primaryFieldValue;
+						
+						deletedRows[deletedRows.length] = removeData;
 						submitCount++;
-					}else if(isCommit_p){
-						//commit的时候 未修改数据 需要将主键值传递回去
-						var emptyData = {};
-						emptyData[r.primaryFieldName] = r.primaryFieldValue;
-						submitData[submitData.length] = emptyData;
+					}else if(r.isNew && r.isModified()){
+						//新数据 修改
+						insertedRows[insertedRows.length] = r.getSubmitData(true);
+						submitCount++;
+					}else if(!r.isNew && r.isModified()){
+						//旧数据 修改
+						modifiedRows[modifiedRows.length] = r.getSubmitData(true);
+						submitCount++;
+					}else if(isCommit && !r.isModified() && r.isNew){
+						//旧数据 未修改 强制保存 仅传递主键值
+						var removeData = {};
+						removeData[r.primaryFieldName] = r.primaryFieldValue;
+						
+						modifiedRows[modifiedRows.length] = removeData;
+						submitCount++;
 					}
 				}
-				if(submitCount ==0 && !isCommit_p){
+				
+				if(submitCount ==0 ){
 					//无待提交的数据
 					//关闭等待的mask
 					LUI.Page.instance.unmask(dsSavingMsgId);
@@ -262,12 +275,17 @@ LUI.Datasource = {
 						//未保存 且无回调函数 弹出提示信息
 						LUI.Message.info("信息","未找到需要保存的数据！");
 					}
-					
-					this.fireEvent(this.events.save,{
-						success:true,info:'未修改数据'
-					},this);
-					
 					return;
+				}
+				
+				if(insertedRows.length >0){
+					submitData.inserted = insertedRows;
+				}
+				if(modifiedRows.length >0){
+					submitData.modified = modifiedRows;
+				}
+				if(deletedRows.length >0){
+					submitData.deleted = deletedRows;
 				}
 				
 				$.ajax({
@@ -289,23 +307,24 @@ LUI.Datasource = {
 					context:this,
 					success: function(result){
 						if(result.success){
-							if(this.records.size() == result.data.length){
-								//只有数据集记录与返回主键集合大小一致时 才设置主键
-								//认为这样是全数据集新增的情况 （也只有此情况下才有设置主键、继续修改的需求）
-								for(var i=0;i<this.records.size();i++){
-									var r = this.getRecord(i);
-									r.saveOK(result.data[i]);
+							//服务器返回的rows 是包括主、从表的全部记录
+							if(result.rows!=null){
+								for(var i=0;i<result.rows.length;i++){
+									var r = LUI.Record.getInstance(result.rows[i]._record_id);
+									r.saveOK(result.rows[i]);
 								}
 							}
-							
 						}else{
 							LUI.Message.info("保存失败",result.errorMsg);
 						}
-						
-						if(callback!=null){
-							callback.apply(this,[result])
+						//只向回调函数传递是否成功的消息
+						var ret = {
+							success:result.success,
+							errorMsg:result.errorMsg
 						}
-						this.fireEvent(this.events.save,result,this);
+						if(callback!=null){
+							callback.apply(this,[ret])
+						}
 						//关闭等待的mask
 						LUI.Page.instance.unmask(dsSavingMsgId);
 					},
@@ -315,11 +334,25 @@ LUI.Datasource = {
 						LUI.Page.instance.unmask(dsSavingMsgId);
 					}
 				});
-				
-				
 			},
-			commit:function(){
-				this.fireEvent(this.events.submit,{},this);
+			save:function(xiTongDH_p,gongNengDH_p,caoZuoDH_p,callback){
+				//保存当前新增、修改或删除的数据
+				this._onSave(xiTongDH_p,gongNengDH_p,caoZuoDH_p,false,function(result){
+					if(callback!=null){
+						callback.apply(this,[result])
+					}
+					this.fireEvent(this.events.save,result,this);
+				});
+			},
+			submit:function(xiTongDH_p,gongNengDH_p,caoZuoDH_p,callback){
+				//提交全部数据
+				//1、未修改或删除的 也要提交数据主键值
+				this._onSave(xiTongDH_p,gongNengDH_p,caoZuoDH_p,true,function(result){
+					if(callback!=null){
+						callback.apply(this,[result])
+					}
+					this.fireEvent(this.events.submit,result,this);
+				});
 			},
 			destroy:function(){
 				for(var i=0;i<this.records.size();i++){
@@ -355,6 +388,14 @@ LUI.Datasource = {
 					LUI.Message.warn('警告','数据源'+datasetConfig.label+'onSave事件的处理函数('+datasetInstance.listenerDefs.onSave+')不存在！');
 				}else{
 					datasetInstance.addListener(datasetInstance.events.save,null,onSaveFunc);
+				}
+			}
+			if(datasetInstance.listenerDefs.onSubmit!=null){
+				var onSubmitFunc = window[datasetInstance.listenerDefs.onSubmit];
+				if(onSubmitFunc==null){
+					LUI.Message.warn('警告','数据源'+datasetConfig.label+'onSubmit事件的处理函数('+datasetInstance.listenerDefs.onSubmit+')不存在！');
+				}else{
+					datasetInstance.addListener(datasetInstance.events.submit,null,onSubmitFunc);
 				}
 			}
 		}

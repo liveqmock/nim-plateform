@@ -238,30 +238,35 @@ LUI.Page = {
 				pageContent = pageContent.replace(linkReg ,'');
 			}
 			//处理要显示的内容 如果是唯一元素 设置其高度100%
-			$(targetId).html(pageContent);
-			
+			$(targetId).css('opacity','0').html(pageContent);
 			//有同名的js文件 要在解析xml之前加载！
 			if(htmlResult.jsExists){
 				LUI.Page.loadJS(jsPage,true,function(){//这里的jsPage 是module目录下的文件
 		        	if(!_urlInfo.params.originMode){
 		        		//加载xml
 		        		LUI.Page.loadXML(xmlPage,htmlResult.currentPage.name,params,isIndependent,function(){
+		        			$(targetId).css('opacity','1');
 		        			//callback执行之前 此页面的load事件已执行
 							if(callback!=null){
 								callback.apply(this,[htmlResult.currentPage]);
 							}
 						});
+		        	}else{
+		        		$(targetId).css('opacity','1');
 		        	}
 				});
 			}else{
 				if(!_urlInfo.params.originMode){
 	        		//加载xml
 	        		LUI.Page.loadXML(xmlPage,htmlResult.currentPage.name,params,isIndependent,function(){
+	        			$(targetId).css('opacity','1');
 	        			//callback执行之前 此页面的load事件已执行
 						if(callback!=null){
 							callback.apply(this,[htmlResult.currentPage]);
 						}
 					});
+	        	}else{
+	        		$(targetId).css('opacity','1');
 	        	}
 			}
 		});

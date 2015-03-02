@@ -237,7 +237,7 @@
 
 		LUI.Message = {
 			info:function(title,message,type,option){
-				if(LUI.Page.instance.isSilenced){
+				if(LUI.Page.instance!=null && LUI.Page.instance.isSilenced){
 					return;
 				}
 				var divEl = $(
@@ -288,7 +288,7 @@
 				});
 			},
 			warn:function(title,message,type,option){
-				if(LUI.Page.instance.isSilenced){
+				if(LUI.Page.instance!=null && LUI.Page.instance.isSilenced){
 					return;
 				}
 				var divEl = $('<div title="'+title+'">'+
@@ -334,7 +334,7 @@
 
 			},
 			error:function(title,message,type,option){
-				if(LUI.Page.instance.isSilenced){
+				if(LUI.Page.instance!=null && LUI.Page.instance.isSilenced){
 					return;
 				}
 				var divEl = $('<div title="'+title+'">'+

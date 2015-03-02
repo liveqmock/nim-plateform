@@ -354,6 +354,8 @@ LUI.Record = {
 					if(!this.isNew){
 						newData[this.primaryFieldName] = this.primaryFieldValue;
 					}
+					//记录record id
+					newData._record_id = this.id;
 				}
 				return newData;
 			},
@@ -667,22 +669,28 @@ LUI.Recordset = {
 					//保存成功 清除标志
 					this.deleted = LUI.Set.createNew();
 					
-					for(var i = 0;i<this.all.size();i++){
-						var cr = this.all.get(i);
-						if(cr.isNew && cr.isModified()){
-							var pkValue = null;
-							for(var k = 0;k<dataArray.length;k++){
-								if(dataArray[k]._clientDetailKey == cr.id ){
-									pkValue = dataArray[k][this.primaryFieldName];
-								}
-							}
-							if(pkValue == null){
-								LUI.Message.info("错误","保存成功后，未返回集合新增数据的主键值!");
-							}else{
-								cr.saveOK(pkValue);
-							}
+					if(dataArray!=null){
+						for(var i=0;i<dataArray.size();i++){
+							var r = this.getRecordById(dataArray[i]._record_id);
+							r.saveOK(dataArray[i]);
 						}
 					}
+//					for(var i = 0;i<this.all.size();i++){
+//						var cr = this.all.get(i);
+//						if(cr.isNew && cr.isModified()){
+//							var pkValue = null;
+//							for(var k = 0;k<dataArray.length;k++){
+//								if(dataArray[k]._clientDetailKey == cr.id ){
+//									pkValue = dataArray[k][this.primaryFieldName];
+//								}
+//							}
+//							if(pkValue == null){
+//								LUI.Message.info("错误","保存成功后，未返回集合新增数据的主键值!");
+//							}else{
+//								cr.saveOK(pkValue);
+//							}
+//						}
+//					}
 				},
 				getSubmitData : function(onlyModified){
 					var _dataObject = {
