@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.dom4j.Document;
@@ -22,7 +23,9 @@ import com.poweruniverse.nim.base.description.LocalWebservice;
 import com.poweruniverse.nim.base.description.RemoteComponent;
 import com.poweruniverse.nim.base.description.RemoteWebservice;
 import com.poweruniverse.nim.base.servlet.BasePlateformServlet;
+import com.poweruniverse.nim.data.entity.EntityManager;
 import com.poweruniverse.nim.data.service.utils.HibernateSessionFactory;
+import com.poweruniverse.nim.data.service.utils.JSONConvertUtils;
 
 /**
  * 初始化整个应用
@@ -35,22 +38,29 @@ import com.poweruniverse.nim.data.service.utils.HibernateSessionFactory;
 public class ApplicationInitialServlet extends BasePlateformServlet{
 	private static final long serialVersionUID = 1L;
 	public final static String ApplicationConfigFile = "application.cfg.xml";
+	public final static String HibernateConfigFile = "hibernate.example.xml";
 	
 	public void init() throws ServletException{
 		super.init();
 		//初始化 application
 		Application app = initApplicationConfig(this.ContextPath);
 		
-		//循环所有local组件
-		for(String cmpName:app.getComponentKeySet()){
-			Component componentInfo = app.getComponent(cmpName);
-			if(componentInfo.isLocalComponent()){
-				LocalComponent lc = (LocalComponent)componentInfo;
-				//初始化所有组件
-				lc.initialize();
-				//发布webservice服务
-				lc.publish();
+		if(app!=null){
+			//循环所有local组件
+			for(String cmpName:app.getComponentKeySet()){
+				Component componentInfo = app.getComponent(cmpName);
+				if(componentInfo.isLocalComponent()){
+					LocalComponent lc = (LocalComponent)componentInfo;
+					//初始化所有组件
+					lc.initialize();
+					//发布webservice服务
+					lc.publish();
+				}
 			}
+		}else{
+			System.err.println("---------------------------------------");
+			System.err.println("当前应用初始化失败，请修改后重试！");
+			System.err.println("---------------------------------------");
 		}
 	}
 
@@ -158,33 +168,52 @@ public class ApplicationInitialServlet extends BasePlateformServlet{
 					app.addComponent(componentInfo);
 				}
 			}
-			
 			//session factory 配置
-			List<Element> sessionFactoryEls = (List<Element>)appEl.elements("sessionFactory");
-			for(Element sessionFactoryEl : sessionFactoryEls){
-				String sessionFactoryName = sessionFactoryEl.attributeValue("name");
-				String sessionFactoryFileName = sessionFactoryEl.attributeValue("cfgFileName");
-				String srcPath = sessionFactoryEl.attributeValue("srcPath");
-				String classesPath = sessionFactoryEl.attributeValue("classesPath");
-				String entityPackage = sessionFactoryEl.attributeValue("entityPackage");
+			Element sessionFactoryEl = appEl.element("sessionFactory");
+			String sessionFactoryFileName = sessionFactoryEl.attributeValue("cfgFileName");
+			
+			JSONObject sessionConfig = new JSONObject();
+			sessionConfig.put("cfgFileName", sessionFactoryFileName);
+			
+			JSONArray xiTongConfigs = new JSONArray();
+			List<Element> xiTongEls = (List<Element>)sessionFactoryEl.elements("xiTong");
+			for(Element xiTongEl : xiTongEls){
+				JSONObject xiTongConfig = JSONConvertUtils.applyXML2Json(xiTongEl,false);
 				
-				JSONObject sessionConfig = new JSONObject();
-				sessionConfig.put("name", sessionFactoryName);
-				sessionConfig.put("cfgFileName", sessionFactoryFileName);
-				sessionConfig.put("srcPath", srcPath);
-				sessionConfig.put("classesPath", classesPath);
-				sessionConfig.put("entityPackage", entityPackage);
-
-				File sessionFactoryFile = new File(contextPath+sessionFactoryFileName);
-				if(!sessionFactoryFile.exists()){
-					System.err.println("sessionFactory "+sessionFactoryName+" 的配置文件("+sessionFactoryFile.getPath()+")不存在！");
-				}
-				HibernateSessionFactory.createSessionFactory(sessionFactoryName, sessionFactoryFile,sessionConfig);
-				
+				xiTongConfigs.add(xiTongConfig);
 			}
+			
+			sessionConfig.put("xiTongs", xiTongConfigs);
 
+			File sessionFactoryFile = new File(contextPath+sessionFactoryFileName);
+			if(!sessionFactoryFile.exists()){
+				//复制文件
+				InputStream ins = ApplicationInitialServlet.class.getResourceAsStream("/"+HibernateConfigFile);
+				OutputStream os = new FileOutputStream(sessionFactoryFile);
+				int bytesRead = 0;
+				byte[] buffer = new byte[8192];
+				while ((bytesRead = ins.read(buffer, 0, 8192)) != -1) {
+					os.write(buffer, 0, bytesRead);
+				}
+				os.close();
+				ins.close();
+				System.err.println("hiernate配置文件("+sessionFactoryFile.getPath()+")不存在,已创建示例文件，请修改后重新启动！");
+			}
+			//HibernateSessionFactory初始化（添加必要的mapping）
+			HibernateSessionFactory.initial(sessionFactoryFile,sessionConfig);
+			//检查实体类版本是否一致 
+			//是否需要根据实体类定义文件 重新生成java类 hbm文件 实体类数据
+			if(!EntityManager.checkEntitySyn(contextPath)){
+				app = null;
+			}
+			//添加其他mapping
+			if(!HibernateSessionFactory.loadMappings()){
+				app = null;
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			app = null;
 		}
 		return app;
 	}

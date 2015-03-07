@@ -22,7 +22,7 @@ import com.poweruniverse.nim.base.message.JSONMessageResult;
 import com.poweruniverse.nim.base.message.StringResult;
 import com.poweruniverse.nim.base.utils.InvokeUtils;
 import com.poweruniverse.nim.base.webservice.BasePlateformWebservice;
-import com.poweruniverse.nim.data.entity.YongHu;
+import com.poweruniverse.nim.data.entity.system.YongHu;
 import com.poweruniverse.nim.data.service.utils.HibernateSessionFactory;
 
 /**
@@ -85,7 +85,7 @@ public class PageWebserviceImpl extends BasePlateformWebservice{
 		try {
 			Application app = Application.getInstance();
 			
-			sess = HibernateSessionFactory.getSession(HibernateSessionFactory.defaultSessionFactory);
+			sess = HibernateSessionFactory.getSession();
 			//检查pageUrl 是否合法(无.. js后缀)
 			int hasDD = pageUrl.indexOf("..");
 			if(hasDD ==-1 && pageUrl.endsWith("xml")){

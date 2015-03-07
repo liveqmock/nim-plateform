@@ -2636,6 +2636,7 @@ function refreshExtendForm(eventSource,eventTarget,event,eventOriginal){
 			}
 		}
 		LUI.PageDesigner.instance.validateNode(node);
+		LUI.PageDesigner.instance._saveComponentBtn.button( "enable");
 	}
 }
 

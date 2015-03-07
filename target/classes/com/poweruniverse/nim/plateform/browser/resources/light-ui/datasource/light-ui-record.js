@@ -36,6 +36,7 @@ LUI.Record = {
 				//保存成功 清除标志
 				if(this.isNew && this.primaryFieldName!=null){
 					this.primaryFieldValue = retData[this.primaryFieldName];
+					this.data[this.primaryFieldName] = retData[this.primaryFieldName];
 					this.isNew = false;
 				}
 				this.modified = {};

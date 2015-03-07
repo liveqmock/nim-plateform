@@ -1,66 +1,90 @@
 package com.poweruniverse.nim.plateform.action;
 
 
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.hibernate.Session;
 
-import com.poweruniverse.nim.data.bean.MethodResult;
-import com.poweruniverse.nim.data.entity.ShiTiLei;
-import com.poweruniverse.nim.data.entity.ZiDuan;
-import com.poweruniverse.nim.data.entity.ZiDuanLX;
-import com.poweruniverse.nim.data.entity.base.EntityI;
+import com.poweruniverse.nim.base.message.JSONMessageResult;
+import com.poweruniverse.nim.base.message.Result;
+import com.poweruniverse.nim.data.entity.EntityManager;
+import com.poweruniverse.nim.data.entity.system.ShiTiLei;
+import com.poweruniverse.nim.data.entity.system.ZiDuan;
+import com.poweruniverse.nim.data.entity.system.ZiDuanLX;
+import com.poweruniverse.nim.data.entity.system.base.EntityI;
 import com.poweruniverse.nim.data.service.utils.HibernateSessionFactory;
-import com.poweruniverse.nim.plateform.utils.EntityManager;
 
 
 public class STLAction {
 	
-	public MethodResult onEntityGenerate(String gongNengDH, String caoZuoDH,List<EntityI> entities,JSONObject submitData,Integer yongHuDM) throws Exception{
+	public Result onEntityGenerate(String gongNengDH, String caoZuoDH,List<EntityI> entities,JSONObject submitData,Integer yongHuDM) throws Exception{
+		int errorCount = 0;
 		//
-		Session sess = HibernateSessionFactory.getSession(HibernateSessionFactory.defaultSessionFactory);
-		JSONObject sessionConfigure = HibernateSessionFactory.getConfiguration(HibernateSessionFactory.defaultSessionFactory);
+		Session sess = HibernateSessionFactory.getSession();
+		JSONObject sessionConfigure1 = HibernateSessionFactory.getConfiguration();
+		JSONArray xiTongConfigs = sessionConfigure1.getJSONArray("xiTongs");
+		Map<String,JSONObject> xiTongMap = new HashMap<String,JSONObject>();
+		for(int i=0;i<xiTongConfigs.size();i++){
+			JSONObject xiTongConfig = xiTongConfigs.getJSONObject(i);
+			xiTongMap.put(xiTongConfig.getString("name"), xiTongConfig);
+		}
 		//根据当前实体类数据 生成json文件 并自动生成java文件及hbm文件 提示用户刷新并重启
 		for(int j=0;j<entities.size();j++){
 			ShiTiLei entityObj = (ShiTiLei)entities.get(j);
-			//
 			
-			String classPackageName = "";
-			String className = "";
-			
-			//确定包名以及类名
-			String[] classPackages =entityObj.getBiaoMing().toLowerCase().substring(0, entityObj.getBiaoMing().lastIndexOf('_')).split("_");
-			if("sys".equals(classPackages[0])){
-				classPackageName = ".system";
-			}else{
-				for(int i = 0;i<classPackages.length;i++){
-					classPackageName+= "."+classPackages[i];
-				}
+			if(entityObj.getXiTong()==null){
+				return new JSONMessageResult("实体类("+entityObj.getShiTiLeiMC()+")所属系统不能为空!");
+			}else if(entityObj.getBiaoMing()==null){
+				return new JSONMessageResult("实体类("+entityObj.getShiTiLeiMC()+")表名不能为空!");
+			}else if(entityObj.getBiaoMing().toUpperCase().startsWith((entityObj.getXiTong().getXiTongDH()+"_").toUpperCase())){
+				return new JSONMessageResult("实体类("+entityObj.getShiTiLeiMC()+")的表名("+entityObj.getBiaoMing()+")开头必须与系统代号("+entityObj.getXiTong().getXiTongDH()+"_"+")一致!");
 			}
-			className = entityObj.getBiaoMing().substring(entityObj.getBiaoMing().lastIndexOf('_') +1);
 			
-			//类名必须以大写字母开头
-			String firstClassName= className.replaceFirst(className.substring(0, 1),className.substring(0, 1).toUpperCase());
-			if(!firstClassName.equals(className)){
-				return new MethodResult("类名（表名的最后一段）必须以大写字母开头！->"+entityObj.getShiTiLeiMC()+":"+firstClassName);
-			}else{
-				//检查字段代号
-				for(ZiDuan zd:entityObj.getZds()){
-					String ziDuanDH = zd.getZiDuanDH();
-					
-					String firstZiDuanDH= ziDuanDH.replaceFirst(ziDuanDH.substring(0, 1),ziDuanDH.substring(0, 1).toUpperCase());
-					if(firstZiDuanDH.equals(ziDuanDH)){
-						return new MethodResult("字段代号必须以小写字母开头！->"+entityObj.getShiTiLeiMC()+":"+firstZiDuanDH);
+			JSONObject xiTongConfig = xiTongMap.get(entityObj.getXiTong().getXiTongDH());
+
+			//将类名记录在stl对象中 
+			if(entityObj.getShiTiLeiClassName()==null){
+				String classPackageName = "";
+				String className = "";
+				
+				//确定包名以及类名
+				String[] classPackages =entityObj.getBiaoMing().toLowerCase().substring(0, entityObj.getBiaoMing().lastIndexOf('_')).split("_");
+				if("sys".equals(classPackages[0])){
+					classPackageName = ".system";
+				}else{
+					for(int i = 0;i<classPackages.length;i++){
+						classPackageName+= "."+classPackages[i];
 					}
 				}
+				className = entityObj.getBiaoMing().substring(entityObj.getBiaoMing().lastIndexOf('_') +1);
+				
+				//类名必须以大写字母开头
+				String firstClassName= className.replaceFirst(className.substring(0, 1),className.substring(0, 1).toUpperCase());
+				if(!firstClassName.equals(className)){
+					return new JSONMessageResult("实体类("+entityObj.getShiTiLeiMC()+")表名("+entityObj.getBiaoMing()+")的最后一段("+className+")必须以大写字母开头!");
+				}else{
+					//检查字段代号
+					for(ZiDuan zd:entityObj.getZds()){
+						String ziDuanDH = zd.getZiDuanDH();
+						
+						String firstZiDuanDH= ziDuanDH.replaceFirst(ziDuanDH.substring(0, 1),ziDuanDH.substring(0, 1).toUpperCase());
+						if(firstZiDuanDH.equals(ziDuanDH)){
+							return new JSONMessageResult("实体类("+entityObj.getShiTiLeiMC()+")中字段("+zd.getZiDuanBT()+")的代号("+ziDuanDH+")必须以小写字母开头!");
+						}
+					}
+				}
+				//
+				String fullClassName = xiTongConfig.getString("entityPackage")+".entity"+classPackageName+"."+className;
+				
+				entityObj.setShiTiLeiClassName(fullClassName);
 			}
-			//
-			String fullClassName = sessionConfigure.getString("entityPackage")+classPackageName+"."+className;
 			
-			//将类名记录在stl对象中  
-			entityObj.setShiTiLeiClassName(fullClassName);
 			//是否业务表
 			if(entityObj.getShiFouYWB().booleanValue()){
 				//业务表要保证有n个业务字段
@@ -306,12 +330,22 @@ public class STLAction {
 					entityObj.addTozds(entityObj, zd);
 				}
 			}
-			sess.update(entityObj);
-			//
-			EntityManager.createEntityDefine(entityObj,sessionConfigure.getString("srcPath"));
+			//以当前时间为版本号
+			String versionString = EntityManager.createEntityDefine(entityObj,Calendar.getInstance().getTime(),xiTongConfig);
+			if(versionString!=null){
+				entityObj.setShiTiLeiBB(versionString);
+				sess.update(entityObj);
+			}else{
+				errorCount++;
+			}
 		}
-		
-		return new MethodResult();
+		JSONMessageResult ret = null;
+		if(errorCount==0){
+			ret = new JSONMessageResult();
+		}else{
+			ret = new JSONMessageResult("共"+entities.size()+"个实体类，其中"+errorCount+"个生成失败！");
+		}
+		return ret;
 	}
 	
 

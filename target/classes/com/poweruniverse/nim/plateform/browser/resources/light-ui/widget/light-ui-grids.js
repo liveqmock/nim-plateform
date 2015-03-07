@@ -459,6 +459,7 @@ LUI.SubGrid = {
 			},
 			renderRow:function(row){
 				//
+				var isInitial = true;
 				var rowEl = null;
 				if(!row.rendered){
 					if(row.index == 0){
@@ -474,6 +475,7 @@ LUI.SubGrid = {
 					}
 				}else{
 					rowEl = row.el;
+					isInitial = false;
 				}
 				
 				rowEl.attr('_row_index',row.index);
@@ -486,6 +488,7 @@ LUI.SubGrid = {
 					rowIndex:row.index,
 					rowEl:row.el,
 					record:row.record,
+					isInitial:isInitial,
 					rowData:row.record.getData()
 				});
 			},
