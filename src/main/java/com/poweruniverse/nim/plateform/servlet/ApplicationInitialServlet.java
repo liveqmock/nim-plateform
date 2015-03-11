@@ -199,21 +199,25 @@ public class ApplicationInitialServlet extends BasePlateformServlet{
 				ins.close();
 				System.err.println("hiernate配置文件("+sessionFactoryFile.getPath()+")不存在,已创建示例文件，请修改后重新启动！");
 			}
-			//HibernateSessionFactory初始化（添加必要的mapping）
-			HibernateSessionFactory.initial(sessionFactoryFile,sessionConfig);
-			//检查实体类版本是否一致 
-			//是否需要根据实体类定义文件 重新生成java类 hbm文件 实体类数据
-			if(!EntityManager.checkEntitySyn(contextPath)){
+			
+			if(!HibernateSessionFactory.initial(sessionFactoryFile,sessionConfig)){
+				//HibernateSessionFactory初始化（添加必要的mapping）
 				app = null;
-			}
-			//添加其他mapping
-			if(!HibernateSessionFactory.loadMappings()){
+			}else if(!EntityManager.checkEntitySyn(contextPath)){
+				//检查实体类版本是否一致 
+				//是否需要根据实体类定义文件 重新生成java类 hbm文件 实体类数据
+				app = null;
+			}else if(!HibernateSessionFactory.loadMappings()){
+				//添加其他mapping
 				app = null;
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			app = null;
+		}
+		if(app==null){
+			HibernateSessionFactory.close();
 		}
 		return app;
 	}

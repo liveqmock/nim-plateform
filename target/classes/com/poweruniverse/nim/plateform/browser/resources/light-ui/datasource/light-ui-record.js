@@ -220,17 +220,33 @@ LUI.Record = {
 						}
 						fieldRecord.primaryFieldValue = fieldNewValue[fieldDef.meta.primaryFieldName];
 						//原值不为空 循环设置属性值
-						var subSilence = silence?true:false; 
+						
+						var subChanged = false; 
 						for(var p in fieldNewValue){
 							if(fieldRecord.hasField(p)){
-								fieldRecord.setFieldValue(p,fieldNewValue[p],subSilence,isInitial,originSource);//（这里子记录的setFieldValue 会触发当前record的change事件）
-								if(!subSilence){
-									//即使允许发出事件 对象类型字段中 所有属性只发出一次改变事件
-									subSilence = true;
+								if(!silence && !subChanged){
+									//即使允许发出change事件 对象类型字段中 所有有变化的属性至多只发出一次改变事件
+									if(!this.equalsValue(fieldRecord.data[p],fieldNewValue[p])){
+										subChanged = true;
+									}
 								}
+								//循环设置 使fieldRecord有机会记录modified的值
+								fieldRecord.setFieldValue(p,fieldNewValue[p],true,isInitial,originSource);//（这里子记录的setFieldValue 会触发当前record的change事件）
 							}
 						}
-//						this._setField(fieldName,fieldNewValue,silence,isInitial,originSource);
+						//最后发出change事件 避免数据局部更新的问题
+						if(subChanged){
+							this.data[fieldName] = fieldRecord;
+							this.modified[fieldName] = fieldRecord;
+							if(!silence && (originSource==null || originSource != this)){
+								this.fireEvent(this.events.change,{
+									fieldName:fieldName,
+									oldValue:fieldNewValue,
+									newValue:fieldNewValue,
+									isInitial: isInitial
+								},originSource||this);
+							}
+						}
 					}
 				}else if(fieldDef.fieldType == 'set'){
 //					LUI.Message.info("警告","暂时不允许对集合字段直接设置值!");

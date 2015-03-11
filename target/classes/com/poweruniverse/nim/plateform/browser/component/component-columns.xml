@@ -709,7 +709,7 @@
 				},{
 					value:'rela',text:'关联输入域'
 				}]"/>
-			<property name="datasourceType" label="数据来源" type="string" default="private" allowBlank="false" info="生成方式" 
+			<property name="datasourceType" label="数据来源" type="string" default="private" allowBlank="false" info="数据源来源" 
 					enabled="true" widget="textSelectEditor" options="[{
 					value:'public',text:'公共数据源'
 				},{
@@ -732,6 +732,7 @@
 		</extensions>
 		<events>
 			<event name="onChange" type="string" label="数据改变" params="" />
+			<event name="onLoad" type="string" label="数据加载之前" params="" />
 		</events>
 		<structure>
 			<item component-name="gnDataset" />
@@ -756,7 +757,7 @@
 				},{
 					value:'rela',text:'关联输入域'
 				}]"/>
-			<property name="datasourceType" label="数据来源" type="string" default="private" allowBlank="false" info="生成方式" 
+			<property name="datasourceType" label="数据来源" type="string" default="private" allowBlank="false" info="数据源来源" 
 					enabled="true" widget="textSelectEditor" options="[{
 					value:'public',text:'公共数据源'
 				},{
@@ -838,7 +839,7 @@
 				},{
 					value:'rela',text:'关联输入域'
 				}]"/>
-			<property name="datasourceType" label="数据来源" type="string" default="private" allowBlank="false" info="生成方式" 
+			<property name="datasourceType" label="数据来源" type="string" default="private" allowBlank="false" info="数据源来源" 
 					enabled="true" widget="textSelectEditor" options="[{
 					value:'public',text:'公共数据源'
 				},{

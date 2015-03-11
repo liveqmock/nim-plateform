@@ -189,7 +189,6 @@
 		<structure>
 		</structure>
 		<events>
-			<event name="onChange" type="string" label="数据改变" params=""/>
 		</events>
 	</type>
 	<!-- 8字段类型  set-->

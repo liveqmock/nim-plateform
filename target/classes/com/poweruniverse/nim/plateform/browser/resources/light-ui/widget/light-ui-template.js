@@ -23,7 +23,7 @@ LUI.Template = {
 						'<label class="nim-field-label" style="width:90px;word-wrap:break-word;word-break:break-all;overflow:hidden;" for="{{form.name}}_{{name}}">{{label}}</label>'+
 					'</td>'+
 					'<td width="*">'+
-						'<input type="text" id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="nim-field-wrapper field text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless isValid}}nim-field-invalid{{/unless}}">'+
+						'<input type="text" id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="nim-field-wrapper field text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless valid}}nim-field-invalid{{/unless}}">'+
 					'</td>'+
 			        '</tr>'+
 			    '</table>'+
@@ -36,7 +36,7 @@ LUI.Template = {
 						'<label class="nim-field-label" style="width:90px;word-wrap:break-word;word-break:break-all;overflow:hidden;" for="{{form.name}}_{{name}}">{{label}}</label>'+
 					'</td>'+
 					'<td width="*">'+
-						'<input type="text" id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="text-align:{{textAlign}};width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="nim-field-wrapper field text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless isValid}}nim-field-invalid{{/unless}}">'+
+						'<input type="text" id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="text-align:{{textAlign}};width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="nim-field-wrapper field text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless valid}}nim-field-invalid{{/unless}}">'+
 					'</td>'+
 			        '</tr>'+
 			    '</table>'+
@@ -49,7 +49,7 @@ LUI.Template = {
 						'<label class="nim-field-label" style="width:90px;word-wrap:break-word;word-break:break-all;overflow:hidden;" for="{{form.name}}_{{name}}">{{label}}</label>'+
 					'</td>'+
 					'<td width="*">'+
-						'<input type="text" id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="text-align:{{textAlign}};width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="nim-field-wrapper field text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless isValid}}nim-field-invalid{{/unless}}">'+
+						'<input type="text" id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="text-align:{{textAlign}};width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="nim-field-wrapper field text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless valid}}nim-field-invalid{{/unless}}">'+
 					'</td>'+
 			        '</tr>'+
 			    '</table>'+
@@ -62,7 +62,7 @@ LUI.Template = {
 						'<label class="nim-field-label" style="width:90px;word-wrap:break-word;word-break:break-all;overflow:hidden;" for="{{form.name}}_{{name}}">{{label}}</label>'+
 					'</td>'+
 					'<td width="*">'+
-						'<input type="password" id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="nim-field-wrapper field text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless isValid}}nim-field-invalid{{/unless}}">'+
+						'<input type="password" id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="nim-field-wrapper field text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless valid}}nim-field-invalid{{/unless}}">'+
 					'</td>'+
 			        '</tr>'+
 			    '</table>'+
@@ -75,7 +75,7 @@ LUI.Template = {
 						'<label class="nim-field-label" style="width:90px;word-wrap:break-word;word-break:break-all;overflow:hidden;" for="{{form.name}}_{{name}}">{{label}}</label>'+
 					'</td>'+
 					'<td width="*">'+
-					'<input type="checkbox" id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="width:14px;" class="nim-field-wrapper text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless isValid}}nim-field-invalid{{/unless}}">'+
+					'<input type="checkbox" id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="width:14px;" class="nim-field-wrapper text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless valid}}nim-field-invalid{{/unless}}">'+
 					'</td>'+
 			        '</tr>'+
 			    '</table>'+
@@ -88,7 +88,7 @@ LUI.Template = {
 						'<label style="width:90px;word-wrap:break-word;word-break:break-all;overflow:hidden;" for="{{form.name}}_{{name}}">{{label}}</label>'+
 					'</td>'+
 					'<td width="*" style="font-size: 1em important!;">'+
-						'<select id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} data-placeholder="请选择..." style="width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="nim-field-wrapper nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless isValid}}nim-field-invalid{{/unless}}">'+
+						'<select id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} data-placeholder="请选择..." style="width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="nim-field-wrapper nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless valid}}nim-field-invalid{{/unless}}">'+
 						'</select>'+
 					'</td>'+
 			        '</tr>'+
@@ -103,7 +103,7 @@ LUI.Template = {
 					'</td>'+
 					'<td width="*" style="font-size: 1em important!;">'+
 						'<span id="{{form.name}}_{{name}}_field_container" class="nim-field-wrapper" style="display:inline-block;width:{{#if width}}{{width}}{{else}}220px{{/if}};">'+
-							'<input type="text" id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="width:{{#if width}}{{width}}{{else}}220px{{/if}};" class=" text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless isValid}}nim-field-invalid{{/unless}}" >'+
+							'<input type="text" id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="width:{{#if width}}{{width}}{{else}}220px{{/if}};" class=" text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless valid}}nim-field-invalid{{/unless}}" >'+
 							'<img id="_handler" src="resources/plateform/light-ui/images/indicator.png" style="margin-left: 4px;vertical-align: middle;" title="拖动选择目标元素">'+
 						'</span>'+
 					'</td>'+
@@ -119,7 +119,7 @@ LUI.Template = {
 					'</td>'+
 					'<td width="*" style="font-size: 1em important!;">'+
 						'<span id="{{form.name}}_{{name}}_field_container" class="nim-field-wrapper" style="display:inline-block;width:{{#if width}}{{width}}{{else}}220px{{/if}};">'+
-							'<input type="text" id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="width:{{#if width}}{{width}}{{else}}220px{{/if}};" class=" text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless isValid}}nim-field-invalid{{/unless}}" >'+
+							'<input type="text" id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="width:{{#if width}}{{width}}{{else}}220px{{/if}};" class=" text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless valid}}nim-field-invalid{{/unless}}" >'+
 							'<img id="_explorer" src="resources/plateform/light-ui/images/file-upload-icon.gif" style="cursor:pointer;width:16px;height:16px;margin-left: 4px;vertical-align: middle;"  title="选择模板文件">'+
 							'<img id="_handler" src="resources/plateform/light-ui/images/ie.png" style="cursor:pointer;width:16px;height:16px;margin-left: 4px;vertical-align: middle;"  title="在新窗口打开子页面">'+
 						'</span>'+
@@ -136,7 +136,7 @@ LUI.Template = {
 						'</td>'+
 						'<td width="*" style="font-size: 1em important!;">'+
 							'<span id="{{form.name}}_{{name}}_field_container" class="nim-field-wrapper" style="display:inline-block;width: {{#if width}}{{width}}{{else}}100%{{/if}};" >'+
-								'<input type="text" id="{{form.name}}_{{name}}" readonly style="width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless isValid}}nim-field-invalid{{/unless}}" >'+
+								'<input type="text" id="{{form.name}}_{{name}}" readonly style="width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless valid}}nim-field-invalid{{/unless}}" >'+
 								'<img id="_handler" src="resources/plateform/light-ui/images/file-upload-icon.gif" style="margin-left: 4px;vertical-align: middle;cursor:pointer;">'+
 							'</span>'+
 						'</td>'+
@@ -151,7 +151,7 @@ LUI.Template = {
 							'<label class="nim-field-label" style="width:90px;word-wrap:break-word;word-break:break-all;overflow:hidden;" for="{{form.name}}_{{name}}">{{label}}</label>'+
 						'</td>'+
 						'<td width="*">' +
-							'<ul id="{{form.name}}_{{name}}" style="padding-left:0px;display:inline-block;width:{{#if width}}{{width}}{{else}}220px{{/if}};list-style: none outside none;" class="ui-corner-all nim-field-wrapper {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless isValid}}nim-field-invalid{{/unless}}">'+
+							'<ul id="{{form.name}}_{{name}}" style="padding-left:0px;display:inline-block;width:{{#if width}}{{width}}{{else}}220px{{/if}};list-style: none outside none;" class="ui-corner-all nim-field-wrapper {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless valid}}nim-field-invalid{{/unless}}">'+
 								'<li style="float:left;margin-top: 0px;">'+
 									'<input id="" type="radio"  style="width:14px;" class="nim-field-checkbox ">' +
 									'<label id="" class="nim-field-checkbox-text" style="line-height: 19px;" for=""></label>'+
@@ -171,7 +171,7 @@ LUI.Template = {
 						'</td>'+
 						'<td width="*" style="font-size: 1em important!;">'+
 							'<span id="{{form.name}}_{{name}}_field_container" class="nim-field-wrapper" style="display:inline-block;width:{{#if width}}{{width}}{{else}}220px{{/if}};">'+
-								'<textarea id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="height:{{#if height}}{{height}}{{else}}50px{{/if}};width:{{#if width}}{{width}}{{else}}220px{{/if}};" title="{{info}}" class="ui-corner-all nim-field-el {{#unless isValid}}nim-field-invalid{{/unless}}">'+
+								'<textarea id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="height:{{#if height}}{{height}}{{else}}50px{{/if}};width:{{#if width}}{{width}}{{else}}220px{{/if}};" title="{{info}}" class="ui-corner-all nim-field-el {{#unless valid}}nim-field-invalid{{/unless}}">'+
 								'</textarea>'+
 								'<img title="编辑" id="_handler" src="resources/plateform/light-ui/images/icon-text.jpg" style="position: relative;margin-left: 4px;cursor:hand;cursor:pointer;">'+
 							'</span>'+
@@ -188,7 +188,7 @@ LUI.Template = {
 						'</td>'+
 						'<td width="*" style="font-size: 1em important!;">'+
 							'<span id="{{form.name}}_{{name}}_field_container" class="nim-field-wrapper" style="display:inline-block;height:{{#if height}}{{height}}{{else}}100%{{/if}};width:{{#if width}}{{width}}{{else}}220px{{/if}};">'+
-								'<textarea id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="height:{{height}};width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="nim-field-el {{#unless isValid}}nim-field-invalid{{/unless}}">'+
+								'<textarea id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="height:{{height}};width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="nim-field-el {{#unless valid}}nim-field-invalid{{/unless}}">'+
 								'</textarea>'+
 								'<img title="编辑" id="_handler" src="resources/plateform/light-ui/images/icon-text.jpg" style="margin-left: 4px;cursor:hand;cursor:pointer;">'+
 							'</span>'+
@@ -205,7 +205,7 @@ LUI.Template = {
 						'</td>'+
 						'<td width="*" style="font-size: 1em important!;">'+
 							'<span id="{{form.name}}_{{name}}_field_container" class="nim-field-wrapper" style="display:inline-block;width:{{#if width}}{{width}}{{else}}220px{{/if}};">'+
-								'<input type="text" id="{{id}}{{name}}" {{#unless enabled }}disabled{{/unless}} style="width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless isValid}}nim-field-invalid{{/unless}}">'+
+								'<input type="text" id="{{id}}{{name}}" {{#unless enabled }}disabled{{/unless}} style="width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="text ui-widget-content ui-corner-all nim-field-el {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless valid}}nim-field-invalid{{/unless}}">'+
 								'<img title="显示日历" id="_handler" src="resources/plateform/light-ui/images/date-pic.png" style="margin-left: 4px;vertical-align: middle;cursor:hand;{{#if enabled}}cursor:pointer;{{/if}}">'+
 							'</span>'+
 						'</td>'+
@@ -221,7 +221,7 @@ LUI.Template = {
 						'</td>'+
 						'<td width="*" style="font-size: 1em important!;">'+
 							'<span id="{{form.name}}_{{name}}_field_container" class="nim-field-wrapper" style="display:inline-block;width:  {{#if width}}{{width}}{{else}}100%{{/if}};">'+
-								'<textarea id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="height:{{height}};width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="nim-field-el {{#unless isValid}}nim-field-invalid{{/unless}}">'+
+								'<textarea id="{{form.name}}_{{name}}" {{#unless enabled}}disabled{{/unless}} style="height:{{height}};width:{{#if width}}{{width}}{{else}}220px{{/if}};" class="nim-field-el {{#unless valid}}nim-field-invalid{{/unless}}">'+
 								'</textarea>'+
 								'<img title="编辑" id="_handler" src="resources/plateform/light-ui/images/icon-text.jpg" style="position: relative;margin-left: 4px;cursor:hand;cursor:pointer;">'+
 							'</span>'+
@@ -237,7 +237,7 @@ LUI.Template = {
 							'<label class="nim-field-label" style="width:90px;word-wrap:break-word;word-break:break-all;overflow:hidden;" for="{{form.name}}_{{name}}">{{label}}</label>'+
 						'</td>'+
 						'<td width="*">' +
-							'<ul id="{{form.name}}_{{name}}" style="width:{{#if width}}{{width}}{{else}}220px{{/if}};list-style: none outside none;" class="nim-field-wrapper {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless isValid}}nim-field-invalid{{/unless}}">'+
+							'<ul id="{{form.name}}_{{name}}" style="width:{{#if width}}{{width}}{{else}}220px{{/if}};list-style: none outside none;" class="nim-field-wrapper {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless valid}}nim-field-invalid{{/unless}}">'+
 								'<li style="float:left;">'+
 									'<input id="" type="checkbox"  style="width:14px;" class="nim-field-checkbox ">' +
 									'<label id="" class="nim-field-checkbox-text" style="line-height: 19px;" for=""></label>'+
@@ -256,7 +256,7 @@ LUI.Template = {
 							'<label class="nim-field-label" style="width:90px;word-wrap:break-word;word-break:break-all;overflow:hidden;" for="{{form.name}}_{{name}}">{{label}}</label>'+
 						'</td>'+
 						'<td width="*">' +
-							'<span id="{{form.name}}_{{name}}" style="width:{{#if width}}{{width}}{{else}}220px{{/if}};display: inline-block;" class="nim-field-wrapper {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless isValid}}nim-field-invalid{{/unless}}" >' +
+							'<span id="{{form.name}}_{{name}}" style="width:{{#if width}}{{width}}{{else}}220px{{/if}};display: inline-block;" class="nim-field-wrapper {{#unless enabled}}nim-field-disabled{{/unless}} {{#unless valid}}nim-field-invalid{{/unless}}" >' +
 								'<div id="toolsbar" style=""><a id="uploader" class="nim-setfield-file-uploader " href="#" >上传</a></div>' +
 								'<ul class="nim-setfield-file-list" style="">' +
 									'<li class="nim-setfield-file-item" style="" >' +

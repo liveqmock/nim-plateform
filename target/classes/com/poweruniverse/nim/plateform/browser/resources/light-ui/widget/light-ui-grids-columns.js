@@ -195,7 +195,7 @@ LUI.Grid.Cell = {
 			row:row,
 			column:column,
 			rendered:false,
-			isValid:true,
+			valid:true,
 			validInfo:null,
 			events:{
 				click:'_cell_click',
@@ -245,15 +245,15 @@ LUI.Grid.Cell = {
 				}
 				this.rendered = true;
 			},
-			_onValidate:function(){
-				var oldValid = this.isValid;
-				this.isValid = this.field.isValid;
-				this.validInfo = "第"+(row.index +1)+"行 "+" 第"+(column.index +1)+"列  "+this.field.validInfo;
+			validate:function(){
+				var oldValid = this.valid;
+				this.valid = this.field.isValid();
+				this.validInfo = "第 "+(row.index +1)+" 行  "+(this.column.label)+" "+this.field.validInfo;
 				
-				if( oldValid!= this.isValid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.isValid});
+				if( oldValid!= this.valid){
+					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
-				return this.isValid;
+				return this.valid;
 			},
 			getField:function(){
 				return this.field;
@@ -261,7 +261,7 @@ LUI.Grid.Cell = {
 			setField:function(tField){
 				this.field = tField;
 				this.field.addListener(this.field.events.validChange,this,function(sField,cell,event,eventOrigin){
-					this._onValidate();
+					this.validate();
 				});
 			}
 		});

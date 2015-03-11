@@ -57,6 +57,9 @@ LUI.Form.Field = {
 		delete fieldConfig.type;                
 		
 		var onChangeFunctionName = fieldMeta.onChange;
+		if(fieldMeta.listenerDefs!=null && fieldMeta.listenerDefs.onChange!=null){
+			onChangeFunctionName = fieldMeta.listenerDefs.onChange;
+		}
 		var onChangeFunc = null;
 		if(onChangeFunctionName!=null && onChangeFunctionName.length >0){
 			onChangeFunc = window[onChangeFunctionName];
@@ -64,7 +67,6 @@ LUI.Form.Field = {
 				LUI.Message.warn('查询失败','字段onChange事件的处理函数('+onChangeFunctionName+')不存在！');
 			}
 		}
-		
 		
 		var fieldCfg = $.extend({
 			name:null,
@@ -237,32 +239,35 @@ LUI.Form.Field = {
 				}
 				return _rawValue;
 			},
-			isValid:true,
+			valid:true,
+			isValid:function(){
+				return this.valid || this.hidden || !this.enabled;
+			},
 			validInfo:'',
 			/**
 			 * 根据显示值 校验值是否有效
 			 * 检查数据值是否有效：非空、取值范围、长度等
 			 */
 			validate:function(dataValue){
-				var oldValid = this.isValid;
-				this.isValid = true;
+				var oldValid = this.valid;
+				this.valid = true;
 				//默认只检查 是否允许为空
 				if((dataValue==null || (''+dataValue).length ==0) && !this.allowBlank){
-					this.isValid = false;
+					this.valid = false;
 					this.validInfo = '此字段不允许为空!';
 				}else{
-					this.isValid = true;
+					this.valid = true;
 				}
 				
-				if(!this.isValid){
+				if(!this.valid){
 					this.markInvalid();
 				}else{
 					this.clearInvalid();
 				}
-				if( oldValid!= this.isValid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.isValid});
+				if( oldValid!= this.valid){
+					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
-				return this.isValid;
+				return this.valid;
 			},
 			markInvalid:function(){
 				if(this.enabled && this.rendered ){
@@ -277,7 +282,7 @@ LUI.Form.Field = {
 			enabled:enabled,
 			enable:function(){
 				this.enabled = true;
-				if(!this.isValid){
+				if(!this.valid){
 					//enable状态下 需要显示数据是否有效
 					this.markInvalid();
 				}
@@ -287,7 +292,7 @@ LUI.Form.Field = {
 			},
 			disable:function(){
 				this.enabled = false;
-				if(!this.isValid){
+				if(!this.valid){
 					//disable状态下 不显示数据是否有效
 					this.clearInvalid();
 				}
@@ -354,10 +359,12 @@ LUI.Form.Field = {
 			},
 			setHidden:function(isHidden){
 				this.hidden = isHidden;
-				if(isHidden){
-					this.hide();
-				}else{
-					this.show();
+				if(this.rendered){
+					if(isHidden){
+						this.hide();
+					}else{
+						this.show();
+					}
 				}
 			},
 			hide:function(){
@@ -380,10 +387,7 @@ LUI.Form.Field = {
 					if(this.createFieldEl(LUI.Template.Field.field)){
 						this.fieldWidth = this.inputEl.width();
 						this.resize(this.fieldWidth);
-						//将自定义onchange方法 绑定到当前对象
-						if(this.onChangeFunction!=null){
-							this.addListener(this.events.change,this._observer,this.onChangeFunction);
-						}
+						
 						//将input元素的change事件 绑定到当前对象(一个inputEl 同时只能绑定到一个field)
 						var contextThis = this;
 						this.inputEl.bind('change',function(){
@@ -421,7 +425,8 @@ LUI.Form.Field = {
 					
 					//与页面元素取消关联
 					this.inputEl.unbind();
-					this.removeListener(this.events.change,this._observer);
+					//注释原因：field的change 不需要render 也应该可以触发
+//					this.removeListener(this.events.change,this._observer);
 				}
 				
 				this.el = null;
@@ -500,7 +505,12 @@ LUI.Form.Field = {
 			}
 		},fieldConfig);
 		
-		return $.extend(LUI.Observable.createNew(),fieldCfg);
+		//将自定义onchange方法 绑定到当前对象
+		var fieldInstance = $.extend(LUI.Observable.createNew(),fieldCfg);
+		if(fieldInstance.onChangeFunction!=null){
+			fieldInstance.addListener(fieldInstance.events.change,fieldInstance._observer,fieldInstance.onChangeFunction);
+		}
+		return fieldInstance;
 	}
 };
 
@@ -698,7 +708,7 @@ LUI.Form.Field.BooleanRadioEditor = {
 			 */
 			enable:function(){
 				this.enabled = true;
-				if(!this.isValid){
+				if(!this.valid){
 					this.markInvalid();
 				}
 				//将字段变为可编辑
@@ -707,7 +717,7 @@ LUI.Form.Field.BooleanRadioEditor = {
 			},
 			disable:function(){
 				this.enabled = false;
-				if(!this.isValid){
+				if(!this.valid){
 					//disable状态下 不显示数据是否有效
 					this.clearInvalid();
 				}
@@ -848,14 +858,14 @@ LUI.Form.Field.String = {
 			id: '_form_field_text_'+(++LUI.Form.Field.String.uniqueId),
 			type:LUI.Form.Field.String.type,
 			validate:function(dataValue){
-				var oldValid = this.isValid;
+				var oldValid = this.valid;
 				//字符型字段 除了校验是否为空外还需要检查长度是否符合要求
-				this.isValid = true;
+				this.valid = true;
 				//检查值是否 有效
 				var stringValue = dataValue==null?'':dataValue;
 				if(stringValue.length ==0){
 					if(!this.allowBlank){
-						this.isValid = false;
+						this.valid = false;
 						this.validInfo = '不允许为空!';
 					}
 				}else{
@@ -863,7 +873,7 @@ LUI.Form.Field.String = {
 						var minLength = parseInt(this.minLength);
 						if(minLength > 0 && stringValue.length < minLength){
 							//检查是否符合最少字符要求
-							this.isValid = false;
+							this.valid = false;
 							this.validInfo = '请至少输入'+minLength+'个字符!';
 						}
 					}
@@ -872,23 +882,23 @@ LUI.Form.Field.String = {
 						var maxLength = parseInt(this.maxLength);
 						if(maxLength > 0 && stringValue.length > maxLength){
 							//检查是否符合最大字符要求
-							this.isValid = false;
+							this.valid = false;
 							this.validInfo = '不允许超过'+maxLength+'个字符!';
 						}
 					}
 					
 				}
 				
-				if(!this.isValid){
+				if(!this.valid){
 					this.markInvalid();
 				}else{
 					this.clearInvalid();
 				}
 				
-				if( oldValid!= this.isValid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.isValid});
+				if( oldValid!= this.valid){
+					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
-				return this.isValid;
+				return this.valid;
 			}
 		});
 	}
@@ -929,14 +939,14 @@ LUI.Form.Field.Password = {
 				this.validate(this.rawValue);
 			},
 			validate:function(dataValue){
-				var oldValid = this.isValid;
+				var oldValid = this.valid;
 				//密码型字段 除了校验是否为空外还需要检查长度是否符合要求（以后可以加上 强制字母 大小写等密码强度要求）
-				this.isValid = true;
+				this.valid = true;
 				//检查存储值是否 有效
 				var stringValue = dataValue==null?'':dataValue;
 				if(stringValue.length ==0){
 					if(!this.allowBlank){
-						this.isValid = false;
+						this.valid = false;
 						this.validInfo = '不允许为空!';
 					}
 				}else{
@@ -945,7 +955,7 @@ LUI.Form.Field.Password = {
 						var minLength = parseInt(this.minLength);
 						if(minLength > 0 && stringValue.length < minLength){
 							//检查是否符合最少字符要求
-							this.isValid = false;
+							this.valid = false;
 							this.validInfo = '密码长度至少为'+minLength+'位字符!';
 						}
 					}
@@ -954,22 +964,22 @@ LUI.Form.Field.Password = {
 						var maxLength = parseInt(this.maxLength);
 						if(maxLength > 0 && stringValue.length > maxLength){
 							//检查是否符合最大字符要求
-							this.isValid = false;
+							this.valid = false;
 							this.validInfo = '密码长度最多为'+maxLength+'个字符!';
 						}
 					}
 				}
 				
-				if(!this.isValid){
+				if(!this.valid){
 					this.markInvalid();
 				}else{
 					this.clearInvalid();
 				}
 				
-				if( oldValid!= this.isValid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.isValid});
+				if( oldValid!= this.valid){
+					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
-				return this.isValid;
+				return this.valid;
 			}
 		});
 	}
@@ -984,35 +994,35 @@ LUI.Form.Field.MobileNumber = {
 			id: '_form_field_mobile_'+(++LUI.Form.Field.MobileNumber.uniqueId),
 			type:LUI.Form.Field.MobileNumber.type,
 			validate:function(dataValue){
-				var oldValid = this.isValid;
+				var oldValid = this.valid;
 				//手机号字段 除了校验是否为空外还需要检查号码是否符合要求
-				this.isValid = true;
+				this.valid = true;
 				//检查值是否 有效
 				var stringValue = dataValue==null?'':dataValue;
 				if(stringValue.length ==0){
 					if(!this.allowBlank){
-						this.isValid = false;
+						this.valid = false;
 						this.validInfo = '不允许为空!';
 					}
 				}else{
 					var r   =   /^(13[0-9]|15[0-9]|18[0-9])\d{8}$/ ;//手机号      
-					this.isValid = r.test(stringValue);
-					if(!this.isValid){
+					this.valid = r.test(stringValue);
+					if(!this.valid){
 						this.validInfo = '请输入有效的手机号!';
 					}
 				}
 				
-				if(!this.isValid){
+				if(!this.valid){
 					this.markInvalid();
 				}else{
 					this.clearInvalid();
 				}
 				
-				//var oldValid = this.isValid;
-				if( oldValid!= this.isValid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.isValid});
+				//var oldValid = this.valid;
+				if( oldValid!= this.valid){
+					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
-				return this.isValid;
+				return this.valid;
 			}
 		});
 	}
@@ -1026,36 +1036,36 @@ LUI.Form.Field.PostCode = {
 			id: '_form_field_postcode_'+(++LUI.Form.Field.PostCode.uniqueId),
 			type:LUI.Form.Field.PostCode.type,
 			validate:function(dataValue){
-				var oldValid = this.isValid;
+				var oldValid = this.valid;
 				//手机号字段 除了校验是否为空外还需要检查号码是否符合要求
-				this.isValid = true;
+				this.valid = true;
 
 				//检查值是否 有效
 				var stringValue = dataValue==null?'':dataValue;
 				if(stringValue.length ==0){
 					if(!this.allowBlank){
-						this.isValid = false;
+						this.valid = false;
 						this.validInfo = '不允许为空!';
 					}
 				}else{
 					var r   =   /^[0-9]\d{5}$/ ;//邮编
-					this.isValid = r.test(stringValue);
-					if(!this.isValid){
+					this.valid = r.test(stringValue);
+					if(!this.valid){
 						this.validInfo = '请输入有效的邮编 (6位数字)!';
 					}
 				}
 				
-				if(!this.isValid){
+				if(!this.valid){
 					this.markInvalid();
 				}else{
 					this.clearInvalid();
 				}
 				
-				//var oldValid = this.isValid;
-				if( oldValid!= this.isValid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.isValid});
+				//var oldValid = this.valid;
+				if( oldValid!= this.valid){
+					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
-				return this.isValid;
+				return this.valid;
 			}
 		});
 	}
@@ -1071,35 +1081,35 @@ LUI.Form.Field.Email = {
 				type:LUI.Form.Field.Email.type,
 				validate:function(dataValue){
 					
-					var oldValid = this.isValid;
+					var oldValid = this.valid;
 					
-					this.isValid = true;
+					this.valid = true;
 					//检查值是否 有效
 					var stringValue = dataValue==null?'':dataValue;
 					if(stringValue.length ==0){
 						if(!this.allowBlank){
-							this.isValid = false;
+							this.valid = false;
 							this.validInfo = '不允许为空!';
 						}
 					}else{
 						var r = /^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$/;//邮箱
-						this.isValid = r.test(stringValue);
-						if(!this.isValid){
+						this.valid = r.test(stringValue);
+						if(!this.valid){
 							this.validInfo = '请输入有效的邮箱!';
 						}
 					}
 					
-					if(!this.isValid){
+					if(!this.valid){
 						this.markInvalid();
 					}else{
 						this.clearInvalid();
 					}
 					
-					//var oldValid = this.isValid;
-					if( oldValid!= this.isValid){
-						this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.isValid});
+					//var oldValid = this.valid;
+					if( oldValid!= this.valid){
+						this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 					}
-					return this.isValid;
+					return this.valid;
 				}
 			});
 		}
@@ -1236,7 +1246,7 @@ LUI.Form.Field.StringText = {
 					//按钮不可点击
 					this.enabled = true;
 					//
-					if(!this.isValid){
+					if(!this.valid){
 						this.markInvalid();
 					}
 					this.inputEl.removeAttr('disabled');
@@ -1245,7 +1255,7 @@ LUI.Form.Field.StringText = {
 					//按钮可点击
 					this.enabled = false;
 					//
-					if(!this.isValid){
+					if(!this.valid){
 						//disable状态下 不显示数据是否有效
 						this.clearInvalid();
 					}
@@ -1258,14 +1268,14 @@ LUI.Form.Field.StringText = {
 					}
 				},
 				validate:function(dataValue){
-					var oldValid = this.isValid;
+					var oldValid = this.valid;
 					//字符型字段 除了校验是否为空外还需要检查长度是否符合要求
-					this.isValid = true;
+					this.valid = true;
 					//检查值是否 有效
 					var stringValue = dataValue==null?'':dataValue;
 					if(stringValue.length ==0){
 						if(!this.allowBlank){
-							this.isValid = false;
+							this.valid = false;
 							this.validInfo = '不允许为空!';
 						}
 					}else{
@@ -1273,7 +1283,7 @@ LUI.Form.Field.StringText = {
 							var minLength = parseInt(this.minLength);
 							if(minLength > 0 && stringValue.length < minLength){
 								//检查是否符合最少字符要求
-								this.isValid = false;
+								this.valid = false;
 								this.validInfo = '请至少输入'+minLength+'个字符!';
 							}
 						}
@@ -1282,24 +1292,24 @@ LUI.Form.Field.StringText = {
 							var maxLength = parseInt(this.maxLength);
 							if(maxLength > 0 && stringValue.length > maxLength){
 								//检查是否符合最大字符要求
-								this.isValid = false;
+								this.valid = false;
 								this.validInfo = '不允许超过'+maxLength+'个字符!';
 							}
 						}
 						
 					}
 					
-					if(!this.isValid){
+					if(!this.valid){
 						this.markInvalid();
 					}else{
 						this.clearInvalid();
 					}
 					
-					//var oldValid = this.isValid;
-					if( oldValid!= this.isValid){
-						this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.isValid});
+					//var oldValid = this.valid;
+					if( oldValid!= this.valid){
+						this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 					}
-					return this.isValid;
+					return this.valid;
 				}
 			});
 		
@@ -1351,6 +1361,9 @@ LUI.Form.Field.StringSelect = {
 							disable_search:!allowSearch,
 							width:this.inputEl.css("width")
 						});
+						
+						this.rendered = true;
+						
 						//添加选项
 						this.initOptions(this.options);
 
@@ -1363,7 +1376,6 @@ LUI.Form.Field.StringSelect = {
 						this.inputEl.bind('change',function(){
 							contextThis.setValue($(this).val());
 						});
-						this.rendered = true;
 						//原值要重新显示出来
 						this.displayRawValue();
 					}
@@ -1389,38 +1401,40 @@ LUI.Form.Field.StringSelect = {
 				}
 			},
 			initOptions:function(){
-				//删除原有选项
-				this.inputEl.find('option').remove();
-				if(this.allowBlank){
-					this.inputEl.append('<option value=""></option>');
-				}
-				
-				var options = [];
-				if(this.options !=null && this.options.length >0){
-					options = eval(this.options); 
-				}else if (this.dataGetter!=null && this.dataGetter.length>0){
-					var dataGetterFunc = window[this.dataGetter];
-					if(dataGetterFunc==null){
-						LUI.Message.warn('查询失败','字段的dataGetter函数('+this.dataGetter+')不存在！');
-					}else{
-						options = dataGetterFunc.apply(this); 
+				if(this.rendered){
+					//删除原有选项
+					this.inputEl.find('option').remove();
+					if(this.allowBlank){
+						this.inputEl.append('<option value=""></option>');
 					}
 					
-				}
-				
-				var valueExists = false;
-				for(var i=0;i<options.length;i++){
-					if(this.value == options[i].value){
-						valueExists = true;
+					var options = [];
+					if(this.options !=null && this.options.length >0){
+						options = eval(this.options); 
+					}else if (this.dataGetter!=null && this.dataGetter.length>0){
+						var dataGetterFunc = window[this.dataGetter];
+						if(dataGetterFunc==null){
+							LUI.Message.warn('查询失败','字段的dataGetter函数('+this.dataGetter+')不存在！');
+						}else{
+							options = dataGetterFunc.apply(this); 
+						}
+						
 					}
-					this.inputEl.append('<option  value="'+options[i].value+'"'+(this.value == options[i].value ?'selected':'')+'>'+options[i].text+'</option>');
+					
+					var valueExists = false;
+					for(var i=0;i<options.length;i++){
+						if(this.value == options[i].value){
+							valueExists = true;
+						}
+						this.inputEl.append('<option  value="'+options[i].value+'"'+(this.value == options[i].value ?'selected':'')+'>'+options[i].text+'</option>');
+					}
+					if(this.value!=null && !valueExists){
+						this.setValue(null,true);
+					}else if(this.value ==null && this.allowBlank== false && options.length >0){
+						this.setValue(options[0].value,true);
+					}
+					this.inputEl.trigger("chosen:updated");
 				}
-				if(this.value!=null && !valueExists){
-					this.setValue(null);
-				}else if(this.value ==null && this.allowBlank== false && options.length >0){
-					this.setValue(options[0].value);
-				}
-				this.inputEl.trigger("chosen:updated");
 			}
 		});
 		return field;
@@ -1606,7 +1620,7 @@ LUI.Form.Field.StringChooseEl = {
 					//按钮不可点击 拖拽
 					this.enabled = true;
 					//
-					if(!this.isValid){
+					if(!this.valid){
 						this.markInvalid();
 					}
 					this.inputEl.removeAttr('disabled');
@@ -1615,7 +1629,7 @@ LUI.Form.Field.StringChooseEl = {
 					//按钮可点击 拖拽
 					this.enabled = false;
 					//
-					if(!this.isValid){
+					if(!this.valid){
 						//disable状态下 不显示数据是否有效
 						this.clearInvalid();
 					}
@@ -1723,7 +1737,7 @@ LUI.Form.Field.URLField = {
 					//按钮不可点击 拖拽
 					this.enabled = true;
 					//
-					if(!this.isValid){
+					if(!this.valid){
 						this.markInvalid();
 					}
 					this.inputEl.removeAttr('disabled');
@@ -1732,7 +1746,7 @@ LUI.Form.Field.URLField = {
 					//按钮可点击 拖拽
 					this.enabled = false;
 					//
-					if(!this.isValid){
+					if(!this.valid){
 						//disable状态下 不显示数据是否有效
 						this.clearInvalid();
 					}
@@ -2050,14 +2064,14 @@ LUI.Form.Field.StringHTML = {
 				}
 			},
 			validate:function(dataValue){
-				var oldValid = this.isValid;
+				var oldValid = this.valid;
 				//html型字段 除了校验是否为空外还需要检查长度是否符合要求
-				this.isValid = true;
+				this.valid = true;
 				//检查值是否 有效
 				var stringValue = dataValue==null?'':dataValue;
 				if(stringValue.length ==0){
 					if(!this.allowBlank){
-						this.isValid = false;
+						this.valid = false;
 						this.validInfo = '不允许为空!';
 					}
 				}else{
@@ -2065,7 +2079,7 @@ LUI.Form.Field.StringHTML = {
 						var minLength = parseInt(this.minLength);
 						if(minLength > 0 && stringValue.length < minLength){
 							//检查是否符合最少字符要求
-							this.isValid = false;
+							this.valid = false;
 							this.validInfo = '请至少输入'+minLength+'个字符!';
 						}
 					}
@@ -2074,24 +2088,24 @@ LUI.Form.Field.StringHTML = {
 						var maxLength = parseInt(this.maxLength);
 						if(maxLength > 0 && stringValue.length > maxLength){
 							//检查是否符合最大字符要求
-							this.isValid = false;
+							this.valid = false;
 							this.validInfo = '不允许超过'+maxLength+'个字符!';
 						}
 					}
 					
 				}
 				
-				if(!this.isValid){
+				if(!this.valid){
 					this.markInvalid();
 				}else{
 					this.clearInvalid();
 				}
 				
-				//var oldValid = this.isValid;
-				if( oldValid!= this.isValid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.isValid});
+				//var oldValid = this.valid;
+				if( oldValid!= this.valid){
+					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
-				return this.isValid;
+				return this.valid;
 			}
 		});
 		return field;
@@ -2255,22 +2269,22 @@ LUI.Form.Field.Int = {
 				this.validate(this.rawValue);
 			},
 			validate:function(dataValue){
-				var oldValid = this.isValid;
+				var oldValid = this.valid;
 				//数值型字段 除了校验是否为空外还需要检查是否有效 大小是否是否符合要求
-				this.isValid = true;
+				this.valid = true;
 
 				//检查值是否 有效
 				var stringValue = dataValue==null?'':(''+dataValue).replace(/,/g,"");
 				if(stringValue.length ==0){
 					if(!this.allowBlank){
-						this.isValid = false;
+						this.valid = false;
 						this.validInfo = '不允许为空!';
 					}
 				}else if(stringValue.length > 0){
 					var   r = /^-?\d+$/;　　//整数      
 					//检查是否有效数字
-					this.isValid = r.test(stringValue);
-					if(!this.isValid){
+					this.valid = r.test(stringValue);
+					if(!this.valid){
 						this.validInfo = '请输入有效的整数!';
 					}else{
 						//检查取值范围
@@ -2278,7 +2292,7 @@ LUI.Form.Field.Int = {
 							var minValue = parseFloat(this.minValue);
 							if(parseFloat(stringValue) < minValue){
 								//检查是否符合最少字符要求
-								this.isValid = false;
+								this.valid = false;
 								this.validInfo = '请输入不小于'+minValue+'的整数!';
 							}
 						}
@@ -2287,23 +2301,23 @@ LUI.Form.Field.Int = {
 							var maxValue = parseFloat(this.maxValue);
 							if(parseFloat(stringValue) > maxValue){
 								//检查是否符合最少字符要求
-								this.isValid = false;
+								this.valid = false;
 								this.validInfo = '请输入不大于'+maxValue+'的整数!';
 							}
 						}
 					}
 				}
-				if(!this.isValid){
+				if(!this.valid){
 					this.markInvalid();
 				}else{
 					this.clearInvalid();
 				}
 				
-				//var oldValid = this.isValid;
-				if( oldValid!= this.isValid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.isValid});
+				//var oldValid = this.valid;
+				if( oldValid!= this.valid){
+					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
-				return this.isValid;
+				return this.valid;
 			},
 			/**
 			 * 将显示值转换为数据值
@@ -2389,15 +2403,15 @@ LUI.Form.Field.Double = {
 			},
 
 			validate:function(dataValue){
-				var oldValid = this.isValid;
+				var oldValid = this.valid;
 				//数值型字段 除了校验是否为空外还需要检查是否有效 大小是否是否符合要求
-				this.isValid = true;
+				this.valid = true;
 
 				//检查值是否 有效
 				var stringValue = dataValue==null?'':(''+dataValue).replace(/,/g,"");
 				if(stringValue.length ==0){
 					if(!this.allowBlank){
-						this.isValid = false;
+						this.valid = false;
 						this.validInfo = '不允许为空!';
 					}
 				}else if(stringValue.length > 0){
@@ -2419,8 +2433,8 @@ LUI.Form.Field.Double = {
 					}
 					//检查是否有效数字
 					
-					this.isValid = r.test(stringValue);
-					if(!this.isValid){
+					this.valid = r.test(stringValue);
+					if(!this.valid){
 						if(this.decLength == null || this.decLength =='0'){
 							this.validInfo = '请输入有效的数值!';
 						}else{
@@ -2432,7 +2446,7 @@ LUI.Form.Field.Double = {
 							var minValue = parseFloat(this.minValue);
 							if(parseFloat(stringValue) < minValue){
 								//检查是否符合最少字符要求
-								this.isValid = false;
+								this.valid = false;
 								this.validInfo = '请输入不小于'+minValue+'的数值!';
 							}
 						}
@@ -2441,7 +2455,7 @@ LUI.Form.Field.Double = {
 							var maxValue = parseFloat(this.maxValue);
 							if(parseFloat(stringValue) > maxValue){
 								//检查是否符合最少字符要求
-								this.isValid = false;
+								this.valid = false;
 								this.validInfo = '请输入不大于'+maxValue+'的数值!';
 							}
 						}
@@ -2449,17 +2463,17 @@ LUI.Form.Field.Double = {
 					
 				}
 				
-				if(!this.isValid){
+				if(!this.valid){
 					this.markInvalid();
 				}else{
 					this.clearInvalid();
 				}
 				
-				//var oldValid = this.isValid;
-				if( oldValid!= this.isValid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.isValid});
+				//var oldValid = this.valid;
+				if( oldValid!= this.valid){
+					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
-				return this.isValid;
+				return this.valid;
 			},
 			/**
 			 * 将显示值转换为数据值
@@ -2568,10 +2582,20 @@ LUI.Form.Field.ObjectSelect = {
 			minLength = parseInt(fieldMeta.minLength);
 		}
 		
-//		var allowEdit = true;
-//		if(fieldMeta.allowEdit!=null && fieldMeta.allowEdit=='false'){
-//			allowEdit = false;
-//		}
+		//数据加载 事件(在下拉选框控件中 before！)
+		var beforeLoadFunctionName = fieldMeta.onLoad;
+		if(fieldMeta.listenerDefs!=null && fieldMeta.listenerDefs.onLoad!=null){
+			beforeLoadFunctionName = fieldMeta.listenerDefs.onLoad;
+		}
+		var beforeLoadFunc = null;
+		if(beforeLoadFunctionName!=null && beforeLoadFunctionName.length >0){
+			beforeLoadFunc = window[beforeLoadFunctionName];
+			if(beforeLoadFunc==null){
+				LUI.Message.warn('查询失败','字段beforeLoad事件的处理函数('+beforeLoadFunctionName+')不存在！');
+			}else if(fieldMeta.searchMode == 'local'){
+				LUI.Message.warn('警告','字段'+fieldMeta.name+'的查询方式为local，定义的beforeLoad事件可能不会被触发！');
+			}
+		}
 		
 		var field = $.extend(LUI.Form.Field.createNew(fieldMeta,lui_form),{
 			id: '_form_field_objectselect_'+(++LUI.Form.Field.ObjectSelect.uniqueId),
@@ -2579,6 +2603,7 @@ LUI.Form.Field.ObjectSelect = {
 			options:[],
 			queryFields:queryFields,
 			datasource:_datasource,
+			beforeLoadFunction:beforeLoadFunc,
 			renderTemplateExpression:renderTemplateExpression,
 			focus:function(){
 				var comboboxIns = this.inputEl.combobox("instance");
@@ -2605,23 +2630,28 @@ LUI.Form.Field.ObjectSelect = {
 								var searchString = null;
 								var isShowAll = false;
 								if(request.term == 'search all'){
+									//点击了下拉按钮
 									isShowAll = true;
 									if(this.options.minLength >0){
 										return;
 									}
 								}else if(request.term!=null && request.term.length>0){
-									searchString = request.term.toLowerCase();;
+									//输入了内容
+									searchString = request.term.toLowerCase();
 								}
 								
 								//输入字符或点击下拉箭头 请求显示符合条件的选项 
 								if(contextThis.searchMode == 'local'){
 									//本地搜索
-									if(contextThis.datasource.loaded = true){
+									if(contextThis.datasource.loaded == true){
 										//如果已经load了全部数据 进行本地搜索
 										contextThis.initOptions(searchString,isShowAll);
 										response(contextThis.options);
 									}else{
 										//如果还没有load 需要远程取得全部数据 再进行本地搜索
+										if(contextThis.beforeLoadFunction!=null){
+											contextThis.beforeLoadFunction.apply(contextThis,[contextThis,null,null]);
+										}
 										contextThis.datasource.load({},function(){
 											contextThis.initOptions(searchString,isShowAll);
 											response(contextThis.options);
@@ -2643,6 +2673,9 @@ LUI.Form.Field.ObjectSelect = {
 										filters[filters.length] = filter;
 									}
 									
+									if(contextThis.beforeLoadFunction!=null){
+										contextThis.beforeLoadFunction.apply(contextThis,[contextThis,null,null]);
+									}
 									contextThis.datasource.load({
 										filters:filters
 									},function(){
@@ -2657,7 +2690,7 @@ LUI.Form.Field.ObjectSelect = {
 							}
 						});
 						//如果数据源已经loaded 初始化选择项
-//						if(this.datasource.loaded = true ){
+//						if(this.datasource.loaded == true ){
 //							this.initOptions();
 //						}
 						
@@ -2682,29 +2715,29 @@ LUI.Form.Field.ObjectSelect = {
 				this.validate(this.value);
 			},
 			validate:function(dataVal){
-				var oldValid = this.isValid;
+				var oldValid = this.valid;
 				//对象类型的字段 只校验字段值 是否允许为空
-				this.isValid = true;
+				this.valid = true;
 				//将空显示值 变为
 				//默认只检查 是否允许为空
 				if((dataVal == null || dataVal.length ==0) && !this.allowBlank){
-					this.isValid = false;
+					this.valid = false;
 					this.validInfo = '此字段不允许为空!';
 				}else{
-					this.isValid = true;
+					this.valid = true;
 				}
 				
-				if(!this.isValid){
+				if(!this.valid){
 					this.markInvalid();
 				}else{
 					this.clearInvalid();
 				}
 				
-				//var oldValid = this.isValid;
-				if( oldValid!= this.isValid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.isValid});
+				//var oldValid = this.valid;
+				if( oldValid!= this.valid){
+					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
-				return this.isValid;
+				return this.valid;
 			},
 			setSizeDesignable:function(node,isEnable){
 				if(!this.rendered){
@@ -2844,7 +2877,7 @@ LUI.Form.Field.ObjectSelect = {
 			},
 			enable:function(){
 				this.enabled = true;
-				if(!this.isValid){
+				if(!this.valid){
 					this.markInvalid();
 				}
 				var comboboxIns = this.inputEl.combobox("instance");
@@ -2855,7 +2888,7 @@ LUI.Form.Field.ObjectSelect = {
 			},
 			disable:function(){
 				this.enabled = false;
-				if(!this.isValid){
+				if(!this.valid){
 					//disable状态下 不显示数据是否有效
 					this.clearInvalid();
 				}
@@ -3105,7 +3138,7 @@ LUI.Form.Field.ObjectRadioEditor = {
 			 */
 			enable:function(){
 				this.enabled = true;
-				if(!this.isValid){
+				if(!this.valid){
 					this.markInvalid();
 				}
 				//将字段变为可编辑
@@ -3114,7 +3147,7 @@ LUI.Form.Field.ObjectRadioEditor = {
 			},
 			disable:function(){
 				this.enabled = false;
-				if(!this.isValid){
+				if(!this.valid){
 					//disable状态下 不显示数据是否有效
 					this.clearInvalid();
 				}
@@ -3157,7 +3190,7 @@ LUI.Form.Field.Date = {
 						_this.inputEl.datepicker("show");
 					});
 					//
-					if(!this.isValid){
+					if(!this.valid){
 						this.markInvalid();
 					}
 					this.inputEl.removeAttr('disabled');
@@ -3168,7 +3201,7 @@ LUI.Form.Field.Date = {
 					//按钮不可点击
 					this.el.find('img#_handler').unbind('click');
 					//
-					if(!this.isValid){
+					if(!this.valid){
 						//disable状态下 不显示数据是否有效
 						this.clearInvalid();
 					}
@@ -3262,23 +3295,23 @@ LUI.Form.Field.Date = {
 					this.inputEl.outerWidth(fieldWidth -16);
 				},
 				validate:function(dataValue){
-					var oldValid = this.isValid;
+					var oldValid = this.valid;
 					//日期型字段 除了校验是否为空外还需要检查是否有效 大小是否是否符合要求
-					this.isValid = true;
+					this.valid = true;
 
 					//检查值是否 有效
 					var stringValue = dataValue==null?'':(''+dataValue);
 					if(stringValue.length ==0){
 						if(!this.allowBlank){
-							this.isValid = false;
+							this.valid = false;
 							this.validInfo = '不允许为空!';
 						}
 					}else if(stringValue.length > 0){
 						stringValue = stringValue.substr(0,10);
 						//检查是否有效数字
 						var r =  /^(\d{4})-(\d{2})-(\d{2})$/ ;　　//日期     
-						this.isValid = r.test(stringValue);
-						if(!this.isValid){
+						this.valid = r.test(stringValue);
+						if(!this.valid){
 							this.validInfo = '请输入有效的日期，格式为yyyy-mm-dd!';
 						}else{
 							var thisDate = new Date(stringValue.replace(/-/g,"/"));
@@ -3287,7 +3320,7 @@ LUI.Form.Field.Date = {
 								var minDate = new Date(this.minDate.replace(/-/g,"/"));
 								if(thisDate < minDate){
 									//检查是否符合最小日期要求
-									this.isValid = false;
+									this.valid = false;
 									this.validInfo = '请输入不小于'+this.minDate+'的日期!';
 								}
 							}
@@ -3296,24 +3329,24 @@ LUI.Form.Field.Date = {
 								var maxDate = new Date(this.maxDate.replace(/-/g,"/"));
 								if(thisDate > maxDate){
 									//检查是否符合最大日期要求
-									this.isValid = false;
+									this.valid = false;
 									this.validInfo = '请输入不大于'+this.maxDate+'的日期!';
 								}
 							}
 						}
 					}
 				
-					if(!this.isValid){
+					if(!this.valid){
 						this.markInvalid();
 					}else{
 						this.clearInvalid();
 					}
 					
-					//var oldValid = this.isValid;
-					if( oldValid!= this.isValid){
-						this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.isValid});
+					//var oldValid = this.valid;
+					if( oldValid!= this.valid){
+						this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 					}
-					return this.isValid;
+					return this.valid;
 				}
 			});
 			return field;
@@ -3357,7 +3390,7 @@ LUI.Form.Field.File = {
 				//按钮不可点击
 				this.enabled = true;
 				//
-				if(!this.isValid){
+				if(!this.valid){
 					this.markInvalid();
 				}
 //				this.inputEl.removeClass('nim-field-disabled');
@@ -3367,7 +3400,7 @@ LUI.Form.Field.File = {
 				//按钮可点击
 				this.enabled = false;
 				//
-				if(!this.isValid){
+				if(!this.valid){
 					//disable状态下 不显示数据是否有效
 					this.clearInvalid();
 				}
@@ -3482,28 +3515,28 @@ LUI.Form.Field.File = {
 				}
 			},
 			validate:function(dataValue){
-				var oldValid = this.isValid;
+				var oldValid = this.valid;
 				//附件类型的字段 只校验字段值 是否允许为空
-				this.isValid = true;
+				this.valid = true;
 				//默认只检查 是否允许为空
 				if((dataValue == null || dataValue.fuJianDM==null)&& !this.allowBlank){
-					this.isValid = false;
+					this.valid = false;
 					this.validInfo = '此字段不允许为空!';
 				}else{
-					this.isValid = true;
+					this.valid = true;
 				}
 				
-				if(!this.isValid){
+				if(!this.valid){
 					this.markInvalid();
 				}else{
 					this.clearInvalid();
 				}
 				
-				//var oldValid = this.isValid;
-				if( oldValid!= this.isValid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.isValid});
+				//var oldValid = this.valid;
+				if( oldValid!= this.valid){
+					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
-				return this.isValid;
+				return this.valid;
 			},
 			setSizeDesignable:function(node,isEnable){
 				if(!this.rendered){

@@ -47,21 +47,21 @@ LUI.Form.SetField = {
 			},
 			validate:function(){
 				//集合字段 默认只检查是否允许为空（以后可以加上最大行数 最小行数）
-				this.isValid = true;
+				this.valid = true;
 				//检查存储值是否 有效
 				if((this.value==null || this.value.length ==0) && !this.allowBlank){
-					this.isValid = false;
+					this.valid = false;
 					this.validInfo = '此字段不允许为空!';
 				}else{
-					this.isValid = true;
+					this.valid = true;
 				}
 				
-				if(!this.isValid){
+				if(!this.valid){
 					this.markInvalid();
 				}else{
 					this.clearInvalid();
 				}
-				return this.isValid;
+				return this.valid;
 			},
 			markInvalid:function(){
 				if(this.enabled && this.rendered ){
@@ -298,7 +298,7 @@ LUI.Form.SetField.CheckboxEditor = {
 			 */
 			enable:function(){
 				this.enabled = true;
-				if(!this.isValid){
+				if(!this.valid){
 					this.markInvalid();
 				}
 				//将字段变为可编辑
@@ -307,7 +307,7 @@ LUI.Form.SetField.CheckboxEditor = {
 			},
 			disable:function(){
 				this.enabled = false;
-				if(!this.isValid){
+				if(!this.valid){
 					//disable状态下 不显示数据是否有效
 					this.clearInvalid();
 				}
@@ -481,7 +481,7 @@ LUI.Form.SetField.FileEditor = {
 			 */
 			enable:function(){
 				this.enabled = true;
-				if(!this.isValid){
+				if(!this.valid){
 					this.markInvalid();
 				}
 				//将字段变为可编辑
@@ -491,7 +491,7 @@ LUI.Form.SetField.FileEditor = {
 			},
 			disable:function(){
 				this.enabled = false;
-				if(!this.isValid){
+				if(!this.valid){
 					//disable状态下 不显示数据是否有效
 					this.clearInvalid();
 				}
@@ -542,13 +542,28 @@ LUI.Form.SetField.GridEditor = {
 				}
 			},
 			setValue:function (newVal,silence,isInitial,originSource){
-				this.value = newVal;
+//				this.value = newVal;
 //				this.validate();
 				if(isInitial){
 					//初始化的时候  从recordset中 直接取得
 					var rs = this.form.record.getFieldValue(this.name);
 					for(var i=0;i<rs.size();i++){
 						this.grid.addRow(rs.getRecordByIndex(i));
+					}
+					
+					//全部表格行添加完成后 为每个单元格的字段 发出change事件
+					for(var i=0;i<this.grid.rows.length;i++){
+						var row = this.grid.rows[i];
+						for(var k=0;k<row.cells.length;k++){
+							var cell = row.cells[k];
+							if(cell.field!=null){
+								cell.field.fireEvent(cell.field.events.change,{
+									oldValue:cell.field.getValue(),
+									newValue:cell.field.getValue(),
+									isInitial: true
+								},this.grid); 
+							}
+						}
 					}
 				}else{
 					//为field setValue 通知resultset改变 通过对resultset的监听间接改变字段的显示
@@ -558,17 +573,21 @@ LUI.Form.SetField.GridEditor = {
 			equalsValue:function(val1,val2){
 				return false;
 			},
+			isValid:function(){
+				this.validate();
+				return this.valid || this.hidden || !this.enabled;
+			},
 			validate:function(){
 				//集合字段 默认只检查是否允许为空（以后可以加上最大行数 最小行数）
-				this.isValid = true;
+				this.valid = true;
 				//检查存储值是否 有效
-				if((this.value==null || this.value.length ==0) && !this.allowBlank){
-					this.isValid = false;
+				if((this.grid==null || this.grid.rows.length ==0) && !this.allowBlank){
+					this.valid = false;
 					this.validInfo = '此字段不允许为空!';
 				}else{
-					this.grid.validate();//表格的校验结果  会通过validchange事件 改变当前字段的校验信息
+					this.valid = this.grid.validate();//表格的校验结果  会通过validchange事件 改变当前字段的校验信息
 				}
-				return this.isValid;
+				return this.valid;
 			},
 			/**
 			 * 将数据值格式化为显示值 (对每个可选对象 处理为checkbox的label)
@@ -584,13 +603,13 @@ LUI.Form.SetField.GridEditor = {
 					this.toolsbar.enable();
 				}
 				
-				if(!this.isValid){
+				if(!this.valid){
 					this.markInvalid();
 				}
 			},
 			disable:function(){
 				this.enabled = false;
-				if(!this.isValid){
+				if(!this.valid){
 					//disable状态下 不显示数据是否有效
 					this.clearInvalid();
 				}
@@ -624,7 +643,7 @@ LUI.Form.SetField.GridEditor = {
 			field.grid = subGrid;
 			
 			subGrid.addListener(subGrid.events.validChange,field,function(sGrid,field,event,eventOrigin){
-				field.isValid = sGrid.isValid;
+				field.valid = sGrid.valid;
 				field.validInfo = sGrid.validInfo;
 			});
 		}

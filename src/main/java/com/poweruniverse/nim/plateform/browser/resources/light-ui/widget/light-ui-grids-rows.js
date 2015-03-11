@@ -13,7 +13,7 @@ LUI.Grid.Row = {
 			record:record,
 			loaded:true,
 			rendered:false,
-			isValid:true,
+			valid:true,
 			validInfo:null,
 			el:null,
 			getCell:function(colIdentifier){
@@ -37,7 +37,7 @@ LUI.Grid.Row = {
 				this.cells[this.cells.length] = cell;
 				
 				cell.addListener(cell.events.validChange,this,function(sCell,row,event,eventOrigin){
-					this._onValidate();
+					this.validate();
 				});
 			},
 			//清除所有单元格
@@ -66,29 +66,43 @@ LUI.Grid.Row = {
 				}
 				
 			},
-			_onValidate:function(){
-				var oldValid = this.isValid;
-				
-				this.isValid = true;
-				//所有field都valid form就valid
+			isValid:function(){
+				this.valid = true;
+				//所有cell都valid row就valid
 				for(var j=0;j<this.cells.length;j++){
-					if(!this.cells[j].isValid){
-						this.isValid = false;
-						this.validInfo = this.cells[j].validInfo;
+					var cell = this.cells[j];
+					if(cell.field!=null && !cell.field.isValid()){
+						this.valid = false;
+						this.validInfo = cell.validInfo;
+						break;
+					}
+				}
+				return this.valid;
+			},
+			validate:function(){
+				var oldValid = this.valid;
+				
+				this.valid = true;
+				//所有cell都valid row就valid
+				for(var j=0;j<this.cells.length;j++){
+					var cell = this.cells[j];
+					if(cell.field!=null && !cell.field.isValid()){
+						this.valid = false;
+						this.validInfo = cell.validInfo;
 						break;
 					}
 				}
 				
-				if( oldValid!= this.isValid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.isValid});
+				if(oldValid!= this.valid){
+					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
-				return this.isValid;
+				return this.valid;
 			},
 			getFirstInvalidField:function(){
 				var field = null;
 				//取row中第一个invalid 的field
 				for(var j=0;j<this.cells.length;j++){
-					if(!this.cells[j].isValid){
+					if(!this.cells[j].isValid()){
 						field = this.cells[j].field;
 						break;
 					}

@@ -418,7 +418,7 @@ LUI.SubGrid = {
 			parentField:null,
 			parentResultSet:null,
 			rendered:false,
-			isValid:true,
+			valid:true,
 			validInfo:null,
 			events:{
 				change:'grid_change',
@@ -450,7 +450,7 @@ LUI.SubGrid = {
 				this.rows[this.rows.length] = row;
 				
 				row.addListener(row.events.validChange,this,function(sRow,grid,event,eventOrigin){
-					this._onValidate();
+					this.validate();
 				});
 				//如果表格已rendered 
 				if(this.rendered){
@@ -585,23 +585,33 @@ LUI.SubGrid = {
 					row.record.reset();
 				}
 			},
-			_onValidate:function(){
-				var oldValid = this.isValid;
+			isValid:function(){
 				//所有row都valid grid就valid
-				this.isValid = true;
 				for(var j=0;j<this.rows.length;j++){
 					var row = this.rows[j];
-					if(!row.isValid){
-						this.isValid = false;
+					if(!row.isValid()){
+						return false;
+					}
+				}
+				return true;
+			},
+			validate:function(){
+				var oldValid = this.valid;
+				//所有row都valid grid就valid
+				this.valid = true;
+				for(var j=0;j<this.rows.length;j++){
+					var row = this.rows[j];
+					if(!row.isValid()){
+						this.valid = false;
 						this.validInfo = row.validInfo;
 						break;
 					}
 				}
 				
-				if( oldValid!= this.isValid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.isValid});
+				if( oldValid!= this.valid){
+					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
-				return this.isValid;
+				return this.valid;
 			},
 			getFirstInvalidField:function(){
 				var field = null;

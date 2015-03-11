@@ -43,6 +43,21 @@ LUI.Datasource = {
 				submit:'dataset_submit',//提交记录
 				save:'dataset_save'//保存记录
 			},
+			addFilter:function(property,operator,value){
+				this.removeFilter(property);
+				this.filters[this.filters.length] = {property:property,operator:operator,value:value};
+			},
+			removeFilter:function(property){
+				var filter = null;
+				if(this.filters.length >0 ){
+					for(var i=0;i<this.filters.length;i++){
+						if(this.filters[i].property == property){
+							this.filters.splice(i,1);
+							break;
+						}
+					}
+				}
+			},
 			/**
 			 * 调用此方法 通知数据源向服务器请求数据
 			 * 参数：[{property:'xiangMuMC',operator:'like',value:'山东'},{operator:'sql',sql:'山东'}]

@@ -42,12 +42,14 @@ public class STLAction {
 				return new JSONMessageResult("实体类("+entityObj.getShiTiLeiMC()+")所属系统不能为空!");
 			}else if(entityObj.getBiaoMing()==null){
 				return new JSONMessageResult("实体类("+entityObj.getShiTiLeiMC()+")表名不能为空!");
-			}else if(entityObj.getBiaoMing().toUpperCase().startsWith((entityObj.getXiTong().getXiTongDH()+"_").toUpperCase())){
-				return new JSONMessageResult("实体类("+entityObj.getShiTiLeiMC()+")的表名("+entityObj.getBiaoMing()+")开头必须与系统代号("+entityObj.getXiTong().getXiTongDH()+"_"+")一致!");
+			}else if(!entityObj.getBiaoMing().startsWith((entityObj.getXiTong().getXiTongDH()+"_").toUpperCase())){
+				return new JSONMessageResult("实体类("+entityObj.getShiTiLeiMC()+")的表名("+entityObj.getBiaoMing()+")开头必须与系统代号("+(entityObj.getXiTong().getXiTongDH()+"_").toUpperCase()+")一致!");
 			}
 			
 			JSONObject xiTongConfig = xiTongMap.get(entityObj.getXiTong().getXiTongDH());
-
+			if(xiTongConfig == null){
+				return new JSONMessageResult("在application.cfg.xml中的sessionFactory元素下，未找到系统("+entityObj.getXiTong().getXiTongDH()+")的定义!");
+			}
 			//将类名记录在stl对象中 
 			if(entityObj.getShiTiLeiClassName()==null){
 				String classPackageName = "";

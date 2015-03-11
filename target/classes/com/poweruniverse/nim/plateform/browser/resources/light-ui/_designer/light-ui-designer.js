@@ -2646,54 +2646,56 @@ function refreshExtendForm(eventSource,eventTarget,event,eventOriginal){
  * @param newComponentName
  */
 function refreshGridExtendForm(eventSource,eventTarget,event,eventOriginal){
-	//先执行通常的处理
-	refreshExtendForm(eventSource,eventTarget,event,eventOriginal);
-	
-	//当前选中的节点
-	var selectedNodes = LUI.PageDesigner.instance._pageCmpTree.getSelectedNodes();
-	var selectedNode = selectedNodes[0];
-	//
-	var newVal = event.params.newValue;
-	var oldVal = event.params.oldValue;
-	var isInitial = event.params.isInitial;
-	//如果是显示类型的表格 -> 编辑类型的表格
-	if(!isInitial && (oldVal == 'displayGrid' || oldVal == 'treeDisplayGrid') && (newVal == 'editGrid' || newVal == 'treeEditGrid')){
-		//查找
-		for(var i=0;i<selectedNode.children.length;i++ ){
-			var cNode = selectedNode.children[i];
-			if(cNode.component.type == 'columns'){
-				var columnsNode= cNode;
-				//循环检查表格列 设为对应的显示类型
-				for(var j=0;j<columnsNode.children.length;j++ ){
-					var dNode = columnsNode.children[j];
-					var typeName = dNode.data.fieldType+'Column';
-					var type_def = LUI.PageDesigner.instance._types[typeName];
-					var component_name = type_def.defaultComponent;
-					dNode.data.type = typeName;
-					dNode.data.component = component_name;
+	if(!event.params.isInitial){
+		//先执行通常的处理
+		refreshExtendForm(eventSource,eventTarget,event,eventOriginal);
+		
+		//当前选中的节点
+		var selectedNodes = LUI.PageDesigner.instance._pageCmpTree.getSelectedNodes();
+		var selectedNode = selectedNodes[0];
+		//
+		var newVal = event.params.newValue;
+		var oldVal = event.params.oldValue;
+		var isInitial = event.params.isInitial;
+		//如果是显示类型的表格 -> 编辑类型的表格
+		if(!isInitial && (oldVal == 'displayGrid' || oldVal == 'treeDisplayGrid') && (newVal == 'editGrid' || newVal == 'treeEditGrid')){
+			//查找
+			for(var i=0;i<selectedNode.children.length;i++ ){
+				var cNode = selectedNode.children[i];
+				if(cNode.component.type == 'columns'){
+					var columnsNode= cNode;
+					//循环检查表格列 设为对应的显示类型
+					for(var j=0;j<columnsNode.children.length;j++ ){
+						var dNode = columnsNode.children[j];
+						var typeName = dNode.data.fieldType+'Column';
+						var type_def = LUI.PageDesigner.instance._types[typeName];
+						var component_name = type_def.defaultComponent;
+						dNode.data.type = typeName;
+						dNode.data.component = component_name;
+						
+						var component_def = LUI.PageDesigner.instance._components[component_name];
+						dNode.component = component_def;
+					}
 					
-					var component_def = LUI.PageDesigner.instance._components[component_name];
-					dNode.component = component_def;
+					break;
 				}
-				
-				break;
 			}
-		}
-	}else if(!isInitial && (newVal == 'displayGrid' || newVal == 'treeDisplayGrid') && (oldVal == 'editGrid' || oldVal == 'treeEditGrid')){
-		//查找
-		for(var i=0;i<selectedNode.children.length;i++ ){
-			var cNode = selectedNode.children[i];
-			if(cNode.component.type == 'columns'){
-				var columnsNode= cNode;
-				//循环检查表格列 设为对应的显示类型
-				for(var j=0;j<columnsNode.children.length;j++ ){
-					var dNode = columnsNode.children[j];
-					dNode.data.type = 'column';
-					dNode.data.component = 'gridColumn';
-					
-					dNode.component = LUI.PageDesigner.instance._components['gridColumn'];
+		}else if(!isInitial && (newVal == 'displayGrid' || newVal == 'treeDisplayGrid') && (oldVal == 'editGrid' || oldVal == 'treeEditGrid')){
+			//查找
+			for(var i=0;i<selectedNode.children.length;i++ ){
+				var cNode = selectedNode.children[i];
+				if(cNode.component.type == 'columns'){
+					var columnsNode= cNode;
+					//循环检查表格列 设为对应的显示类型
+					for(var j=0;j<columnsNode.children.length;j++ ){
+						var dNode = columnsNode.children[j];
+						dNode.data.type = 'column';
+						dNode.data.component = 'gridColumn';
+						
+						dNode.component = LUI.PageDesigner.instance._components['gridColumn'];
+					}
+					break;
 				}
-				break;
 			}
 		}
 	}
@@ -3737,173 +3739,180 @@ function getGridOptions(){
 
 //对象类型的字段 是否隐藏 （隐藏的字段 就不需要数据源了）
 function changeFieldHidden(eventSource,eventTarget,event,eventOriginal){
-	var newVal = event.params.newValue;
-	var oldVal = event.params.oldValue;
-//	var isInitial = event.params.isInitial;
-	
-	if(newVal!=null && newVal != oldVal ){
-		//如果是隐藏字段 不需要编辑生成方式 生成目标等字段
-		var isHidden = false;
-		if(newVal == "true"){
-			isHidden = true;
-		}
-		if(eventSource.form.hasField('renderType')){
-			eventSource.form.getField('renderType').setHidden(isHidden);
-		}
-		if(eventSource.form.hasField('renderto')){
-			eventSource.form.getField('renderto').setHidden(isHidden);
-		}
+	if(!event.params.isInitial){
+		var newVal = event.params.newValue;
+		var oldVal = event.params.oldValue;
+	//	var isInitial = event.params.isInitial;
 		
-		if(eventSource.form.hasField('renderTemplate')){
-			eventSource.form.getField('renderTemplate').setHidden(isHidden);
+		if(newVal!=null && newVal != oldVal ){
+			//如果是隐藏字段 不需要编辑生成方式 生成目标等字段
+			var isHidden = false;
+			if(newVal == "true"){
+				isHidden = true;
+			}
+			if(eventSource.form.hasField('renderType')){
+				eventSource.form.getField('renderType').setHidden(isHidden);
+			}
+			if(eventSource.form.hasField('renderto')){
+				eventSource.form.getField('renderto').setHidden(isHidden);
+			}
+			
+			if(eventSource.form.hasField('renderTemplate')){
+				eventSource.form.getField('renderTemplate').setHidden(isHidden);
+			}
+			
+			if(eventSource.form.hasField('datasourceType')){
+				eventSource.form.getField('datasourceType').setHidden(isHidden);
+				changeFieldSourceType(eventSource,eventTarget,{
+					params:{
+						newValue:eventSource.form.record.getFieldValue('datasourceType')
+					}
+				},eventOriginal);
+			}
+			
+			//当前节点
+			var selectedNodes = LUI.PageDesigner.instance._pageCmpTree.getSelectedNodes();
+			var selectedNode = selectedNodes[0];
+			//判断当前节点 输入值是否有效
+			LUI.PageDesigner.instance.validateNode(selectedNode); 
 		}
-		
-		if(eventSource.form.hasField('datasourceType')){
-			eventSource.form.getField('datasourceType').setHidden(isHidden);
-			changeFieldSourceType(eventSource,eventTarget,{
-				params:{
-					newValue:eventSource.form.record.getFieldValue('datasourceType')
-				}
-			},eventOriginal);
-		}
-		
-		//当前节点
-		var selectedNodes = LUI.PageDesigner.instance._pageCmpTree.getSelectedNodes();
-		var selectedNode = selectedNodes[0];
-		//判断当前节点 输入值是否有效
-		LUI.PageDesigner.instance.validateNode(selectedNode); 
 	}
 }
 
 //对象类型 的字段   切换下拉选项数据来源（公共数据源/私有数据源）
 function changeFieldSourceType(eventSource,eventTarget,event,eventOriginal){
-	var newVal = event.params.newValue;
+//	if(!event.params.isInitial){
+		var newVal = event.params.newValue;
 	
-	//当前选中的field节点
-	var selectedNodes = LUI.PageDesigner.instance._pageCmpTree.getSelectedNodes();
-	var selectedNode = selectedNodes[0];
-	//当前节点下是否存在私有数据源节点
-	var hasChildNode = false;
-	if(selectedNode.children!=null && selectedNode.children.length >0){
-		hasChildNode = true;
-	}
-			
+		//当前选中的field节点
+		var selectedNodes = LUI.PageDesigner.instance._pageCmpTree.getSelectedNodes();
+		var selectedNode = selectedNodes[0];
+		//当前节点下是否存在私有数据源节点
+		var hasChildNode = false;
+		if(selectedNode.children!=null && selectedNode.children.length >0){
+			hasChildNode = true;
+		}
+				
+		
+		var hidden = 'false';
+		if(eventSource.form.record.hasField('hidden')){
+			hidden =  eventSource.form.record.getFieldValue('hidden');
+		}
+		if(hidden != 'true'){
+			if(newVal == 'public'){
+				//显示公共数据源字段 
+				eventSource.form.getField('datasourceName').setHidden(false);
+				//如果私有数据源节点存在 删除
+				if(hasChildNode){
+					LUI.PageDesigner.instance._pageCmpTree.removeChildNodes(selectedNode);
+				}
+			}else if(newVal == 'private'){
+				//隐藏公共数据源字段
+				eventSource.form.getField('datasourceName').setHidden(true);
+				//如果私有数据源节点不存在 添加
+				if(!hasChildNode){
+					var newNode = LUI.PageDesigner.instance.addComponentNode(selectedNode,'gnDataset','数据源');
+					if(newNode!=null){
+						newNode.data.name = 'dataset';
+						newNode.data.label = '数据源';
+					}
+				}
+			}
+		}else{
+			//隐藏公共数据源字段 
+			eventSource.form.getField('datasourceName').setHidden(true);
+			//如果私有数据源节点存在 删除
+			if(hasChildNode){
+				LUI.PageDesigner.instance._pageCmpTree.removeChildNodes(selectedNode);
+			}
+		}
+		
+		//判断当前节点是否有效
+		LUI.PageDesigner.instance.validateNode(selectedNode); 
+//	}
+}
+
+//树控件   切分级类型（关联/编码）
+function changeLevelType(eventSource,eventTarget,event,eventOriginal){
+	if(!event.params.isInitial){
+		var newVal = event.params.newValue;
 	
-	var hidden = 'false';
-	if(eventSource.form.record.hasField('hidden')){
-		hidden =  eventSource.form.record.getFieldValue('hidden');
+		if(newVal == 'parent'){
+			//隐藏编码方式字段
+			eventSource.form.getField('levelSectionFormat').setHidden(true);
+		}else if(newVal == 'section'){
+			//隐藏编码方式字段
+			eventSource.form.getField('levelSectionFormat').setHidden(false);
+		}
 	}
-	if(hidden != 'true'){
+}
+
+//显示控件   切换数据来源（公共数据源/私有数据源）
+function changeDataSourceType(eventSource,eventTarget,event,eventOriginal){
+//	if(!event.params.isInitial){
+		var newVal = event.params.newValue;
+	
+		//当前选中的field节点
+		var selectedNodes = LUI.PageDesigner.instance._pageCmpTree.getSelectedNodes();
+		var selectedNode = selectedNodes[0];
+		//当前节点下是否存在私有数据源节点
+		var privateDatasourceNode = null;
+		if(selectedNode.children!=null && selectedNode.children.length >0){
+			for(var i=0;i<selectedNode.children.length;i++){
+				var componentName = selectedNode.children[i].data.component;
+				var component_def = LUI.PageDesigner.instance._components[componentName];
+				
+				if(component_def.type == 'dataset' || component_def.type == 'record'){
+					privateDatasourceNode = selectedNode.children[i];
+					break;
+				}
+			}
+		}
+	
 		if(newVal == 'public'){
 			//显示公共数据源字段 
 			eventSource.form.getField('datasourceName').setHidden(false);
 			//如果私有数据源节点存在 删除
-			if(hasChildNode){
-				LUI.PageDesigner.instance._pageCmpTree.removeChildNodes(selectedNode);
+			if(privateDatasourceNode!=null){
+				LUI.PageDesigner.instance._pageCmpTree.removeNode(privateDatasourceNode,true);
 			}
 		}else if(newVal == 'private'){
 			//隐藏公共数据源字段
 			eventSource.form.getField('datasourceName').setHidden(true);
 			//如果私有数据源节点不存在 添加
-			if(!hasChildNode){
-				var newNode = LUI.PageDesigner.instance.addComponentNode(selectedNode,'gnDataset','数据源');
-				if(newNode!=null){
-					newNode.data.name = 'dataset';
-					newNode.data.label = '数据源';
-				}
-			}
-		}
-	}else{
-		//隐藏公共数据源字段 
-		eventSource.form.getField('datasourceName').setHidden(true);
-		//如果私有数据源节点存在 删除
-		if(hasChildNode){
-			LUI.PageDesigner.instance._pageCmpTree.removeChildNodes(selectedNode);
-		}
-	}
-	
-	//判断当前节点是否有效
-	LUI.PageDesigner.instance.validateNode(selectedNode); 
-}
-
-//树控件   切分级类型（关联/编码）
-function changeLevelType(eventSource,eventTarget,event,eventOriginal){
-	var newVal = event.params.newValue;
-	
-	if(newVal == 'parent'){
-		//隐藏编码方式字段
-		eventSource.form.getField('levelSectionFormat').setHidden(true);
-	}else if(newVal == 'section'){
-		//隐藏编码方式字段
-		eventSource.form.getField('levelSectionFormat').setHidden(false);
-	}
-	
-}
-
-//显示控件   切换数据来源（公共数据源/私有数据源）
-function changeDataSourceType(eventSource,eventTarget,event,eventOriginal){
-	var newVal = event.params.newValue;
-	
-	//当前选中的field节点
-	var selectedNodes = LUI.PageDesigner.instance._pageCmpTree.getSelectedNodes();
-	var selectedNode = selectedNodes[0];
-	//当前节点下是否存在私有数据源节点
-	var privateDatasourceNode = null;
-	if(selectedNode.children!=null && selectedNode.children.length >0){
-		for(var i=0;i<selectedNode.children.length;i++){
-			var componentName = selectedNode.children[i].data.component;
-			var component_def = LUI.PageDesigner.instance._components[componentName];
-			
-			if(component_def.type == 'dataset' || component_def.type == 'record'){
-				privateDatasourceNode = selectedNode.children[i];
-				break;
-			}
-		}
-	}
-
-	if(newVal == 'public'){
-		//显示公共数据源字段 
-		eventSource.form.getField('datasourceName').setHidden(false);
-		//如果私有数据源节点存在 删除
-		if(privateDatasourceNode!=null){
-			LUI.PageDesigner.instance._pageCmpTree.removeNode(privateDatasourceNode,true);
-		}
-	}else if(newVal == 'private'){
-		//隐藏公共数据源字段
-		eventSource.form.getField('datasourceName').setHidden(true);
-		//如果私有数据源节点不存在 添加
-		if(privateDatasourceNode == null){
-			var componentName = selectedNode.data.component;
-			var component_def = LUI.PageDesigner.instance._components[componentName];
-			var type_def = LUI.PageDesigner.instance._types[component_def.type];
-			var allStructureArray = [].concat(component_def.structure||[])
-				.concat(type_def.structure||[]);
-			
-			if(allStructureArray.length >0){
-				for(var i=0;i<allStructureArray.length;i++){
-					var dsCmpName = allStructureArray[i]['component-name'];
-					var dsComponent_def = LUI.PageDesigner.instance._components[dsCmpName];
-					if(dsComponent_def.type == 'dataset' || dsComponent_def.type == 'record'){
-						var newNode = LUI.PageDesigner.instance.addComponentNode(selectedNode,dsCmpName,'数据源');
-						if(newNode!=null){
-							newNode.data.name = selectedNode.data.name+'_datasource_';
-							newNode.data.label = '私有数据源';
+			if(privateDatasourceNode == null){
+				var componentName = selectedNode.data.component;
+				var component_def = LUI.PageDesigner.instance._components[componentName];
+				var type_def = LUI.PageDesigner.instance._types[component_def.type];
+				var allStructureArray = [].concat(component_def.structure||[])
+					.concat(type_def.structure||[]);
+				
+				if(allStructureArray.length >0){
+					for(var i=0;i<allStructureArray.length;i++){
+						var dsCmpName = allStructureArray[i]['component-name'];
+						var dsComponent_def = LUI.PageDesigner.instance._components[dsCmpName];
+						if(dsComponent_def.type == 'dataset' || dsComponent_def.type == 'record'){
+							var newNode = LUI.PageDesigner.instance.addComponentNode(selectedNode,dsCmpName,'数据源');
+							if(newNode!=null){
+								newNode.data.name = selectedNode.data.name+'_datasource_';
+								newNode.data.label = '私有数据源';
+							}
+							break;
 						}
-						break;
 					}
 				}
 			}
+		}else if(newVal!=null){
+			//隐藏公共数据源字段
+			eventSource.form.getField('datasourceName').setHidden(true);
+			//如果私有数据源节点存在 删除
+			if(privateDatasourceNode!=null){
+				LUI.PageDesigner.instance._pageCmpTree.removeNode(privateDatasourceNode,true);
+			}
 		}
-	}else if(newVal!=null){
-		//隐藏公共数据源字段
-		eventSource.form.getField('datasourceName').setHidden(true);
-		//如果私有数据源节点存在 删除
-		if(privateDatasourceNode!=null){
-			LUI.PageDesigner.instance._pageCmpTree.removeNode(privateDatasourceNode,true);
-		}
-	}
-	//判断当前节点是否有效
-	LUI.PageDesigner.instance.validateNode(selectedNode); 
+		//判断当前节点是否有效
+		LUI.PageDesigner.instance.validateNode(selectedNode);
+//	}
 }
 
 /**

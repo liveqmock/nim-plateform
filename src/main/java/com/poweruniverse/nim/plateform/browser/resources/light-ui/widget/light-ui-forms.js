@@ -234,18 +234,13 @@ LUI.Form = {
 			},
 			isValid:function(){
 				//所有field都valid form就valid
-				for(var j=0;j<this.fields.length;j++){
-					if(!this.fields[j].isValid && !this.fields[j].hidden && this.fields[j].enabled){
-						return false;
-					}
-				}
-				return true;
+				return this.getFirstInvalidField() ==null;
 			},
 			getFirstInvalidField:function(){
 				var field = null;
 				//所有field都valid form就valid
 				for(var j=0;j<this.fields.length;j++){
-					if(!this.fields[j].isValid && !this.fields[j].hidden && this.fields[j].enabled){
+					if(!this.fields[j].isValid()){
 						field = this.fields[j];
 						break;
 					}
@@ -515,7 +510,8 @@ LUI.Form.Button = {
 				this.form.datasource.save(xiTongDH,gongNengDH,caoZuoDH);
 			},
 			submit:function(){
-				if(this.form.isValid()){
+				var invalidField = this.form.getFirstInvalidField();
+				if(invalidField == null){
 					var xiTongDH = null;
 					if(this.form.xiTongDH!=null){
 						xiTongDH = this.form.xiTongDH;
@@ -531,8 +527,6 @@ LUI.Form.Button = {
 					
 					this.form.datasource.submit(xiTongDH,gongNengDH,caoZuoDH);
 				}else{
-					var invalidField = this.form.getFirstInvalidField();
-					
 					LUI.Message.error('表单验证不通过','字段('+invalidField.label+'):'+invalidField.validInfo,null,{
 						callback:function(){
 							if(invalidField.component =='setGridEditor' && (invalidField.value!=null && invalidField.value.length >0 && invalidField.grid!=null && invalidField.grid.rendered)){

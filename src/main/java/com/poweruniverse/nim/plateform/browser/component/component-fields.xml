@@ -700,6 +700,8 @@
 			<property name="height" label="下拉选框高度" type="string" allowBlank="true" default="150px" info="下拉选框最大高度，使用css格式定义：12px"/>
 		</extensions>
 		<events>
+			<event name="onChange" type="string" label="数据改变" params=""/>
+			<event name="onLoad" type="string" label="数据加载之前" params="" />
 		</events>
 		<structure>
 			<item component-name="gnDataset" />
@@ -732,6 +734,9 @@
 		<extensions>
 			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
 		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params=""/>
+		</events>
 		<structure>
 			<item component-name="gnDataset" />
 		</structure>
@@ -757,6 +762,7 @@
 			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
 		</extensions>
 		<events>
+			<event name="onChange" type="string" label="数据改变" params=""/>
 		</events>
 		<dependencies>
 		</dependencies>
