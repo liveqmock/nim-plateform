@@ -49,6 +49,7 @@ LUI.stlWin = {
 						LUI.Message.info("信息","当前数据源未填写系统代号!");
 						return;
 					}
+					this._gongNengDH = null;
 					this._shiTiLeiDH = datasourceNode.data.shiTiLeiDH;
 					if(this._shiTiLeiDH == null){
 						LUI.Message.info("信息","当前数据源未填写实体类代号!");
@@ -65,6 +66,7 @@ LUI.stlWin = {
 						LUI.Message.info("信息","当前数据源未填写系统代号!");
 						return;
 					}
+					this._shiTiLeiDH = null;
 					this._gongNengDH = datasourceNode.data.gongNengDH;
 					if(this._gongNengDH == null){
 						LUI.Message.info("信息","当前数据源未填写功能代号!");

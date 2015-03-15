@@ -18,7 +18,7 @@
 	<component name="importSubpage" xmlElName="import" type="import" label="子页面" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="false">
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="目标元素" enabled="true" widget="textChooseElEditor"  droppable=".target"/>
-			<property name="pageURL" label="子页面地址" type="string" allowBlank="true" info="生成显示内容的Handlebars表达式" widget="urlEditor" enabled="true" />
+			<property name="pageURL" label="子页面地址" type="string" allowBlank="true" info="" widget="urlEditor" enabled="true" />
 		</properties>
 		<events>
 		</events>
@@ -31,8 +31,8 @@
 	<component name="workflowImg" xmlElName="image" type="image" label="流程图" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="false">
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="目标元素" enabled="true" widget="textChooseElEditor"  droppable=".target"/>
-			<property name="xiTongDH" label="系统代号" type="string" allowBlank="false" widget="textSelectEditor" info="" enabled="true" dataGetter="getXiTongOptions"  onChange="setGongNengOptions"/>
-			<property name="gongNengDH" label="流程功能代号" type="string" allowBlank="false"  widget="textSelectEditor" info="" enabled="true" allowSearch="true" dataGetter="getRelaGongNengOptions"/>
+			<property name="xiTongDH" label="系统代号" type="string" allowBlank="false" widget="textSelectEditor" info="" enabled="true" dataGetter="getXiTongOptions"  onChange="setGongNengOptionsForSelect"/>
+			<property name="gongNengDH" label="流程功能代号" type="string" allowBlank="false"  widget="stringTriggerSelectEditor" info="" enabled="true" allowSearch="true" renderTemplate="{{text}} [{{value}}]"/>
 			<property name="id" label="主键值" type="string" allowBlank="false" info="主键值"/>
 			<property name="autoRender" label="自动生成" type="string" allowBlank="false" default="true"  widget="textSelectEditor" options="[{
 					value:'true',text:'是'
@@ -98,9 +98,10 @@
 	<!-- .......3.3 功能数据字段值...(数据源)variable.... -->
 	<component name="gnVariable" xmlElName="variable" type="variable" label="功能变量" isEditable="true" isRemovable="true" iconClass="ui-icon-copy" isArray="false">
 		<properties>
-			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setGongNengOptions"/>
-			<property name="gongNengDH" label="功能" type="string" allowBlank="false"  widget="textSelectEditor" info="" enabled="true" dataGetter="getRelaGongNengOptions" onChange="setCaoZuoZiDuanOptions"/>
-			<property name="caoZuoDH" label="操作" type="string" allowBlank="false"  widget="textSelectEditor" info="" enabled="true" dataGetter="getRelaCaoZuoOptions"/>
+			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setGongNengOptionsForSelect"/>
+			<property name="gongNengDH" label="功能" type="string" allowBlank="false"  widget="stringTriggerSelectEditor" allowSearch="true" info="" enabled="true" renderTemplate="{{text}} [{{value}}]" 
+					  onChange="setCaoZuoOptionsBySelect" onTriggerClick="openGongNengPage"/>
+			<property name="caoZuoDH" label="操作" type="string" allowBlank="false"  widget="stringSelectEditor" allowSearch="true" info="" enabled="true" renderTemplate="{{text}} [{{value}}]"/>
 			<property name="id" label="主键值" type="string" allowBlank="false"  info="主键值"/>
 			<property name="ziDuanDH" label="字段" type="string" allowBlank="false" widget="textSelectEditor" allowSearch="true" info="字段代号" dataGetter="getRelaGnZiDuanOptions" onChange="setGongNengZDLX"/>
 			<property name="ziDuanLXDH" label="字段类型" type="string" allowBlank="false" default="string" widget="textSelectEditor" dataGetter="getZiDuanLXOptions" info="字段类型"/>
@@ -150,8 +151,9 @@
 				},{
 					value:'false',text:'否'
 				}]" />
-			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setShiTiLeiOptions"/>
-			<property name="shiTiLeiDH" label="实体类" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" dataGetter="getRelaShiTiLeiOptions" info="" enabled="true" />
+			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setShiTiLeiOptionsForSelect"/>
+			<property name="shiTiLeiDH" label="实体类" type="string" allowBlank="false"  widget="stringTriggerSelectEditor" allowSearch="true" info="" enabled="true" renderTemplate="{{text}} [{{value}}]" 
+					  onTriggerClick="openShiTiLeiPage"/>
 			<property name="start" label="开始行数" type="int" default="0" allowBlank="false"  info="开始行[分页时使用]"/>
 			<property name="limit" label="最大行数" type="int" default="0" allowBlank="false"  info="最大行数[分页时使用]"/>
 		</properties>
@@ -177,9 +179,10 @@
 				},{
 					value:'false',text:'否'
 				}]" />
-			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setGongNengOptions"/>
-			<property name="gongNengDH" label="功能" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" info="" enabled="true" dataGetter="getRelaGongNengOptions" onChange="setCaoZuoOptions"/>
-			<property name="caoZuoDH" label="操作" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" info="" enabled="true" dataGetter="getRelaCaoZuoOptions"/>
+			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setGongNengOptionsForSelect"/>
+			<property name="gongNengDH" label="功能" type="string" allowBlank="false"  widget="stringTriggerSelectEditor" allowSearch="true" info="" enabled="true" renderTemplate="{{text}} [{{value}}]" 
+					  onChange="setCaoZuoOptionsBySelect" onTriggerClick="openGongNengPage"/>
+			<property name="caoZuoDH" label="操作" type="string" allowBlank="false"  widget="stringTriggerSelectEditor" allowSearch="true" info="" enabled="true" renderTemplate="{{text}} [{{value}}]"/>
 			<property name="start" label="开始行数" type="int" default="0" allowBlank="false"  info="开始行[分页时使用]"/>
 			<property name="limit" label="最大行数" type="int" default="0" allowBlank="false"  info="最大行数[分页时使用]"/>
 		</properties>
@@ -262,8 +265,9 @@
 				},{
 					value:'false',text:'否'
 				}]" />
-			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor"  default="hdzg" dataGetter="getXiTongOptions" info="" enabled="false" onChange="setShiTiLeiOptions"/>
-			<property name="shiTiLeiDH" label="实体类" type="string" allowBlank="false"  widget="textSelectEditor"  default="SYS_LiuChengJS" dataGetter="getRelaShiTiLeiOptions" info="" enabled="false" />
+			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" default="sys" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setShiTiLeiOptionsForSelect"/>
+			<property name="shiTiLeiDH" label="实体类" type="string" allowBlank="false" default="SYS_LiuChengJS" widget="stringTriggerSelectEditor" allowSearch="true" info="" enabled="true" renderTemplate="{{text}} [{{value}}]" 
+					  onTriggerClick="openShiTiLeiPage"/>
 		</properties>
 		<structure>
 			<item component-name="properties" />
@@ -287,8 +291,9 @@
 				},{
 					value:'false',text:'否'
 				}]" />
-			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setShiTiLeiOptions"/>
-			<property name="shiTiLeiDH" label="实体类" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" dataGetter="getRelaShiTiLeiOptions" info="" enabled="true" />
+			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setShiTiLeiOptionsForSelect"/>
+			<property name="shiTiLeiDH" label="实体类" type="string" allowBlank="false"  widget="stringTriggerSelectEditor" allowSearch="true" info="" enabled="true" renderTemplate="{{text}} [{{value}}]" 
+					  onTriggerClick="openShiTiLeiPage"/>
 			<property name="id" label="主键值" type="string" allowBlank="true"  info=""/>
 		</properties>
 		<structure>
@@ -334,9 +339,10 @@
 				},{
 					value:'false',text:'否'
 				}]" />
-			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setGongNengOptions"/>
-			<property name="gongNengDH" label="功能" type="string" allowBlank="false"  widget="textSelectEditor" dataGetter="getRelaGongNengOptions" allowSearch="true" info="" enabled="true" onChange="setCaoZuoOptions"/>
-			<property name="caoZuoDH" label="操作" type="string" allowBlank="false"  widget="textSelectEditor" dataGetter="getRelaCaoZuoOptions" info="" enabled="true" />
+			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setGongNengOptionsForSelect"/>
+			<property name="gongNengDH" label="功能" type="string" allowBlank="false"  widget="stringTriggerSelectEditor" allowSearch="true" info="" enabled="true" renderTemplate="{{text}} [{{value}}]" 
+					  onChange="setCaoZuoOptionsBySelect" onTriggerClick="openGongNengPage"/>
+			<property name="caoZuoDH" label="操作" type="string" allowBlank="false"  widget="stringSelectEditor" allowSearch="true" info="" enabled="true" renderTemplate="{{text}} [{{value}}]"/>
 			<property name="id" label="主键值" type="string" allowBlank="true"  info="主键值"/>
 		</properties>
 		<structure>
@@ -419,9 +425,10 @@
 					value:'false',text:'否'
 				}]" />
 				
-			<property name="xiTongDH" label="系统代号" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setGongNengOptions"/>
-			<property name="gongNengDH" label="功能代号" type="string" allowBlank="false"  widget="textSelectEditor" dataGetter="getRelaGongNengOptions" info="" enabled="true" allowSearch="true" onChange="setCaoZuoOptions"/>
-			<property name="caoZuoDH" label="操作代号" type="string" allowBlank="false"  widget="textSelectEditor" dataGetter="getRelaCaoZuoOptions" info=""  allowSearch="true" enabled="true" />
+			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setGongNengOptionsForSelect"/>
+			<property name="gongNengDH" label="功能" type="string" allowBlank="false"  widget="stringTriggerSelectEditor" allowSearch="true" info="" enabled="true" renderTemplate="{{text}} [{{value}}]" 
+					  onChange="setCaoZuoOptionsBySelect" onTriggerClick="openGongNengPage"/>
+			<property name="caoZuoDH" label="操作" type="string" allowBlank="false"  widget="stringSelectEditor" allowSearch="true" info="" enabled="true" renderTemplate="{{text}} [{{value}}]"/>
 		</properties>
 		<extensions>
 			<property name="width" label="宽度" type="string" allowBlank="true" info="表单的宽度，使用css格式定义：12px 100% "/>
@@ -519,8 +526,8 @@
 				},{
 					value:'false',text:'否'
 				}]" />
-			<property name="xiTongDH" label="系统代号" type="string" allowBlank="false" widget="textSelectEditor" info="" enabled="true" dataGetter="getXiTongOptions"  onChange="setGongNengOptions"/>
-			<property name="gongNengDH" label="流程功能代号" type="string" allowBlank="false"  widget="textSelectEditor" info="" enabled="true" allowSearch="true" dataGetter="getRelaGongNengOptions"/>
+			<property name="xiTongDH" label="系统代号" type="string" allowBlank="false" widget="textSelectEditor" info="" enabled="true" dataGetter="getXiTongOptions"  onChange="setGongNengOptionsForSelect"/>
+			<property name="gongNengDH" label="流程功能代号" type="string" allowBlank="false"  widget="stringTriggerSelectEditor" info="" enabled="true" allowSearch="true" renderTemplate="{{text}} [{{value}}]" />
 			<property name="gongNengObjId" label="业务对象Id" type="string" allowBlank="false"  info="" enabled="true"/>
 		</properties>
 		<dependencies>
@@ -863,9 +870,10 @@
 	<component name="operation" xmlElName="action" type="action" label="执行操作" isEditable="true" isRemovable="true"  iconClass="ui-icon-copy" isArray="false">
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" droppable=".action"/>
-			<property name="xiTongDH" label="系统代号" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setGongNengOptions"/>
-			<property name="gongNengDH" label="功能代号" type="string" allowBlank="false"  widget="textSelectEditor" info="" enabled="true" allowSearch="true" onChange="setCaoZuoOptions"/>
-			<property name="caoZuoDH" label="操作代号" type="string" allowBlank="false"  widget="textSelectEditor" info=""  allowSearch="true" enabled="true" />
+			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setGongNengOptionsForSelect"/>
+			<property name="gongNengDH" label="功能" type="string" allowBlank="false"  widget="stringTriggerSelectEditor" allowSearch="true" info="" enabled="true" renderTemplate="{{text}} [{{value}}]" 
+					  onChange="setCaoZuoOptionsBySelect" onTriggerClick="openGongNengPage"/>
+			<property name="caoZuoDH" label="操作" type="string" allowBlank="false"  widget="stringSelectEditor" allowSearch="true" info="" enabled="true" renderTemplate="{{text}} [{{value}}]"/>
 		</properties>
 		<extensions>
 		</extensions>

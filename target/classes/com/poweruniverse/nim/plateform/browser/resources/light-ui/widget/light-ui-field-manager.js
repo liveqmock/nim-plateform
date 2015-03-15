@@ -60,6 +60,7 @@ $(document).ready(function(){
 //	LUI.FieldFactoryManager.regsterFieldFactory('objectField',LUI.Form.Field.ObjectPopup);//弹出式选择
 	LUI.FieldFactoryManager.regsterFieldFactory('objectField',LUI.Form.Field.File);//文件
 	LUI.FieldFactoryManager.regsterFieldFactory('objectField',LUI.Form.Field.ObjectRadioEditor);//无线按钮选择
+	LUI.FieldFactoryManager.regsterFieldFactory('objectField',LUI.Form.Field.ObjectSelectWithPage);//下拉选择 关联页面
 	LUI.FieldFactoryManager.regsterFieldFactory('objectField',LUI.Form.Field.ObjectSelect,true);//下拉选择
 	
 	LUI.FieldFactoryManager.regsterFieldFactory('doubleField',LUI.Form.DisplayField.DoubleDisplay);
@@ -73,7 +74,9 @@ $(document).ready(function(){
 	LUI.FieldFactoryManager.regsterFieldFactory('intField',LUI.Form.Field.Int,true);
 
 	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.DisplayField.StringDisplay);
+	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.ChosenSelect);
 	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.StringSelect);
+	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.StringTriggerSelect);
 	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.Email);//邮箱
 	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.MobileNumber);//手机号
 	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.PostCode);//邮编

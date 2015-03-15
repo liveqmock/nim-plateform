@@ -239,6 +239,20 @@ LUI.Page = {
 			}
 			//处理要显示的内容 如果是唯一元素 设置其高度100%
 			$(targetId).css('opacity','0').html(pageContent);
+			
+			//设计模式下 添加一个图标按钮
+			if(_isDesignMode && !_urlInfo.params.workMode && targetId!='#_pageContent'){
+				var targetIdPosition = $(targetId).css('position');
+				if(targetIdPosition == 'relative' || targetIdPosition == 'absolute'){
+					$('<img style="cursor:pointer;width:16px;height:16px;right: 0px;top: 0px;position: absolute;" src="resources/plateform/light-ui/images/ie.png" >')
+						.attr('title','在新窗口打开'+htmlPage)
+						.click(function(){
+							window.open('http://'+_urlInfo.host+':'+_urlInfo.port+'/nim.html?_pt_='+htmlPage+'&_ps_='+unescape(LUI.Util.stringify(params)));
+						})
+						.appendTo($(targetId));
+				}
+				
+			}
 			//有同名的js文件 要在解析xml之前加载！
 			if(htmlResult.jsExists){
 				LUI.Page.loadJS(jsPage,true,function(){//这里的jsPage 是module目录下的文件

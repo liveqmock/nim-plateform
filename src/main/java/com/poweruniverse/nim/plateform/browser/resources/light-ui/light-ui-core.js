@@ -152,7 +152,7 @@
 								this.listeners.put(evt_code,listenerSet);
 							}else{
 								alert("对象"+this.id+"不支持此事件("+evt_code+")");
-								consol.err("对象"+this.id+"不支持此事件("+evt_code+")");
+								console.err("对象"+this.id+"不支持此事件("+evt_code+")");
 								return;
 							}
 						}

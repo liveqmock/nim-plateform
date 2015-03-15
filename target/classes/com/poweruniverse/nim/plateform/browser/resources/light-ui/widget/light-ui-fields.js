@@ -287,8 +287,10 @@ LUI.Form.Field = {
 					this.markInvalid();
 				}
 				//将字段变为不可编辑
-				this.inputEl.removeClass('nim-field-disabled');
-				this.inputEl.removeAttr('disabled');
+				if(this.inputEl!=null){
+					this.inputEl.removeClass('nim-field-disabled');
+					this.inputEl.removeAttr('disabled');
+				}
 			},
 			disable:function(){
 				this.enabled = false;
@@ -297,8 +299,10 @@ LUI.Form.Field = {
 					this.clearInvalid();
 				}
 				//将字段变为不可编辑
-				this.inputEl.addClass('nim-field-disabled');
-				this.inputEl.attr('disabled','true');
+				if(this.inputEl!=null){
+					this.inputEl.addClass('nim-field-disabled');
+					this.inputEl.attr('disabled','true');
+				}
 			},
 			el:null,
 			inputEl:null,
@@ -637,9 +641,9 @@ LUI.Form.Field.BooleanRadioEditor = {
 						//显示选中情况
 //						this.displayRawValue();
 						//将自定义onchange方法 绑定到当前对象的change事件
-						if(this.onChangeFunction!=null){
-							this.addListener(this.events.change,this._observer,this.onChangeFunction);
-						}
+//						if(this.onChangeFunction!=null){
+//							this.addListener(this.events.change,this._observer,this.onChangeFunction);
+//						}
 						this.rendered = true;
 					}
 				}
@@ -783,9 +787,9 @@ LUI.Form.Field.BooleanCheckEditor = {
 							//根据构建类型 确定如何render
 							if(this.createFieldEl(LUI.Template.Field.checkbox)){
 								//将自定义onchange方法 绑定到当前对象的change事件
-								if(this.onChangeFunction!=null){
-									this.addListener(this.events.change,this._observer,this.onChangeFunction);
-								}
+//								if(this.onChangeFunction!=null){
+//									this.addListener(this.events.change,this._observer,this.onChangeFunction);
+//								}
 								//在ie浏览器中 checkbox需要失去焦点才能触发change事件
 								if (isIE) {
 									this.inputEl.click(function () {
@@ -923,9 +927,9 @@ LUI.Form.Field.Password = {
 						this.fieldWidth = this.inputEl.width();
 						this.resize(this.fieldWidth);
 						//将自定义onchange方法 绑定到当前对象
-						if(this.onChangeFunction!=null){
-							this.addListener(this.events.change,this._observer,this.onChangeFunction);
-						}
+//						if(this.onChangeFunction!=null){
+//							this.addListener(this.events.change,this._observer,this.onChangeFunction);
+//						}
 						//将input元素的change事件 绑定到当前对象(一个inputEl 同时只能绑定到一个field)
 						var contextThis = this;
 						this.inputEl.bind('change',function(){
@@ -1194,9 +1198,9 @@ LUI.Form.Field.StringText = {
 								contextThis.setValue(_v,false,false,null);
 							});
 							//将自定义onchange方法 绑定到当前对象的change事件
-							if(this.onChangeFunction!=null){
-								this.addListener(this.events.change,this._observer,this.onChangeFunction);
-							}
+//							if(this.onChangeFunction!=null){
+//								this.addListener(this.events.change,this._observer,this.onChangeFunction);
+//							}
 							this.rendered = true;
 							//原值要重新显示出来
 							this.displayRawValue();
@@ -1333,13 +1337,13 @@ LUI.Form.Field.Textarea = {
 /**
  * 字符选择控件 预定义范围内选择值 代替用户输入
  */
-LUI.Form.Field.StringSelect = {
+LUI.Form.Field.ChosenSelect = {
 	uniqueId:0,
 	type:'textSelectEditor',
 	createNew:function(fieldMeta,lui_form){
 		var field = $.extend(LUI.Form.Field.createNew(fieldMeta,lui_form),{
-			id: '_form_field_string_select_'+(++LUI.Form.Field.StringSelect.uniqueId),
-			type:LUI.Form.Field.StringSelect.type,
+			id: '_form_field_chosen_select_'+(++LUI.Form.Field.ChosenSelect.uniqueId),
+			type:LUI.Form.Field.ChosenSelect.type,
 			options:fieldMeta.options,
 			dataGetter:fieldMeta.dataGetter,
 			render:function(){
@@ -1368,9 +1372,9 @@ LUI.Form.Field.StringSelect = {
 						this.initOptions(this.options);
 
 						//将自定义onchange方法 绑定到当前对象的change事件
-						if(this.onChangeFunction!=null){
-							this.addListener(this.events.change,this._observer,this.onChangeFunction);
-						}
+//						if(this.onChangeFunction!=null){
+//							this.addListener(this.events.change,this._observer,this.onChangeFunction);
+//						}
 						//将input元素的change事件 绑定到当前对象
 						var contextThis = this;
 						this.inputEl.bind('change',function(){
@@ -1441,6 +1445,376 @@ LUI.Form.Field.StringSelect = {
 	}
 };
 
+
+LUI.Form.Field.StringSelect = {
+	uniqueId:0,
+	type:'stringSelectEditor',
+	createNew:function(fieldMeta,lui_form){
+		
+		var renderTemplateExpression = null;
+		if(fieldMeta.renderTemplate!=null && fieldMeta.renderTemplate.length >0){
+			renderTemplateExpression = Handlebars.compile(fieldMeta.renderTemplate);
+		}else{
+			LUI.Message.warn('创建字段失败','字段('+fieldMeta.name+')未设置显示表达式！');
+			return null;
+		}
+		
+		var minLength = 0;
+		if(fieldMeta.minLength!=null){
+			minLength = parseInt(fieldMeta.minLength);
+		}
+		
+		var field = $.extend(LUI.Form.Field.createNew(fieldMeta,lui_form),{
+			id: '_form_field_string_select_'+(++LUI.Form.Field.StringSelect.uniqueId),
+			type:LUI.Form.Field.StringSelect.type,
+			options:fieldMeta.options,
+			dataGetter:fieldMeta.dataGetter,
+			minLength:minLength,
+			renderTemplateExpression:renderTemplateExpression,
+			render:function(){
+				if(this.loaded == false){
+					this.initOptions();
+				}
+				if(this.renderType != 'none'){
+					if(this.createFieldEl(LUI.Template.Field.select)){
+						var contextThis = this;
+						var width = this.inputEl.outerWidth();
+						this.inputEl.combobox({
+							getObjectField:function(){
+								return contextThis;
+							},
+							height:fieldMeta.height,
+							width:width,
+							disabled:!this.enabled,
+							allowEdit:this.allowEdit,
+							source: function( request, response ) {
+								var searchString = null;
+								var isShowAll = false;
+								if(request.term == 'search all'){
+									//点击了下拉按钮
+									isShowAll = true;
+									if(this.options.minLength >0){
+										return;
+									}
+								}else if(request.term!=null && request.term.length>0){
+									//输入了内容
+									searchString = request.term.toLowerCase();
+								}
+								
+								//输入字符或点击下拉箭头 请求显示符合条件的选项 
+								//本地搜索
+								contextThis.search(searchString,isShowAll);
+								response(contextThis.options);
+							},
+							minLength: contextThis.minLength,
+							select: function( event, ui ) {
+								contextThis.setValue(ui.item.value);
+								return false;
+							}
+						});
+						
+						//将自定义onchange方法 绑定到当前对象的change事件
+//						if(this.onChangeFunction!=null){
+//							this.addListener(this.events.change,this._observer,this.onChangeFunction);
+//						}
+		//				//在ie浏览器中 checkbox需要失去焦点才能触发change事件
+		//				if (isIE) {
+		//					this.inputEl.click(function () {
+		//						this.blur();
+		//						this.focus();
+		//					});
+		//				}; 
+						this.rendered = true;
+						//原值要重新显示出来
+						this.displayRawValue();
+					}
+				}
+				this.validate(this.value);
+			},
+			setValue:function (newVal,silence,isInitial,originSource){
+				var oldVal = this.value;
+				//如果值有变化
+				if(!this.equalsValue(this.value,newVal)){
+					//记录字段值
+					this.value = newVal;
+					var newRawValue = this.formatRawValue(newVal);
+					//如果校验通过
+					this.validate(newRawValue)
+					
+					//显示值有变化 
+					if(!this.equalsRawValue(this.rawValue,newRawValue)){
+						//保存显示值并重新显示
+						this.rawValue =newRawValue;
+						if(this.rendered ){
+							this.displayRawValue();
+						}
+					}
+					
+					
+					//触发change事件
+					if(!silence && (originSource==null || originSource != this)){
+						this.fireEvent(this.events.change,{
+							oldValue:oldVal,
+							newValue:newVal,
+							isInitial: (isInitial ==null?false:isInitial)
+						},originSource||this);
+					}
+				}
+			},
+			/**
+			 * 将显示值转换为数据值
+			 */
+			parseRawValue:function(rawVal){
+				var val = null;
+				for(var i=0;i<this.options.length;i++){
+					var optionData = this.options[i];
+					
+					var optionLabel = optionData.value;
+					if(this.renderTemplateExpression!=null){
+						optionLabel = this.renderTemplateExpression(optionData);
+					}
+					
+					if(optionLabel == rawVal){
+						val = optionData.value;
+						break;
+					}
+				}
+				return val;
+			},
+			/**
+			 * 将数据值格式化为显示值
+			 */
+			formatRawValue:function(dataVal){
+				var _rawValue = '';
+				if(dataVal!=null && this.allOptions !=null){
+					if(typeof(dataVal) == 'string'){
+						for(var i=0;i<this.allOptions.length;i++){
+							var optionData = this.allOptions[i];
+							if(optionData.value == dataVal){
+								_rawValue = this.renderTemplateExpression(optionData);
+								break;
+							}
+						}
+					}else if(typeof(dataVal) == 'object'){
+						_rawValue = this.renderTemplateExpression(dataVal);
+					}
+				}
+				return _rawValue;
+			},
+			displayRawValue:function (){
+				var comboInput = this.inputEl.combobox("instance").input;
+				if(comboInput.val() != this.rawValue){
+					//将显示值 重新显示到页面
+					comboInput.val(this.rawValue);
+				}
+			},
+			loaded:false,
+			allOptions:[],
+			initOptions:function(){
+				if(this.options !=null && this.options.length >0){
+					this.allOptions = eval(this.options); 
+//				}else if (this.dataGetter!=null && this.dataGetter.length>0){
+//					var dataGetterFunc = window[this.dataGetter];
+//					if(dataGetterFunc==null){
+//						LUI.Message.warn('查询失败','字段的dataGetter函数('+this.dataGetter+')不存在！');
+//					}else{
+//						this.allOptions = dataGetterFunc.apply(this); 
+//					}
+				}
+			},
+			setOptions:function(opts){
+				this.allOptions = opts;
+				//重新计算显示值 
+				var newRawValue = this.formatRawValue(this.value);
+				//检查是否有效
+				this.validate(newRawValue);
+				
+				if(!this.equalsRawValue(this.rawValue,newRawValue)){
+					//保存显示值并重新显示
+					this.rawValue =newRawValue;
+					if(this.rendered ){
+						this.displayRawValue();
+					}
+				}
+				var valueExists = false;
+				for(var i=0;i<this.allOptions.length;i++){
+					var optionData = this.allOptions[i];
+					if(this.value!=null && this.value == optionData.value){
+						valueExists = true;
+						break;
+					}
+				}
+				
+				if(this.value!=null && !valueExists){
+					this.setValue(null,true);
+				}
+			},
+			search:function(searchString,isShowAll){
+				if(this.rendered){
+					var searchStringLowerCase = null;
+					if(searchString!=null){
+						searchStringLowerCase = searchString.toLowerCase();
+					}
+					//删除原有选项
+					this.options = [];
+//					var valueExists = false;
+					for(var i=0;i<this.allOptions.length;i++){
+						var optionData = this.allOptions[i];
+//						if(this.value!=null && this.value == optionData.value){
+//							valueExists = true;
+//						}
+						
+						var optionLabel = optionData.value;
+						if(this.renderTemplateExpression!=null){
+							optionLabel = this.renderTemplateExpression(optionData);
+						}
+						if(searchStringLowerCase==null || optionLabel.toLowerCase().indexOf(searchStringLowerCase) >= 0){
+							this.options[this.options.length] = {
+								value: optionData.value,
+								label: optionLabel
+							};
+						}
+					}
+					
+//					if(this.value!=null && !valueExists){
+//						this.setValue(null,true);
+//					}else if(this.value ==null && this.allowBlank== false && this.options.length >0){
+//						this.setValue(this.options[0].value,true);
+//					}
+				}
+			},
+			markInvalid:function(){
+				if(this.enabled && this.rendered ){
+					var comboboxIns = this.inputEl.combobox("instance");
+					if(comboboxIns!=null) comboboxIns.wrapper.addClass('custom-combobox-invalid');
+				}
+			},
+			clearInvalid:function(){
+				if(this.rendered ){
+					var comboboxIns = this.inputEl.combobox("instance");
+					if(comboboxIns!=null) comboboxIns.wrapper.removeClass('custom-combobox-invalid');
+				}
+			},
+			enable:function(){
+				this.enabled = true;
+				if(!this.valid){
+					this.markInvalid();
+				}
+				var comboboxIns = this.inputEl.combobox("instance");
+				//将字段变为可编辑
+				comboboxIns.input.removeAttr('disabled');
+				//按钮变为diabeld
+				comboboxIns.trigger.button("enable");
+			},
+			disable:function(){
+				this.enabled = false;
+				if(!this.valid){
+					//disable状态下 不显示数据是否有效
+					this.clearInvalid();
+				}
+				
+				var comboboxIns = this.inputEl.combobox("instance");
+				//将字段变为不可编辑
+				comboboxIns.input.attr('disabled','true');
+				//按钮变为diabeld
+				comboboxIns.trigger.button("disable");
+			}
+		});
+		return field;
+	}
+};
+
+
+LUI.Form.Field.StringTriggerSelect = {
+	type:'stringTriggerSelectEditor',
+	createNew:function(fieldMeta,lui_form){
+		var field = $.extend(LUI.Form.Field.StringSelect.createNew(fieldMeta,lui_form),{
+			events:{
+				change:'_field_change',
+				triggerClick:'_field_trigger_click',
+				validChange:'_field_valid_change'
+			},
+			render:function(){
+				if(this.loaded == false){
+					this.initOptions();
+				}
+				if(this.renderType != 'none'){
+					if(this.createFieldEl(LUI.Template.Field.selectWithTrigger)){
+						var contextThis = this;
+						var width = this.inputEl.outerWidth();
+						this.resize(width);
+						this.inputEl.combobox({
+							getObjectField:function(){
+								return contextThis;
+							},
+							width:this.inputEl.outerWidth(),
+							disabled:!this.enabled,
+							allowEdit:this.allowEdit,
+							source: function( request, response ) {
+								var searchString = null;
+								var isShowAll = false;
+								if(request.term == 'search all'){
+									//点击了下拉按钮
+									isShowAll = true;
+									if(this.options.minLength >0){
+										return;
+									}
+								}else if(request.term!=null && request.term.length>0){
+									//输入了内容
+									searchString = request.term.toLowerCase();
+								}
+								
+								//输入字符或点击下拉箭头 请求显示符合条件的选项 
+								//本地搜索
+								contextThis.search(searchString,isShowAll);
+								response(contextThis.options);
+							},
+							minLength: contextThis.minLength,
+							select: function( event, ui ) {
+								contextThis.setValue(ui.item.value);
+								return false;
+							}
+						});
+						//
+						this.el.find( 'img#_handler').first()
+							.click(function(){
+								//执行trigger event
+								contextThis.fireEvent(contextThis.events.triggerClick,{
+									value:contextThis.value
+								},contextThis);
+							});
+							
+						this.rendered = true;
+						//原值要重新显示出来
+						this.displayRawValue();
+					}
+					
+					
+				}
+				this.validate(this.value);
+			},
+			resize:function(fieldWidth){
+				this.inputEl.outerWidth(fieldWidth  -20);
+			}
+		});
+		
+		var onTriggerClickFunctionName = fieldMeta.onTriggerClick;
+		if(fieldMeta.listenerDefs!=null && fieldMeta.listenerDefs.onTriggerClick!=null){
+			onTriggerClickFunctionName = fieldMeta.listenerDefs.onTriggerClick;
+		}
+		var onTriggerClickFunc = null;
+		if(onTriggerClickFunctionName!=null && onTriggerClickFunctionName.length >0){
+			onTriggerClickFunc = window[onTriggerClickFunctionName];
+			if(onTriggerClickFunc==null){
+				LUI.Message.warn('查询失败','字段onTriggerClick事件的处理函数('+onTriggerClickFunctionName+')不存在！');
+			}
+		}
+		if(onTriggerClickFunc!=null){
+			field.addListener(field.events.triggerClick,field._observer,onTriggerClickFunc);
+		}
+		return field;
+	}
+};
 /**
  * 字符选择控件 提供参考值 辅助用户输入ui-icon-triangle-1-e
  */
@@ -1602,9 +1976,9 @@ LUI.Form.Field.StringChooseEl = {
 								contextThis.setValue($(this).val(),false,false,null);
 							});
 							//将自定义onchange方法 绑定到当前对象的change事件
-							if(this.onChangeFunction!=null){
-								this.addListener(this.events.change,this._observer,this.onChangeFunction);
-							}
+//							if(this.onChangeFunction!=null){
+//								this.addListener(this.events.change,this._observer,this.onChangeFunction);
+//							}
 							this.rendered = true;
 							//原值要重新显示出来
 							this.displayRawValue();
@@ -1719,9 +2093,9 @@ LUI.Form.Field.URLField = {
 								contextThis.setValue($(this).val(),false,false,null);
 							});
 							//将自定义onchange方法 绑定到当前对象的change事件
-							if(this.onChangeFunction!=null){
-								this.addListener(this.events.change,this._observer,this.onChangeFunction);
-							}
+//							if(this.onChangeFunction!=null){
+//								this.addListener(this.events.change,this._observer,this.onChangeFunction);
+//							}
 							this.rendered = true;
 							//原值要重新显示出来
 							this.displayRawValue();
@@ -1950,9 +2324,9 @@ LUI.Form.Field.StringHTML = {
 						}
 					}
 					//将自定义onchange方法 绑定到当前对象的change事件
-					if(this.onChangeFunction!=null){
-						this.addListener(this.events.change,this._observer,this.onChangeFunction);
-					}
+//					if(this.onChangeFunction!=null){
+//						this.addListener(this.events.change,this._observer,this.onChangeFunction);
+//					}
 				}
 				this.rendered = true;
 				this.validate(this.rawValue);
@@ -2215,9 +2589,9 @@ LUI.Form.Field.EventScript = {
 								fieldCmp.setValue($(this).val(),false,false,null);
 							});
 							//将自定义onchange方法 绑定到当前对象的change事件
-							if(this.onChangeFunction!=null){
-								this.addListener(this.events.change,this._observer,this.onChangeFunction);
-							}
+//							if(this.onChangeFunction!=null){
+//								this.addListener(this.events.change,this._observer,this.onChangeFunction);
+//							}
 							this.rendered = true;
 							//原值要重新显示出来
 							this.displayRawValue();
@@ -2253,9 +2627,9 @@ LUI.Form.Field.Int = {
 						this.fieldWidth = this.inputEl.width();
 						this.resize(this.fieldWidth);
 						//将自定义onchange方法 绑定到当前对象
-						if(this.onChangeFunction!=null){
-							this.addListener(this.events.change,this._observer,this.onChangeFunction);
-						}
+//						if(this.onChangeFunction!=null){
+//							this.addListener(this.events.change,this._observer,this.onChangeFunction);
+//						}
 						//将input元素的change事件 绑定到当前对象(一个inputEl 同时只能绑定到一个field)
 						var contextThis = this;
 						this.inputEl.bind('change',function(){
@@ -2386,9 +2760,9 @@ LUI.Form.Field.Double = {
 						this.fieldWidth = this.inputEl.width();
 						this.resize(this.fieldWidth);
 						//将自定义onchange方法 绑定到当前对象
-						if(this.onChangeFunction!=null){
-							this.addListener(this.events.change,this._observer,this.onChangeFunction);
-						}
+//						if(this.onChangeFunction!=null){
+//							this.addListener(this.events.change,this._observer,this.onChangeFunction);
+//						}
 						//将input元素的change事件 绑定到当前对象(一个inputEl 同时只能绑定到一个field)
 						var contextThis = this;
 						this.inputEl.bind('change',function(){
@@ -2697,9 +3071,9 @@ LUI.Form.Field.ObjectSelect = {
 						
 						
 						//将自定义onchange方法 绑定到当前对象的change事件
-						if(this.onChangeFunction!=null){
-							this.addListener(this.events.change,this._observer,this.onChangeFunction);
-						}
+//						if(this.onChangeFunction!=null){
+//							this.addListener(this.events.change,this._observer,this.onChangeFunction);
+//						}
 		//				//在ie浏览器中 checkbox需要失去焦点才能触发change事件
 		//				if (isIE) {
 		//					this.inputEl.click(function () {
@@ -2933,7 +3307,133 @@ LUI.Form.Field.ObjectSelect = {
 
 };
 
+//对象类型的下拉选择 提供额外的页面打开按钮
+LUI.Form.Field.ObjectSelectWithPage = {
+	uniqueId:0,
+	type:'objectSelectWithPageEditor',
+	createNew:function(fieldMeta,lui_form){
+		
+		var field = $.extend(LUI.Form.Field.ObjectSelect.createNew(fieldMeta,lui_form),{
+			render:function(){
+				if(this.renderType != 'none'){
+					if(this.createFieldEl(LUI.Template.Field.selectWithPage)){
+						
+						var contextThis = this;
+						this.inputEl.combobox({
+							getObjectField:function(){
+								return contextThis;
+							},
+							height:fieldMeta.height,
+							width:fieldMeta.width,
+							disabled:!this.enabled,
+							allowEdit:this.allowEdit,
+							source: function( request, response ) {
+								var searchString = null;
+								var isShowAll = false;
+								if(request.term == 'search all'){
+									//点击了下拉按钮
+									isShowAll = true;
+									if(this.options.minLength >0){
+										return;
+									}
+								}else if(request.term!=null && request.term.length>0){
+									//输入了内容
+									searchString = request.term.toLowerCase();
+								}
+								
+								//输入字符或点击下拉箭头 请求显示符合条件的选项 
+								if(contextThis.searchMode == 'local'){
+									//本地搜索
+									if(contextThis.datasource.loaded == true){
+										//如果已经load了全部数据 进行本地搜索
+										contextThis.initOptions(searchString,isShowAll);
+										response(contextThis.options);
+									}else{
+										//如果还没有load 需要远程取得全部数据 再进行本地搜索
+										if(contextThis.beforeLoadFunction!=null){
+											contextThis.beforeLoadFunction.apply(contextThis,[contextThis,null,null]);
+										}
+										contextThis.datasource.load({},function(){
+											contextThis.initOptions(searchString,isShowAll);
+											response(contextThis.options);
+										},true,false);
+									}
+								}else{
+									//远程搜索
+									var filters = [];
+									if(searchString!=null && contextThis.queryFields.length>0){
+										var filter = {
+											property:contextThis.queryFields[0],
+											operator:'like',
+											value:searchString,
+											assist:contextThis.queryFields
+										};
+										if(contextThis.queryFields.length>1){
+											filter.assist = contextThis.queryFields.slice(1);
+										}
+										filters[filters.length] = filter;
+									}
+									
+									if(contextThis.beforeLoadFunction!=null){
+										contextThis.beforeLoadFunction.apply(contextThis,[contextThis,null,null]);
+									}
+									contextThis.datasource.load({
+										filters:filters
+									},function(){
+										contextThis.initOptions(searchString,isShowAll);
+										response(contextThis.options);
+									},true,false);
+								}
+							},
+							minLength: minLength,
+							select: function( event, ui ) {
+								contextThis.setValue(ui.item.data);
+							}
+						});
+						//将自定义onchange方法 绑定到当前对象的change事件
+//						if(this.onChangeFunction!=null){
+//							this.addListener(this.events.change,this._observer,this.onChangeFunction);
+//						}
+						this.rendered = true;
+						var _this = this;
+						this.el.find( 'img#_handler').first()
+							.click(function(){
+								_this.onPageBtnClick();
+							});
+						//原值要重新显示出来
+						this.displayRawValue();
+					}
+				}
+				this.validate(this.value);
+			},
+			resize:function(fieldWidth){
+				this.inputEl.outerWidth(fieldWidth  -20);
+			},
+			onPageBtnClick:function(){
+				//点击打开页面
+				var params = {};
+				if(this.value != null){
+					params.id = this.value[this.datasource.primaryFieldName];
+				}
+				if(this.openType == 'window'){
+					window.open('http://'+_urlInfo.host+':'+_urlInfo.port+'/nim.html?_pt_='+this.pageURL+'&_ps_='+unescape(LUI.Util.stringify(params)));
+				}else if(this.openType == 'popup'){
+					LUI.PageUtils.popup({
+						page:pageURL,
+						params:params,
+						buttons: {
+							"关闭": function() {
+								$( this ).dialog( "close" );
+							}
+						}
+					});
+				}
+			}
+		});
+		return field;
+	}
 
+};
 
 //对象类型的radio编辑控件
 //
@@ -3064,9 +3564,9 @@ LUI.Form.Field.ObjectRadioEditor = {
 						//显示选中情况
 //						this.displayRawValue();
 						//将自定义onchange方法 绑定到当前对象的change事件
-						if(this.onChangeFunction!=null){
-							this.addListener(this.events.change,this._observer,this.onChangeFunction);
-						}
+//						if(this.onChangeFunction!=null){
+//							this.addListener(this.events.change,this._observer,this.onChangeFunction);
+//						}
 						this.rendered = true;
 					}
 				}
@@ -3280,9 +3780,9 @@ LUI.Form.Field.Date = {
 								contextThis.setValue($(this).val(),false,false,null);
 							});
 							//将自定义onchange方法 绑定到当前对象的change事件
-							if(this.onChangeFunction!=null){
-								this.addListener(this.events.change,this._observer,this.onChangeFunction);
-							}
+//							if(this.onChangeFunction!=null){
+//								this.addListener(this.events.change,this._observer,this.onChangeFunction);
+//							}
 							this.rendered = true;
 							//原值要重新显示出来
 							this.displayRawValue();
@@ -3452,9 +3952,9 @@ LUI.Form.Field.File = {
 						});
 						
 						//将自定义onchange方法 绑定到当前对象的change事件
-						if(this.onChangeFunction!=null){
-							this.addListener(this.events.change,this._observer,this.onChangeFunction);
-						}
+//						if(this.onChangeFunction!=null){
+//							this.addListener(this.events.change,this._observer,this.onChangeFunction);
+//						}
 						
 						this.addListener(this.events.change,this._observer,function(eventSource,eventTarget,event,eventOriginal){
 							if(contextThis.getValue()!=null){

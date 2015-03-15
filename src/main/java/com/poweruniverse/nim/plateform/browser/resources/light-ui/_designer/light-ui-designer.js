@@ -2740,6 +2740,120 @@ function setGongNengOptions(eventSource,eventTarget,event,eventOriginal){
 	gongNengDHField.initOptions();
 }
 
+//为combobox类型的功能字段 设置选项
+function setGongNengOptionsForSelect(eventSource,eventTarget,event,eventOriginal){
+	//当前选中的节点
+	var selectedNodes = LUI.PageDesigner.instance._pageCmpTree.getSelectedNodes();
+	var selectedNode = selectedNodes[0];
+	
+	var gongNengDHField = LUI.PageDesigner.instance.getFormField(selectedNode,'gongNengDH');
+	var xiTongDHField = LUI.PageDesigner.instance.getFormField(selectedNode,'xiTongDH');
+	var xiTongDH = xiTongDHField.getValue();
+	
+	if(xiTongDH == null){
+		gongNengDHField.disable();
+	}else{
+		var options = [];
+		for(var i=0;i<LUI.PageDesigner.instance._gongNengs.length;i++ ){
+			var gongNengData = LUI.PageDesigner.instance._gongNengs[i];
+			if(gongNengData.xiTong.xiTongDH == xiTongDH){
+				options[options.length] = {text:gongNengData.gongNengMC,value:gongNengData.gongNengDH};
+			}
+		}
+		gongNengDHField.setOptions(options);
+		
+		gongNengDHField.enable();
+	}
+}
+
+//为combobox类型的实体类字段 设置选项
+function setShiTiLeiOptionsForSelect(eventSource,eventTarget,event,eventOriginal){
+	//当前选中的节点
+	var selectedNodes = LUI.PageDesigner.instance._pageCmpTree.getSelectedNodes();
+	var selectedNode = selectedNodes[0];
+	
+	var shiTiLeiDHField = LUI.PageDesigner.instance.getFormField(selectedNode,'shiTiLeiDH');
+	var xiTongDHField = LUI.PageDesigner.instance.getFormField(selectedNode,'xiTongDH');
+	var xiTongDH = xiTongDHField.getValue();
+	
+	if(xiTongDH == null){
+		this.disable();
+	}else{
+		var options = [];
+		
+		for(var i=0;i<LUI.PageDesigner.instance._shiTiLeis.length;i++ ){
+			var shiTiLeiData = LUI.PageDesigner.instance._shiTiLeis[i];
+			if(shiTiLeiData.xiTong == null){
+				LUI.Message.error("错误","实体类（"+shiTiLeiData.shiTiLeiMC+"）未关联系统！");
+			}else if(shiTiLeiData.xiTong.xiTongDH == xiTongDH){
+				options[options.length] = {text:shiTiLeiData.shiTiLeiMC,value:shiTiLeiData.shiTiLeiDH};
+			}
+		}
+		shiTiLeiDHField.setOptions(options);
+		shiTiLeiDHField.enable();
+	}
+}
+
+//combobox类型的功能字段 为操作字段设置选项
+function setCaoZuoOptionsBySelect(eventSource,eventTarget,event,eventOriginal){
+	//当前选中的节点
+	var selectedNodes = LUI.PageDesigner.instance._pageCmpTree.getSelectedNodes();
+	var selectedNode = selectedNodes[0];
+	
+	var caoZuoDHField = LUI.PageDesigner.instance.getFormField(selectedNode,'caoZuoDH');
+	
+	var gongNengDHField = LUI.PageDesigner.instance.getFormField(selectedNode,'gongNengDH');
+	var gongNengDH = gongNengDHField.getValue();
+	if(gongNengDH == null){
+		caoZuoDHField.disable();
+	}else{
+		var options = [];
+		for(var i=0;i<LUI.PageDesigner.instance._gongNengs.length;i++ ){
+			var gongNengData = LUI.PageDesigner.instance._gongNengs[i];
+			if(gongNengData.gongNengDH == gongNengDH){
+				for(var j=0;j<gongNengData.czs.length;j++ ){
+					var caoZuoData = gongNengData.czs[j];
+					options[options.length] = {text:caoZuoData.caoZuoMC,value:caoZuoData.caoZuoDH};
+				}
+				break;
+			}
+		}
+		caoZuoDHField.setOptions(options);
+		caoZuoDHField.enable();
+	}
+}
+
+//打开功能新增或编辑按钮
+function openGongNengPage(eventSource,eventTarget,event,eventOriginal){
+	var gongNengDH = event.params.value;
+	if(gongNengDH ==null){
+		window.open('nim.html?_pt_=system/gongNengAppend/gongNengAppend.html');
+	}else{
+		for(var i=0;i<LUI.PageDesigner.instance._gongNengs.length;i++ ){
+			var gongNengData = LUI.PageDesigner.instance._gongNengs[i];
+			if(gongNengData.gongNengDH == gongNengDH){
+				window.open('nim.html?_pt_=system/gongNengEdit/gongNengEdit.html&_ps_={id:'+gongNengData.gongNengDM+'}');
+				break;
+			}
+		}
+	}
+}
+
+//打开实体类新增或编辑按钮
+function openShiTiLeiPage(eventSource,eventTarget,event,eventOriginal){
+	var shiTiLeiDH = event.params.value;
+	if(shiTiLeiDH ==null){
+		window.open('nim.html?_pt_=system/shiTiLeiAppend/shiTiLeiAppend.html');
+	}else{
+		for(var i=0;i<LUI.PageDesigner.instance._shiTiLeis.length;i++ ){
+			var _shiTiLeiData = LUI.PageDesigner.instance._shiTiLeis[i];
+			if(_shiTiLeiData.shiTiLeiDH == shiTiLeiDH){
+				window.open('nim.html?_pt_=system/shiTiLeiEdit/shiTiLeiEdit.html&_ps_={id:'+_shiTiLeiData.shiTiLeiDM+'}');
+				break;
+			}
+		}
+	}
+}
 
 /**
  * “功能”字段 重新设置选项
@@ -3473,19 +3587,6 @@ function getRelaWidgetOptions(){
 	return options;
 }
 
-/**
- * 通知 “操作”字段 重新设置选项
- */
-function setCaoZuoOptions(eventSource,eventTarget,event,eventOriginal){
-	//当前选中的节点
-	var selectedNodes = LUI.PageDesigner.instance._pageCmpTree.getSelectedNodes();
-	var selectedNode = selectedNodes[0];
-	
-	var caoZuoDHField = LUI.PageDesigner.instance.getFormField(selectedNode,'caoZuoDH');
-	
-//	caoZuoDHField.setValue(null);
-	caoZuoDHField.initOptions();
-}
 
 /**
  * “操作”字段 重新设置选项

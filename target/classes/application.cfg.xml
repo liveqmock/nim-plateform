@@ -38,7 +38,7 @@
 	
 	<!-- 数据配置-->
 	<sessionFactory name="default" cfgFileName="WEB-INF/hibernate.cfg.xml" >
-		<xiTong name="system" 
+		<xiTong name="sys" 
 			srcPath="D:/data/workspace/nim-data/src/main/java/" 
 			classesPath="D:/data/workspace/nim-data/target/classes/" 
 			entityPackage="com.poweruniverse.nim.data" />

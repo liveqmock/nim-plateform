@@ -62,7 +62,7 @@
 		</dependencies>
 	</component>
 	<!-- 1.2 文字选择 textSelectEditor-->
-	<component name="textSelectEditor" type="stringField" label="下拉选择"  xmlElName="field" isEditable="true" isRemovable="true" >
+	<component name="textSelectEditor" type="stringField" label="下拉选择(chosen)"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
 			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
@@ -82,6 +82,69 @@
 			<dependency type-name="formFields"/>
 		</dependencies>
 	</component>
+	<!-- 1.2 文字选择 stringSelectEditor-->
+	<component name="stringSelectEditor" type="stringField" label="下拉选择(select)"  xmlElName="field" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="prompt" label="提示文字" type="string" allowBlank="true" info="提示文字"/>
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="hidden" label="是否隐藏" type="string" allowBlank="false" info="是否隐藏" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不隐藏'},{value:'true',text:'隐藏'}]" onChange="changeFieldHidden"/>
+		
+			<property name="minLength" label="最少查询字数" type="string" allowBlank="false" info="最少查询字数" default="0" enabled="true" 
+				widget="textSelectEditor" options="[{value:'0',text:'不限'},{value:'1',text:'一个字符'},{value:'2',text:'两个字符'},{value:'3',text:'三个字符'}]"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="下拉选框高度" type="string" allowBlank="true" default="150px" info="下拉选框最大高度，使用css格式定义：12px"/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params=""/>
+		</events>
+		<structure>
+			<item component-name="gnDataset" />
+		</structure>
+		<dependencies>
+		</dependencies>
+	</component>
+	<!-- 1.2 文字选择 带图标按钮 stringTriggerSelectEditor -->
+	<component name="stringTriggerSelectEditor" type="stringField" label="下拉选择(trigger)"  xmlElName="field" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="prompt" label="提示文字" type="string" allowBlank="true" info="提示文字"/>
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="hidden" label="是否隐藏" type="string" allowBlank="false" info="是否隐藏" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不隐藏'},{value:'true',text:'隐藏'}]" onChange="changeFieldHidden"/>
+			<property name="minLength" label="最少查询字数" type="string" allowBlank="false" info="最少查询字数" default="0" enabled="true" 
+				widget="textSelectEditor" options="[{value:'0',text:'不限'},{value:'1',text:'一个字符'},{value:'2',text:'两个字符'},{value:'3',text:'三个字符'}]"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="下拉选框高度" type="string" allowBlank="true" default="150px" info="下拉选框最大高度，使用css格式定义：12px"/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params=""/>
+			<event name="onTriggerClick" type="string" label="点击图标" params="" />
+		</events>
+		<structure>
+			<item component-name="gnDataset" />
+		</structure>
+		<dependencies>
+		</dependencies>
+	</component>
+
 	<!-- 1.2 手机号 mobileEditor-->
 	<component name="mobileEditor" type="stringField" label="手机号"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
@@ -705,6 +768,55 @@
 		</events>
 		<structure>
 			<item component-name="gnDataset" />
+		</structure>
+		<dependencies>
+		</dependencies>
+	</component>
+		<!-- 2.1 form中的字段 date-->
+	<component name="objectSelectWithPageEditor" type="objectField" label="下拉选择(关联页面)"  xmlElName="field" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
+			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
+			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="allowEdit" label="允许编辑" type="string" allowBlank="false" info="是否允许编辑" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="prompt" label="提示文字" type="string" allowBlank="true" info="提示文字"/>
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="hidden" label="是否隐藏" type="string" allowBlank="false" info="是否隐藏" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不隐藏'},{value:'true',text:'隐藏'}]" onChange="changeFieldHidden"/>
+			<property name="datasourceType" label="数据来源" type="string" default="private" allowBlank="false" info="生成方式" 
+					enabled="true" widget="textSelectEditor" options="[{
+					value:'public',text:'公共数据源'
+				},{
+					value:'private',text:'私有数据源'
+				}]" onChange="changeFieldSourceType"/>
+		
+			<property name="datasourceName" label="数据源" type="string" allowBlank="false" info="数据源"  widget="textSelectEditor" dataGetter="getDatasetOptions" />
+			<property name="searchMode" label="查询方式" type="string" default="local" allowBlank="false" info="查询方式" 
+					enabled="true" widget="textSelectEditor" options="[{
+					value:'local',text:'本地（客户端）'
+				},{
+					value:'remote',text:'远程（服务器端）'
+				}]"/>			
+			<property name="minLength" label="最少查询字数" type="string" allowBlank="false" info="最少查询字数" default="0" enabled="true" 
+				widget="textSelectEditor" options="[{value:'0',text:'不限'},{value:'1',text:'一个字符'},{value:'2',text:'两个字符'},{value:'3',text:'三个字符'}]"/>
+			<property name="pageURL" label="页面地址" type="string" allowBlank="true" info="" widget="urlEditor" enabled="true" />
+			<property name="openType" label="打开方式" type="string" allowBlank="false" info="打开方式" default="true" enabled="true" 
+				widget="textSelectEditor" options="[{value:'window',text:'新窗口'},{value:'popup',text:'弹出窗口'}]" />
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="下拉选框高度" type="string" allowBlank="true" default="150px" info="下拉选框最大高度，使用css格式定义：12px"/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params=""/>
+			<event name="onLoad" type="string" label="数据加载之前" params="" />
+		</events>
+		<structure>
+			<item component-name="gnDataset" />
+			<item component-name="parameters" />
 		</structure>
 		<dependencies>
 		</dependencies>

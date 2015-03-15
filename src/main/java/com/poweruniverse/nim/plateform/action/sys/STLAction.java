@@ -1,4 +1,4 @@
-package com.poweruniverse.nim.plateform.action;
+package com.poweruniverse.nim.plateform.action.sys;
 
 
 import java.util.Calendar;
@@ -14,10 +14,10 @@ import org.hibernate.Session;
 import com.poweruniverse.nim.base.message.JSONMessageResult;
 import com.poweruniverse.nim.base.message.Result;
 import com.poweruniverse.nim.data.entity.EntityManager;
-import com.poweruniverse.nim.data.entity.system.ShiTiLei;
-import com.poweruniverse.nim.data.entity.system.ZiDuan;
-import com.poweruniverse.nim.data.entity.system.ZiDuanLX;
-import com.poweruniverse.nim.data.entity.system.base.EntityI;
+import com.poweruniverse.nim.data.entity.sys.ShiTiLei;
+import com.poweruniverse.nim.data.entity.sys.ZiDuan;
+import com.poweruniverse.nim.data.entity.sys.ZiDuanLX;
+import com.poweruniverse.nim.data.entity.sys.base.EntityI;
 import com.poweruniverse.nim.data.service.utils.HibernateSessionFactory;
 
 
@@ -57,12 +57,8 @@ public class STLAction {
 				
 				//确定包名以及类名
 				String[] classPackages =entityObj.getBiaoMing().toLowerCase().substring(0, entityObj.getBiaoMing().lastIndexOf('_')).split("_");
-				if("sys".equals(classPackages[0])){
-					classPackageName = ".system";
-				}else{
-					for(int i = 0;i<classPackages.length;i++){
-						classPackageName+= "."+classPackages[i];
-					}
+				for(int i = 0;i<classPackages.length;i++){
+					classPackageName+= "."+classPackages[i];
 				}
 				className = entityObj.getBiaoMing().substring(entityObj.getBiaoMing().lastIndexOf('_') +1);
 				
