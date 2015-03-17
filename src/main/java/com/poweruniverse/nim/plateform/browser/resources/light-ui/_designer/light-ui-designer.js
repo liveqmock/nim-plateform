@@ -781,7 +781,7 @@ LUI.PageDesigner = {
 									if(formNode.component.name == 'workflowForm'){
 										//流程检视表单 从流程检视表选择字段信息
 										var popupStlWin = LUI.stlWin.getInstance();
-										popupStlWin._xiTongDH = 'system';
+										popupStlWin._xiTongDH = 'sys';
 										popupStlWin._shiTiLeiDH = 'SYS_LiuChengJS';
 										popupStlWin._gongNengDH = null;
 										popupStlWin._callback = function(parentNode,selectNodes){

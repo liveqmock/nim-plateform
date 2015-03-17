@@ -57,7 +57,7 @@ LUI.stlWin = {
 					}
 					LUI.stlWin.getInstance().requestZdsData(this._propertyName,this.showWindow);
 				}else if(datasourceNode.data.component == "todoDataset"){
-					this._xiTongDH = 'system';
+					this._xiTongDH = 'sys';
 					this._shiTiLeiDH = 'SYS_LiuChengJS';
 					LUI.stlWin.getInstance().requestZdsData(this._propertyName,this.showWindow);
 				}else if(datasourceNode.data.component == 'gnDataset' || datasourceNode.data.component == 'gnRecord'){

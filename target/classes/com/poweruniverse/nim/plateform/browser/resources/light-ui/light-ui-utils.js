@@ -1,4 +1,4 @@
-	 /**
+	/**
 	*@param {string} url 完整的URL地址
 	*@returns {object} 自定义的对象
 
@@ -98,15 +98,15 @@
 				port: a.port,
 				query: a.search,
 				params: (function(){
-				   var ret = {},
-				       seg = a.search.replace(/^\?/,'').split('&'),
-				       len = seg.length, i = 0, s;
-				   for (;i<len;i++) {
-				       if (!seg[i]) { continue; }
-				       s = seg[i].split('=');
-				       ret[s[0]] = s[1];
-				   }
-				   return ret;
+				var ret = {},
+				seg = a.search.replace(/^\?/,'').split('&'),
+				len = seg.length, i = 0, s;
+				for (;i<len;i++) {
+				if (!seg[i]) { continue; }
+				s = seg[i].split('=');
+				ret[s[0]] = s[1];
+				}
+				return ret;
 				})(),
 				file: (a.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1],
 				hash: a.hash.replace('#',''),
@@ -231,7 +231,7 @@
             if (! +"\v1") {//增加自动转换透明度功能，用户只需输入W3C的透明样式，它会自动转换成IE的透明滤镜  
                 var t = cssCode.match(/opacity:(\d?\.\d+);/);
                 if (t != null) {
-                    cssCode = cssCode.replace(t[0], "filter:alpha(opacity=" + parseFloat(t[1]) * 100 + ")")
+					  cssCode = cssCode.replace(t[0], "filter:alpha(opacity=" + parseFloat(t[1]) * 100 + ")")
                 }
             }
             cssCode = cssCode + "\n"; //增加末尾的换行符，方便在firebug下的查看。  
@@ -239,11 +239,11 @@
             var styleElements = headElement.getElementsByTagName("style");
             if (styleElements.length == 0) {//如果不存在style元素则创建  
                 if (document.createStyleSheet) {    //ie  
-                	document.createStyleSheet();
+  				document.createStyleSheet();
                 } else {
-                    var tempStyleElement = document.createElement('style'); //w3c  
-                    tempStyleElement.setAttribute("type", "text/css");
-                    headElement.appendChild(tempStyleElement);
+					  var tempStyleElement = document.createElement('style'); //w3c  
+					  tempStyleElement.setAttribute("type", "text/css");
+					  headElement.appendChild(tempStyleElement);
                 }
             }
             var styleElement = styleElements[0];
@@ -268,76 +268,76 @@
           styleElement.innerHTML += scriptCode; //火狐支持直接innerHTML添加样式表字串  
 		},
 		stringify : function (obj) {
-		    var t = typeof (obj);
-		    if (t != "object" || obj === null) {
-		        // simple data type
-		        if (t == "string") obj = '"'+obj+'"';
-		        return String(obj);
-		    }else {
-		        // recurse array or object
-		        var n, v, json = [], arr = (obj && obj.constructor == Array);
-		        for (n in obj) {
-		            v = obj[n]; t = typeof(v);
-		            if(t!='function' && !(arr && t=='boolean')){
-		            	if (t == "string"){
-			            	v = '"'+v+'"';
-			            }else if (t == "object" && v !== null) {
-			            	v = LUI.Util.stringify(v);
-			            	
-//			            	if (!$.support.leadingWhitespace) {
-//			            		//ie 6,7,8
-//			            		v = jQuery.parseJSON(v);
-//			            	}else{
-//			            		v = JSON.stringify(v);
-//			            	}
-			            }
-			            json.push((arr ? "" : '"' + n + '":') + String(v));
-		            }
-		        }
-		        return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
-		    }
+		var t = typeof (obj);
+		if (t != "object" || obj === null) {
+		// simple data type
+		if (t == "string") obj = '"'+obj+'"';
+		return String(obj);
+		}else {
+		// recurse array or object
+		var n, v, json = [], arr = (obj && obj.constructor == Array);
+		for (n in obj) {
+		v = obj[n]; t = typeof(v);
+		if(t!='function' && !(arr && t=='boolean')){
+			if (t == "string"){
+				v = '"'+v+'"';
+			}else if (t == "object" && v !== null) {
+				v = LUI.Util.stringify(v);
+				
+//				if (!$.support.leadingWhitespace) {
+//					//ie 6,7,8
+//					v = jQuery.parseJSON(v);
+//				}else{
+//					v = JSON.stringify(v);
+//				}
+			}
+			json.push((arr ? "" : '"' + n + '":') + String(v));
+		}
+		}
+		return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
+		}
 		},
 		thousandth:function(number){
 			var numberString = ""+number;
-//		    thisobj.value = thisobj.value.replace(/,/g, ""); 
-//		    if (thisobj.value.length > 10) {                 
-//		    	thisobj.value = thisobj.value.substring(0, 10);                 
-//		    }   
-		    var re = /\d{1,3}(?=(\d{3})+$)/g;      
-		   	var n1 = numberString.replace(/^(\d+)((\.\d+)?)$/,function(s,s1,s2){return s1.replace(re,"$&,")+s2;});
-		    return n1;
-	   },
-	   isEmpty:function(object) {
-		   for(var p in object) { 
-			   return false; 
-		   }
-		   return true;
-	   },
-	   isArray:function (object){
-		    return  object && typeof object==='object' &&   
-		            typeof object.length==='number' && 
-		            typeof object.splice==='function' &&   
-		             //判断length属性是否是可枚举的 对于数组 将得到false 
-		            !(object.propertyIsEnumerable('length'));
-	   },
-	   htmlEncode:function (value){
-		    if (value) {
-		        return jQuery('<div />').text(value).html();
-		    } else {
-		        return '';
-		    }
+//		thisobj.value = thisobj.value.replace(/,/g, ""); 
+//		if (thisobj.value.length > 10) {                 
+//			thisobj.value = thisobj.value.substring(0, 10);                 
+//		}   
+		var re = /\d{1,3}(?=(\d{3})+$)/g;      
+			var n1 = numberString.replace(/^(\d+)((\.\d+)?)$/,function(s,s1,s2){return s1.replace(re,"$&,")+s2;});
+		return n1;
+	},
+	isEmpty:function(object) {
+		for(var p in object) { 
+			return false; 
+		}
+		return true;
+	},
+	isArray:function (object){
+		return  object && typeof object==='object' &&   
+		typeof object.length==='number' && 
+		typeof object.splice==='function' &&   
+		//判断length属性是否是可枚举的 对于数组 将得到false 
+		!(object.propertyIsEnumerable('length'));
+	},
+	htmlEncode:function (value){
+		if (value) {
+		return jQuery('<div />').text(value).html();
+		} else {
+		return '';
+		}
 		},
 		htmlDecode:function (value) {
-		    if (value) {
-		        return $('<div />').html(value).text();
-		    } else {
-		        return '';
-		    }
+		if (value) {
+		return $('<div />').html(value).text();
+		} else {
+		return '';
+		}
 		},
 		//下载业务数据关联的文件
 		//参数：{
-		//			xiTongDH:string		  	附件的关联业务数据xiTongDH(用于验证用户权限)
-		//			gongNengDH:string		 附件的关联业务数据gongNengDH(用于验证用户权限)
+		//			xiTongDH:string			附件的关联业务数据xiTongDH(用于验证用户权限)
+		//			gongNengDH:string		附件的关联业务数据gongNengDH(用于验证用户权限)
 		//			caoZuoDH:string			附件的关联业务数据caoZuoDH(用于验证用户权限)
 		//			dataId:number			附件的关联业务数据dataId (用于验证用户权限)
 		//			fileId:number 			附件代码
@@ -391,10 +391,43 @@
 			document.getElementById('_downloadFrame').src = 'download?type=file&fjid='+fileId;
 			
 		},
+		//对某些数据执行status类型的操作
+		execute:function (xiTongDH,gongNengDH,caoZuoDH,dataArray,callback) {
+			$.ajax({
+				url: "http://"+_urlInfo.host+":"+_urlInfo.port+"/jservice/", 
+				type: "POST", 
+				data:{
+					component:'nim-data',
+					service:'data',
+					method:'execute',
+					arguments:"{" +
+						"xiTongDH:'"+xiTongDH+"'," +
+						"gongNengDH:'"+gongNengDH+"'," +
+						"caoZuoDH:'"+caoZuoDH+"'," +
+						"submitData:"+LUI.Util.stringify(dataArray) +
+					"}"
+				},
+				dataType:"json",
+				success: function(result){
+					if(result.success){
+						if(callback!=null){
+							callback.apply(this,[result]);
+						}else{
+							LUI.Message.info("信息","操作成功！");
+						}
+					}else{
+						LUI.Message.info("信息",result.errorMsg);
+					}
+				},
+	            error:function(){
+					LUI.Message.info("信息","访问服务器失败!");
+	            }
+			});
+		},
 		//上传文件
 		//参数：{
-		//			extentions:[] 		  允许的文件扩展名
-		//			message:'' 			  提示信息
+		//			extentions:[] 		允许的文件扩展名
+		//			message:'' 			提示信息
 		//			callback:function(   回调函数 
 		//				id:0  文件id
 		//				fileName:0 文件名
@@ -406,49 +439,49 @@
 						'<input type="file" id="myfile2" name="myfile" style="height:22px;width: 520px;border: 1px solid #86888B;"/>'+
 					'</div>');
 			divEl.dialog({
-				 modal: true,
-				 close:function(){
+				modal: true,
+				close:function(){
 					$(this).dialog( "destroy" );
 					$(this).remove();
-				 },
-				 width:560,
-				 height:200,
-				 maxHeight:360,
-				 autoOpen: true,
-//				 show: { effect: "scale", percent:100,duration: 400 },
-//				 hide: { effect: "scale", percent: 0 ,duration: 400},
-				 open:function(){
-				 	if(options.zIndex){
+				},
+				width:560,
+				height:200,
+				maxHeight:360,
+				autoOpen: true,
+//				show: { effect: "scale", percent:100,duration: 400 },
+//				hide: { effect: "scale", percent: 0 ,duration: 400},
+				open:function(){
+					if(options.zIndex){
 						var widget = divEl.dialog( "widget" );
 						widget.css("z-index",parseInt(options.zIndex)+1);
 					}
-				 },
-				 buttons: [{ 
-					 text: "上传",
-					 click:function(event) {
+				},
+				buttons: [{ 
+					text: "上传",
+					click:function(event) {
 						$.ajaxFileUpload({
-		                    url: 'nimUpload/?fjlx=2', //用于文件上传的服务器端请求地址
-		                    secureuri: false, //是否需要安全协议，一般设置为false
-		                    fileElementId: 'myfile2', //文件上传域的ID
-		                    dataType: 'json', //返回值类型 一般设置为json
-		                    success: function (result, status) {  //服务器成功响应处理函数
-		                        if (result.success) {
-		                        	if(callback!=null){
+							url: 'nimUpload/?fjlx=2', //用于文件上传的服务器端请求地址
+							secureuri: false, //是否需要安全协议，一般设置为false
+							fileElementId: 'myfile2', //文件上传域的ID
+							dataType: 'json', //返回值类型 一般设置为json
+							success: function (result, status) {  //服务器成功响应处理函数
+								if (result.success) {
+									if(callback!=null){
 										callback.apply(options.context||this,[[result.fuJian]]);
 									}
 									divEl.dialog( "close" );
-		                        }
-		                    },
-		                    error: function (data, status, e){//服务器响应失败处理函数
-		                        alert(e);
-		                    }
-			            })
-					 }
+								}
+							},
+							error: function (data, status, e){//服务器响应失败处理函数
+								alert(e);
+							}
+						})
+					}
 				},{
-					 text: "关闭",
-					 click:function() {
+					text: "关闭",
+					click:function() {
 						$( this ).dialog( "close" );
-					 }
+					}
 				}]
 			});	
 		},
@@ -458,40 +491,40 @@
 				return;
 			}
 			var uploadFileHandler = null;
-		    //弹出窗口
+		//弹出窗口
 			var divEl = $(
 					'<div title="上传文件..." >'+
 						'<div id="fileuploader" >上传</div>'+
 					'</div>');
 			divEl.dialog({
-				 modal: true,
-				 close:function(){
+				modal: true,
+				close:function(){
 					$(this).dialog( "destroy" );
 					$(this).remove();
-				 },
-				 width:560,
-				 height:200,
-				 maxHeight:360,
-				 autoOpen: false,
-				 show: { effect: "scale", percent:100,duration: 400 },
-				 hide: { effect: "scale", percent: 0 ,duration: 400},
-				 open:function(){
-				 	if(options.zIndex){
+				},
+				width:560,
+				height:200,
+				maxHeight:360,
+				autoOpen: false,
+				show: { effect: "scale", percent:100,duration: 400 },
+				hide: { effect: "scale", percent: 0 ,duration: 400},
+				open:function(){
+					if(options.zIndex){
 						var widget = divEl.dialog( "widget" );
 						widget.css("z-index",parseInt(options.zIndex)+1);
 					}
-				 },
-				 buttons: [{ 
-					 text: "上传",
-					 click:function(event) {
+				},
+				buttons: [{ 
+					text: "上传",
+					click:function(event) {
 						$(event.currentTarget).button( "disable" );
 						uploadFileHandler.startUpload();
-					 }
+					}
 				},{
-					 text: "关闭",
-					 click:function() {
+					text: "关闭",
+					click:function() {
 						$( this ).dialog( "close" );
-					 }
+					}
 				}]
 			});
 			

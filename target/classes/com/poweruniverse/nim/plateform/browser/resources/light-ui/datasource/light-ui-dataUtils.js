@@ -25,7 +25,7 @@ LUI.DataUtils = {
 				name:'ziDuanLX',fields:[{name:'ziDuanLXDH'}]
 			}]
 		}];
-		LUI.DataUtils.listStlData('system','SYS_ShiTiLei',0,0,fieldsJson,null,null,callback,this);
+		LUI.DataUtils.listStlData('sys','SYS_ShiTiLei',0,0,fieldsJson,null,null,callback,this);
 	},
 	requestGongNengData:function(callback){
 		var fieldsJson = [{
@@ -41,7 +41,7 @@ LUI.DataUtils = {
 		},{
 			name:'czs',fields:[{name:'caoZuoDH'},{name:'caoZuoMC'}]
 		}];
-		LUI.DataUtils.listStlData('system','SYS_GongNeng',0,0,fieldsJson,null,null,callback,this);
+		LUI.DataUtils.listStlData('sys','SYS_GongNeng',0,0,fieldsJson,null,null,callback,this);
 	},
 	requestXiTongData:function(callback){
 		var fieldsJson = [{
@@ -49,7 +49,7 @@ LUI.DataUtils = {
 		},{
 			name:'xiTongMC'
 		}];
-		LUI.DataUtils.listStlData('system','SYS_XiTong',0,0,fieldsJson,null,null,callback,this);
+		LUI.DataUtils.listStlData('sys','SYS_XiTong',0,0,fieldsJson,null,null,callback,this);
 	},
 	requestZiDuanLXData:function(callback){
 		var fieldsJson = [{
@@ -59,7 +59,7 @@ LUI.DataUtils = {
 		},{
 			name:'ziDuanLXMC'
 		}];
-		LUI.DataUtils.listStlData('system','SYS_ZiDuanLX',0,0,fieldsJson,null,null,callback,this);
+		LUI.DataUtils.listStlData('sys','SYS_ZiDuanLX',0,0,fieldsJson,null,null,callback,this);
 	},
 	getSqlVariable:function(xiTongDH,sqlString,callback,context){
 		if(context==null){
@@ -309,7 +309,7 @@ LUI.DataUtils = {
 				service:'data',
 				method:'getTodoList',
 				arguments:"{" +
-					"xiTongDH:'system'," +
+					"xiTongDH:'sys'," +
 					"shiTiLeiDH:'SYS_LiuChengJS'," +
 					"start:" +start +"," +
 					"limit:" +limit  +"," +
