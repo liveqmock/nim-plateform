@@ -780,10 +780,35 @@
 		</dependencies>
 	</component>
 	<!-- 2.1 列-编辑 object-->
-	<component name="fileUploaderColumn" type="objectColumn" label="文件上传"  xmlElName="column" isEditable="true" isRemovable="true" >
+	<component name="fileEditorColumn" type="fileColumn" label="附件上传"  xmlElName="column" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<!-- 2.1 列-编辑 object-->
+	<component name="fileDisplayColumn" type="fileColumn" label="附件显示"  xmlElName="column" isEditable="true" isRemovable="true" >
+		<properties>
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
 			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
@@ -891,7 +916,7 @@
 			<dependency type-name="gridColumns"/>
 		</dependencies>
 	</component>
-	<component name="setFileColumn" type="setColumn" label="集合附件"  xmlElName="field" isEditable="true" isRemovable="true" >
+	<component name="filesetEditorColumn" type="filesetColumn" label="附件集合编辑"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
 				widget="textSelectEditor" options="[{value:'true',text:'enable'},{value:'false',text:'disable'}]" />
@@ -907,6 +932,28 @@
 				}]"/>
 			<property name="keyProperty" label="附件字段" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" dataGetter="getKeyPropertyOptions" info="" enabled="true" onChange="setKeyFJProperty"/>
 			<property name="uploaderEl" label="上传按钮" type="string" allowBlank="true" info="上传按钮" enabled="true" widget="textChooseElEditor" droppable=".action" />
+			
+		</properties>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+		<dependencies>
+			<dependency type-name="gridColumns"/>
+		</dependencies>
+	</component>
+	<component name="filesetDisplayColumn" type="filesetColumn" label="附件集合显示"  xmlElName="field" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
+				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setGridColumnRenderTo" droppable=".data"/>
+			<property name="renderTemplate" widget="textareaEditor" label="显示表达式" type="text" allowBlank="false" info="生成显示内容的Handlebars表达式" enabled="true" />
+			<!--暂时只允许附件表格以“替换输入域”的方式生成-->
+			<property name="renderType" label="生成方式" type="string" default="insert" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				}]"/>
+			<property name="keyProperty" label="附件字段" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" dataGetter="getKeyPropertyOptions" info="" enabled="true" onChange="setKeyFJProperty"/>
 			
 		</properties>
 		<events>

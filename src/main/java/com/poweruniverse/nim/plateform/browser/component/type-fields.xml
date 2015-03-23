@@ -191,6 +191,33 @@
 		<events>
 		</events>
 	</type>
+	<!-- 7字段类型  object-->
+	<type name="fileField" label="附件"  isAppendable="false" sequence="68" defaultComponent="fileEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+		<properties>
+			<property name="fieldType" label="类型" type="string" allowBlank="false" info="" default="" enabled="false"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFieldsTypeOfForm" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="用于绑定数据的字段名"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题"/>
+			<property name="renderType" label="生成方式" type="string" default="rela" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'none',text:'不生成'
+				},{
+					value:'append',text:'生成标题、输入域'
+				},{
+					value:'insert',text:'生成输入域'
+				},{
+					value:'replace',text:'替换输入域'
+				},{
+					value:'rela',text:'关联输入域'
+				}]"/>
+			
+		</properties>
+		<extensions>
+		</extensions>
+		<structure>
+		</structure>
+		<events>
+		</events>
+	</type>
 	<!-- 8字段类型  set-->
 	<type name="setField" label="集合"  isAppendable="false" sequence="69" defaultComponent="setGridEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
@@ -207,4 +234,22 @@
 			<event name="onChange" type="string" label="数据改变" params="" />
 		</events>
 	</type>
+	
+	<!-- 8字段类型  set-->
+	<type name="filesetField" label="集合"  isAppendable="false" sequence="69" defaultComponent="filesetEditor" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+		<properties>
+			<property name="fieldType" label="类型" type="string" allowBlank="false" info="" default="" enabled="false"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFieldsTypeOfForm" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="用于绑定数据的字段名"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题"/>
+		</properties>
+		<extensions>
+			<property name="width" label="宽度" type="string" allowBlank="true" default="120px" info="字段宽度，使用css格式定义：12px 100% "/>
+			<property name="height" label="高度" type="string" allowBlank="true" default="22px" info="字段高度，使用css格式定义：12px 100% "/>
+		</extensions>
+		<events>
+			<event name="onChange" type="string" label="数据改变" params="" />
+		</events>
+	</type>
+
 </type-def>

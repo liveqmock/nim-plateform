@@ -39,7 +39,7 @@ LUI.DataUtils = {
 		},{
 			name:'xiTong',fields:[{name:'xiTongDH'}]
 		},{
-			name:'czs',fields:[{name:'caoZuoDH'},{name:'caoZuoMC'}]
+			name:'czs',fields:[{name:'caoZuoDH'},{name:'caoZuoMC'},{name:'duiXiangXG'}]
 		}];
 		LUI.DataUtils.listStlData('sys','SYS_GongNeng',0,0,fieldsJson,null,null,callback,this);
 	},
@@ -125,37 +125,37 @@ LUI.DataUtils = {
 			}
 		});
 	},
-	//执行一个状态类型的操作，可以指定一个对象或不执行对象 （id = null）
-	executeStatus:function(xiTongDH,gongNengDH,caoZuoDH,id,callback,context){
-		if(context==null){
-			context = this;
-		}
+	//对某些数据执行status类型的操作
+	execute:function (xiTongDH,gongNengDH,caoZuoDH,dataArray,callback) {
 		$.ajax({
 			url: "http://"+_urlInfo.host+":"+_urlInfo.port+"/jservice/", 
 			type: "POST", 
 			data:{
 				component:'nim-data',
-				service:'work',
+				service:'data',
 				method:'execute',
 				arguments:"{" +
 					"xiTongDH:'"+xiTongDH+"'," +
 					"gongNengDH:'"+gongNengDH+"'," +
 					"caoZuoDH:'"+caoZuoDH+"'," +
-					"id:" +id +
+					"submitData:"+LUI.Util.stringify(dataArray) +
 				"}"
 			},
 			dataType:"json",
-			context:context,
 			success: function(result){
 				if(result.success){
-					callback.apply(this,[result]);
+					if(callback!=null){
+						callback.apply(this,[result]);
+					}else{
+						LUI.Message.info("信息","操作成功！");
+					}
 				}else{
 					LUI.Message.info("信息",result.errorMsg);
 				}
 			},
-			error:function(){
+            error:function(){
 				LUI.Message.info("信息","访问服务器失败!");
-			}
+            }
 		});
 	},
 	//加载一个对象 使用功能代号、操作代号、主键值

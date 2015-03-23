@@ -711,21 +711,7 @@
 		<dependencies>
 		</dependencies>
 	</component>
-	<!-- 2.1 form中的字段 date-->
-	<component name="objectFileDisplay" type="objectField" label="附件显示"  xmlElName="field" isEditable="true" isRemovable="true" >
-		<properties>
-			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" />
-		</properties>
-		<extensions>
-		</extensions>
-		<events>
-		</events>
-		<structure>
-		</structure>
-		<dependencies>
-		</dependencies>
-	</component>
-	
+
 	<!-- 2.1 form中的字段 date-->
 	<component name="objectSelectEditor" type="objectField" label="下拉选择"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
@@ -855,7 +841,25 @@
 		<dependencies>
 		</dependencies>
 	</component>
-	<component name="fileUploaderEditor" type="objectField" label="文件上传"  xmlElName="field" isEditable="true" isRemovable="true" >
+	
+	
+	<!-- file ********************************************************* -->
+		<!-- 2.1 form中的字段 file-->
+	<component name="fileDisplay" type="fileField" label="附件显示"  xmlElName="field" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" />
+		</properties>
+		<extensions>
+		</extensions>
+		<events>
+		</events>
+		<structure>
+		</structure>
+		<dependencies>
+		</dependencies>
+	</component>
+	
+	<component name="fileEditor" type="fileField" label="附件上传"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
 			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
@@ -884,30 +888,10 @@
 	<!-- 2.1 form中的字段 set-->
 	<component name="setDisplay" type="setField" label="集合表格显示"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
-			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" />
-			<property name="renderType" label="生成方式" type="string" default="rela" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
-					value:'rela',text:'关联输入域'
-				}]"/>
 		</properties>
 		<structure>
 			<item component-name="subGrid" />
 		</structure>
-		<events>
-		</events>
-		<dependencies>
-			<dependency type-name="formFields"/>
-		</dependencies>
-	</component>
-	<!-- 2.1 form中的字段 set-->
-	<component name="setFileDisplay" type="setField" label="集合附件显示"  xmlElName="field" isEditable="true" isRemovable="true" >
-		<properties>
-			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" />
-			<!--暂时只允许附件表格以“替换输入域”的方式生成-->
-			<property name="renderType" label="生成方式" type="string" default="rela" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
-					value:'rela',text:'关联输入域'
-				}]"/>
-			<property name="keyProperty" label="附件字段" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" dataGetter="getKeyPropertyOptions" info="" enabled="true" onChange="setKeyFJProperty"/>
-		</properties>
 		<events>
 		</events>
 		<dependencies>
@@ -964,14 +948,6 @@
 			<property name="prompt" label="提示文字" type="string" allowBlank="true" info="提示文字"/>
 			<property name="allowBlank" label="允许为空" type="string" allowBlank="false" info="是否允许为空" default="false" enabled="true" 
 				widget="textSelectEditor" options="[{value:'false',text:'不允许'},{value:'true',text:'允许'}]" />
-			<property name="renderType" label="生成方式" type="string" default="rela" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
-					value:'none',text:'不生成'
-				},{
-					value:'rela',text:'关联输入域'
-				}]"/>
-			<!--生成目标只与集合表格控件的表格、工具按钮有关 
-			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" droppable=".field,.data"/>
-			-->
 		</properties>
 		<structure>
 			<item component-name="tools" />
@@ -983,7 +959,8 @@
 			<dependency type-name="formFields"/>
 		</dependencies>
 	</component>
-	<component name="setFileEditor" type="setField" label="集合附件"  xmlElName="field" isEditable="true" isRemovable="true" >
+	
+	<component name="filesetEditor" type="filesetField" label="集合附件"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
 			<!--暂时只允许附件表格以“替换输入域”的方式生成-->
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 
@@ -1005,4 +982,22 @@
 			<dependency type-name="formFields"/>
 		</dependencies>
 	</component>
+	
+	<!-- 2.1 form中的字段 set-->
+	<component name="filesetDisplay" type="filesetField" label="集合附件显示"  xmlElName="field" isEditable="true" isRemovable="true" >
+		<properties>
+			<property name="renderto" label="目标元素" type="string" allowBlank="false" info="关联元素" enabled="true" widget="textChooseElEditor" />
+			<!--暂时只允许附件表格以“替换输入域”的方式生成-->
+			<property name="renderType" label="生成方式" type="string" default="rela" allowBlank="false" info="生成方式" enabled="true" widget="textSelectEditor" options="[{
+					value:'rela',text:'关联输入域'
+				}]"/>
+			<property name="keyProperty" label="附件字段" type="string" allowBlank="false"  widget="textSelectEditor" allowSearch="true" dataGetter="getKeyPropertyOptions" info="" enabled="true" onChange="setKeyFJProperty"/>
+		</properties>
+		<events>
+		</events>
+		<dependencies>
+			<dependency type-name="formFields"/>
+		</dependencies>
+	</component>
+
 </component-def>

@@ -230,7 +230,7 @@ LUI.stlWin = {
 				for(var i=0;i<zdRows.length;i++){
 					var nodeX = {
 						name:zdRows[i].ziDuanBT,
-						isParent:zdRows[i].ziDuanLX.ziDuanLXDH=="set" || zdRows[i].ziDuanLX.ziDuanLXDH=="object",
+						isParent:zdRows[i].ziDuanLX.ziDuanLXDH=="set" || zdRows[i].ziDuanLX.ziDuanLXDH=="fileset" || zdRows[i].ziDuanLX.ziDuanLXDH=="object" || zdRows[i].ziDuanLX.ziDuanLXDH=="file",
 						nocheck:false,
 						data:zdRows[i]
 					};
@@ -256,7 +256,7 @@ LUI.stlWin = {
 				for(var i=0;i<zdRows.length;i++){
 					var nodeX = {
 						name:zdRows[i].ziDuanBT,
-						isParent:zdRows[i].ziDuanLX.ziDuanLXDH=="set" || zdRows[i].ziDuanLX.ziDuanLXDH=="object",
+						isParent:zdRows[i].ziDuanLX.ziDuanLXDH=="set" || zdRows[i].ziDuanLX.ziDuanLXDH=="fileset" || zdRows[i].ziDuanLX.ziDuanLXDH=="object" || zdRows[i].ziDuanLX.ziDuanLXDH=="file",
 						nocheck:false,
 						data:zdRows[i]
 					};
@@ -357,8 +357,8 @@ LUI.zdWin = {
 								data:childDatasourceNode.data
 							}]);
 							//添加children节点
-							if((childDatasourceNode.data.fieldType == 'object' && LUI.zdWin.instance._expandObjectField)
-									|| (childDatasourceNode.data.fieldType == 'set' && LUI.zdWin.instance._expandSetField)){
+							if(((childDatasourceNode.data.fieldType == 'object' || childDatasourceNode.data.fieldType == 'file') && LUI.zdWin.instance._expandObjectField)
+									|| ((childDatasourceNode.data.fieldType == 'set' || childDatasourceNode.data.fieldType == 'fileset') && LUI.zdWin.instance._expandSetField)){
 								this.addNodeToTree(childZdNodes[0],childDatasourceNode);
 							}
 						}

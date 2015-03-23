@@ -24,7 +24,7 @@ LUI.Grid = {
 				return null;
 			}
 		}
-		//
+		
 		if(config.headerLines!=null){
 			config.headerLines = parseInt(config.headerLines);
 		}else{
@@ -37,10 +37,12 @@ LUI.Grid = {
 			config.footerLines = 0;
 		}
 		
-		
 		//记录第一行内容 作为迭代的模板
 		var gridLine = $(config.renderto+' li').eq(config.headerLines);
 		var gridLineContent = $("<p>").append(gridLine.clone()).html();
+		
+		var columnsCfg = config.columns||[];
+		delete config.columns;
 		
 		//参数的默认值
 		var gridConfig = $.extend({
@@ -48,248 +50,209 @@ LUI.Grid = {
 			headerLines:0,
 			footerLines:0,
 			columns:[],
-			rows:[],//选中的行
+			rows:[],
 			gridLineContent:gridLineContent,
-			pagiTarget:null,
 			autoLoad:"true",
-			initialed:false,
+			loaded:false,
 			datasource:datasource,
-			selectedRows:LUI.Set.createNew(),//选中的行
+			rendered:false,
 			events:{
+				load:'grid_load',
 				gridRendered:'grid_render',
-				rowRendered:'row_render',
-				rowSelect:'row_select',
-				rowUnselect:'row_unselect',
-				rowClick:'row_click',
-				pagiRendered:'pagi_render'
+				rowRendered:'row_render'
+			},
+			getRow:function(rowIndex){
+				return this.rows[parseInt(rowIndex)];
+			},
+			renderRow:function(row){
+				//
+				var rowEl = null;
+				if(row.index == 0){
+					//第一行
+					if(this.headerLines>0){
+						rowEl = $(this.gridLineContent).insertAfter($(this.renderto+' li').eq(this.headerLines -1));
+					}else{
+						rowEl = $(this.gridLineContent).appendTo($(this.renderto));
+					}
+				}else{
+					var prevRow = this.getRow(row.index -1);
+					rowEl = $(this.gridLineContent).insertAfter(prevRow.el);
+				}
+				rowEl.attr('_row_index',row.index);
+				rowEl.attr('_record_id',row.record.id);
+				//显示行
+				row.render(rowEl);
+				//
+				this.fireEvent(this.events.rowRendered,{
+					grid:this,
+					rowIndex:row.index,
+					rowEl:row.el,
+					record:row.record,
+					rowData:row.record.getData()
+				});
+			},
+			//在表格中显示与某条record相关的行
+			_addRow:function(record){
+				//
+				var row = LUI.Grid.Row.createNew(this,this.rows.length,record);
+				this.rows[this.rows.length] = row;
+				//如果表格已rendered 
+				if(this.rendered){
+					this.renderRow(row);
+				}
+				return row;
+			},
+			//在表格中不再显示与某条record相关的行
+			_removeRow:function(delRecord){
+				//表格中删除此行
+				var delRow = null;
+				for(var i=0;i<this.rows.length;i++){
+					if(this.rows[i].record.id == delRecord.id){
+						delRow = this.rows[i];
+						this.rows.splice(i,1)
+						break;
+					}
+				}
+				if(delRow==null){
+					LUI.Message.info("删除行失败","表格中未找到对应此记录的行!");
+					return;
+				}
+				//先删除columns中对应此行的单元格
+				for(var i=0;i<this.columns.length;i++){
+					var column = this.columns[i];
+					for(var j=column.size()-1;j>=0;j--){
+						if(column.getCell(j).row.index == delRow.index){
+							column.removeCell(j);
+							break;
+						}
+					}
+				}
+				//再修改rows中大于此行的row index
+				for(var i=0;i<this.rows.length;i++){
+					var row2 = this.rows[i];
+					if(row2.index > delRow.index ){
+						row2.index = row2.index -1;
+					}
+					//刷新行显示
+					row2.render();
+					
+					this.fireEvent(this.events.rowRendered,{
+						grid:this,
+						rowIndex:row2.index,
+						rowEl:row2.el,
+						record:row2.record,
+						rowData:row2.record.getData()
+					});
+				}
+				//最后删除行显示
+				if(delRow.rendered){
+					delRow.el.remove();
+				}
+				return delRow;
 			},
 			/**
 			 * 通知grid  根据绑定的数据 
 			 * 重新显示列表内容 显示grid 分页工具栏
 			 */
-			load:function(){
-				this.render();
-			},
-			_onRowClick:function(rowEl){
-				var rowIndex = $(rowEl).attr('_row_index');
-				var row = this.rows[rowIndex];
-				this.fireEvent(this.events.rowClick,{
-					grid:this,
-					rowIndex:row.index,
-					rowEl:row.el,
-					rowData:row.data
-				});
-				
-				if(!this.selectedRows.contains(row)){
-					this.selectRow(rowIndex);
-				}
-			},
-			_onRowSelect:function(rowEl){
-				var rowIndex = $(rowEl).attr('_row_index');
-				var row = this.rows[rowIndex];
-				
-				this.selectedRows.put(row);
-				
-				this.fireEvent(this.events.rowSelect,{
-					grid:this,
-					rowIndex:row.index,
-					rowEl:row.el,
-					rowData:row.data
-				});
-			},
-			_onRowUnselect:function(rowEl){
-				var rowIndex = $(rowEl).attr('_row_index');
-				var row = this.rows[rowIndex];
-				
-				this.selectedRows.remove(row);
-				this.fireEvent(this.events.rowUnselect,{
-					grid:this,
-					rowIndex:row.index,
-					rowEl:row.el,
-					rowData:row.data
-				});
-			},
-			selectRow:function(index,keepSelection){
-				if(index >=0 && index < this.rows.length){
-					var row = this.rows[index];
-					//通知tree
-					if(!keepSelection || !this.multiSelect){
-						for(var i =0;i<this.selectedRows.size();i++){
-							this._onRowUnselect(this.selectedRows.get(i).el);
-						}
+			load:function(dataResult,dataRecords){
+				//如果有数据 需要消除影响
+				if(this.loaded){
+					//清除原信息
+					this.rows = [];//清除所有表格行
+					for(var j=0;j<this.columns.length;j++){
+						this.columns[j].clear();//清除其中的单元格信息
 					}
-					if(!this.selectedRows.contains(row)){
-						this._onRowSelect(row.el);
-					}
+					//取消对数据源添加、删除事件的监听
+					this.datasource.removeListener(this.datasource.events.add,this);
+					this.datasource.removeListener(this.datasource.events.remove,this);
 				}
-			},
-			unselectRow:function(index){
-				var row = this.rows[index];
-				if(this.selectedRows.contains(row)){
-					this._onRowUnselect(row.el);
+				//从关联数据源取得数据 
+				if(!this.datasource.loaded){
+					LUI.Message.info("加载数据失败","请监听数据源的onload事件，为表格加载数据!");
+					return;
 				}
-			},
-			getSelectRow:function(){
-				var row = null;
-				if(this.selectedRows.size()>0){
-					row = this.selectedRows.get(0);
+				//设置分页信息
+				if(this.pagination!=null){
+					this.pagination.setPagiInfo(dataResult);
 				}
-				return row;
+				//生成表格行
+				for(var i=0;i<dataRecords.length;i++){
+					var record = dataRecords[i];
+					//生成表格行对象 同时建立表格行与数据记录之间的监听关系
+//					this._addRow(record);
+					this.rows[this.rows.length] = LUI.Grid.Row.createNew(this,this.rows.length,record);
+				}
+				//监听数据源的添加事件 创建新行
+				this.datasource.addListener(this.datasource.events.add,this,function(ds,grid,event){
+					//数据集中 新增了记录
+					var newRecord = event.params.record;
+					var row = this._addRow(newRecord);
+					row.init();
+				});
+				//监听此数据源的删除事件
+				this.datasource.addListener(this.datasource.events.remove,this,function(ds,grid,event){
+					var delRecord = event.params.record;
+					this._removeRow(delRecord);
+				});
+
+				
+				this.loaded = true;
+				
+				if(this.rendered || this.autoRender == "true"){
+					this.render();
+				}
+				
 			},
 			render:function(){
-				//预编译行模板
-				var data={
-					totalCount:0,//用于分页显示
-					start:0,//用于分页显示
-					limit:0,//用于分页显示
-					rows:[]
-				};
-				if(this.datasource!=null ){
-					var dsData = this.datasource.getResult();
-					if(dsData!=null){
-						data.totalCount = dsData.totalCount;
-						data.start = dsData.start;
-						data.limit = dsData.limit;
-						for(var i=0;i<this.datasource.size();i++){
-							var record = this.datasource.getRecord(i);
-							data.rows[i] = record.getData();
-							data.rows[i]._record_id = record.id;
-						}
-					}
-					
-					//生成表格内容
-					this.doRender(data);
-					
-					//需要分页的话 重新 显示分页工具栏
-					if(this.pagiTarget!=null){
-						var currentPage = data.limit>0?Math.floor(data.start/data.limit):0;
-						
-						$(this.pagiTarget).pagination(data.totalCount, {
-							items_per_page:data.limit,
-							num_display_entries:2,
-							num_edge_entries:2,
-							prev_text:'前一页',
-							next_text:'后一页',
-							gridInstance:this,
-							current_page:currentPage,
-							callback:function(page_index, jq){
-								if(gridInstance.datasource!=null){
-									gridInstance.datasource.page(page_index);
-								}
-								return false;
-							}
-						});
-						this.fireEvent(this.events.pagiRendered,{
-							grid:this,
-							pagiEl:this.pagiTarget,
-							start:data.start,
-							limit:data.limit,
-							pageIndex:currentPage
-						});
-					}
-				}
-				//
-				this.initialed = true;
-				
-				this.fireEvent(this.events.gridRendered,{
-					grid:this,
-					data:data
-				});
-			},
-			doRender:function(data){
+				//清空列表 
 				//删除除header和footer以外的行 
 				if(this.footerLines>0){
 					$(this.renderto+' li').slice(this.headerLines, -this.footerLines).remove();
 				}else{
 					$(this.renderto+' li').slice(this.headerLines).remove();
 				}
-				this.rows = [];
-				
-				//重新显示列表
-				if(data.rows!=null && data.rows.length >0){
-					var newLineEl = null;
-					for(var i=0;i<data.rows.length;i++){
-						var rowData = data.rows[i];
-						//在表格中增加一行
-						if(newLineEl == null){
-							if(this.headerLines>0){
-								newLineEl = $(this.gridLineContent).insertAfter($(this.renderto+' li').eq(this.headerLines -1));
-							}else{
-								newLineEl = $(this.gridLineContent).appendTo($(this.renderto));
-							}
-						}else{
-							newLineEl = $(this.gridLineContent).insertAfter(newLineEl);
-						}
-						newLineEl.attr('_row_index',i);
-						newLineEl.attr('_record_id',rowData._record_id);
-						//编译动态内容
-						for(var j=0;j<this.columns.length;j++){
-							//单元格内容
-							var cellEl = newLineEl.find(this.columns[j].renderto);
-							cellEl.attr('_col_index',j);
-							cellEl.attr('_col_name',this.columns[j].name);
-							if(this.columns[j].name.indexOf('@index') >=0){
-								cellEl.html(data.start + i +1);
-							}else{
-								var _compiledValue = this._compiledCellTemplates[j](rowData);
-								if(_compiledValue!=null && _compiledValue.length > 0){
-									//如果使用千分符
-									if(this.columns[j].showThousand == 'true'){
-										_compiledValue = LUI.Util.thousandth(_compiledValue);
-									}
-									cellEl.html(_compiledValue);
-								}else{
-									cellEl.html('&nbsp;');
-								}
-							}
-							
-							//单元格提示信息
-							if(this.columns[j].showTips == 'true'){
-								cellEl.attr('title',this._compiledTipTemplates[j](rowData));
-							}else{
-								cellEl.attr('title','');
-							}
-						}
-						//
-						this.rows[this.rows.length] = {
-							id:"row_"+rowData._record_id,
-							index:i,
-							el:newLineEl,
-							data:rowData
-						};
-						//
-						var _this = this;
-						newLineEl.click(function(){
-							_this._onRowClick(this);
-						});
-						//
-						this.fireEvent(this.events.rowRendered,{
-							grid:this,
-							rowIndex:i,
-							rowEl:newLineEl,
-							rowData:rowData
-						});
+				//显示表格行
+				var newLineEl = null;
+				for(var i=0;i<this.rows.length;i++){
+					var row = this.rows[i];
+					if(!row.rendered){
+						this.renderRow(row);
 					}
+				}
+				//
+				this.rendered = true;
+				
+				this.fireEvent(this.events.gridRendered,{
+					grid:this
+				});
+				
+				//显示分页工具栏
+				if(this.pagination!=null && !this.pagination.rendered){
+					this.pagination.render();
 				}
 			},
 			//彻底销毁grid
 			destroy:function(){
 				this.removeAllListener();
 				LUI.Grid.instances.remove(this);
+			},
+			reset:function(){
+				//表格重置 
+				for(var j=0;j<this.rows.length;j++){
+					var row = this.rows[j];
+					row.record.reset();
+				}
 			}
 		},config);
 		//创建grid对象
 		var gridInstance = $.extend(LUI.Widget.createNew(),gridConfig);
-		//记录原模板行信息
-		if(gridInstance.renderto!=null){
-			gridInstance._originalContent = $(gridInstance.renderto).html();
-		}
+		
 		//事件监听
 		if(gridInstance.listenerDefs!=null){
 			if(gridInstance.listenerDefs.onGridRendered!=null){
 				var onGridRenderFunc = window[gridInstance.listenerDefs.onGridRendered];
 				if(onGridRenderFunc==null){
-					LUI.Message.warn('查询失败','事件onGridRendered的处理函数('+gridInstance.listenerDefs.onGridRendered+')不存在！');
+					LUI.Message.warn('错误','事件onGridRendered的处理函数('+gridInstance.listenerDefs.onGridRendered+')不存在！');
 				}else{
 					gridInstance.addListener(gridInstance.events.gridRendered,LUI.Observable.createNew(),onGridRenderFunc);
 				}
@@ -298,7 +261,7 @@ LUI.Grid = {
 			if(gridInstance.listenerDefs.onRowRendered!=null){
 				var onRowRenderFunc = window[gridInstance.listenerDefs.onRowRendered];
 				if(onRowRenderFunc==null){
-					LUI.Message.warn('查询失败','事件onRowRendered的处理函数('+gridInstance.listenerDefs.onRowRendered+')不存在！');
+					LUI.Message.warn('错误','事件onRowRendered的处理函数('+gridInstance.listenerDefs.onRowRendered+')不存在！');
 				}else{
 					gridInstance.addListener(gridInstance.events.rowRendered,LUI.Observable.createNew(),onRowRenderFunc);
 				}
@@ -307,33 +270,29 @@ LUI.Grid = {
 			if(gridInstance.listenerDefs.onPagiRendered!=null){
 				var onPagiRenderFunc = window[gridInstance.listenerDefs.onPagiRendered];
 				if(onPagiRenderFunc==null){
-					LUI.Message.warn('查询失败','事件onPagiRendered的处理函数('+gridInstance.listenerDefs.onPagiRendered+')不存在！');
+					LUI.Message.warn('错误','事件onPagiRendered的处理函数('+gridInstance.listenerDefs.onPagiRendered+')不存在！');
 				}else{
 					gridInstance.addListener(gridInstance.events.pagiRendered,LUI.Observable.createNew(),onPagiRenderFunc);
 				}
 			}
 		}
-		//预编译
-		gridInstance._compiledCellTemplates = [];
-		gridInstance._compiledTipTemplates = [];
-		
-		for(var j=0;j<gridInstance.columns.length;j++){
-			gridInstance._compiledCellTemplates[j] = Handlebars.compile(gridInstance.columns[j].renderTemplate);
-			if( gridInstance.columns[j].tipsTemplate == null || 
-				gridInstance.columns[j].tipsTemplate.length ==0 || 
-				gridInstance.columns[j].tipsTemplate == gridInstance.columns[j].renderTemplate){
-				gridInstance._compiledTipTemplates[j] = gridInstance._compiledCellTemplates[j];
-			}else if(gridInstance.columns[j].showTips == 'true'){
-				gridInstance._compiledTipTemplates[j] = Handlebars.compile(gridInstance.columns[j].tipsTemplate);
-			}
+		//创建表格的列对象
+		for(var j=0;j<columnsCfg.length;j++){
+			gridInstance.columns[gridInstance.columns.length] = LUI.Grid.Column.createNew(gridInstance,j,columnsCfg[j]);
 		}
 		if(gridInstance.autoLoad == "true" && gridInstance.datasource!=null){
 			//监听数据源的load事件 重新显示
 			gridInstance.datasource.addListener(gridInstance.datasource.events.load,gridInstance,function(source,target,event){
-				target.load();
+				var dsResult = event.params.result;
+				var dsRecords = event.params.records;
+				target.load(dsResult,dsRecords);
 			});
 		}
 		
+		//分页工具栏
+		if(config.pagiTarget!=null){
+			gridInstance.pagination = LUI.Grid.Pagination.createNew(gridInstance,config.pagiTarget);
+		}
 		//登记此grid
 		if(LUI.Grid.hasInstance(gridInstance.name)){
 			LUI.Message.warn('警告','同名表格控件(LUI.Grid:'+gridInstance.name+')已存在！');
@@ -444,7 +403,14 @@ LUI.SubGrid = {
 				}
 				return rrow;
 			},
-			addRow:function(record){
+			init:function(){
+				// 为每个单元格设置值
+				for(var i=0;i<this.rows.length;i++){
+					var row = this.rows[i];
+					row.init();
+				}
+			},
+			_addRow:function(record){
 				//
 				var row = LUI.Grid.Row.createNew(this,this.rows.length,record);
 				this.rows[this.rows.length] = row;
@@ -456,6 +422,8 @@ LUI.SubGrid = {
 				if(this.rendered){
 					this.renderRow(row);
 				}
+				return row;
+//				row.init();
 			},
 			renderRow:function(row){
 				//
@@ -492,7 +460,7 @@ LUI.SubGrid = {
 					rowData:row.record.getData()
 				});
 			},
-			removeRow:function(delRecord){
+			_removeRow:function(delRecord){
 				//表格中删除此行
 				var delRow = null;
 				for(var i=0;i<this.rows.length;i++){
@@ -609,7 +577,7 @@ LUI.SubGrid = {
 				}
 				
 				if( oldValid!= this.valid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
+					//this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
 				return this.valid;
 			},
@@ -738,7 +706,7 @@ LUI.EditGrid = {
 			getRow:function(rowIndex){
 				return this.rows[parseInt(rowIndex)];
 			},
-			addRow:function(record){
+			_addRow:function(record){
 				//
 				var row = LUI.Grid.Row.createNew(this,this.rows.length,record);
 				this.rows[this.rows.length] = row;
@@ -746,6 +714,7 @@ LUI.EditGrid = {
 				if(this.rendered){
 					this.renderRow(row);
 				}
+				return row;
 			},
 			renderRow:function(row){
 				//
@@ -774,7 +743,7 @@ LUI.EditGrid = {
 					rowData:row.record.getData()
 				});
 			},
-			removeRow:function(delRecord){
+			_removeRow:function(delRecord){
 				//表格中删除此行
 				var delRow = null;
 				for(var i=0;i<this.rows.length;i++){
@@ -823,9 +792,8 @@ LUI.EditGrid = {
 			},
 			/**
 			 * 通知grid  根据绑定的数据 
-			 * 重新显示列表内容 显示grid 分页工具栏
 			 */
-			load:function(){
+			load:function(dataResult,dataRecords){
 				//如果有数据 需要消除影响
 				if(this.loaded){
 					//清除原信息
@@ -842,28 +810,33 @@ LUI.EditGrid = {
 					LUI.Message.info("加载数据失败","请监听数据源的onload事件，为表格加载数据!");
 					return;
 				}
+				//设置分页信息
+				if(this.pagination!=null){
+					this.pagination.setPagiInfo(dataResult);
+				}
 				//生成表格行
-				for(var i=0;i<this.datasource.size();i++){
-					var record = this.datasource.getRecord(i);
+				for(var i=0;i<dataRecords.length;i++){
+					var record = dataRecords[i];
 					//生成表格行对象 同时建立表格行与数据记录之间的监听关系
-					this.addRow(record);
+					this.rows[this.rows.length] = LUI.Grid.Row.createNew(this,this.rows.length,record);
 				}
 				//监听数据源的添加事件 创建新行
 				this.datasource.addListener(this.datasource.events.add,this,function(ds,grid,event){
 					//数据集中 新增了记录
 					var newRecord = event.params.record;
-					this.addRow(newRecord);
+					var row = this._addRow(newRecord);
+					row.init();
 				});
 				//监听此数据源的删除事件
 				this.datasource.addListener(this.datasource.events.remove,this,function(ds,grid,event){
 					var delRecord = event.params.record;
-					this.removeRow(delRecord);
+					this._removeRow(delRecord);
 				});
 
 				
 				this.loaded = true;
 				
-				if(this.autoRender == "true"){
+				if(this.rendered || this.autoRender == "true"){
 					this.render();
 				}
 				
@@ -890,6 +863,11 @@ LUI.EditGrid = {
 				this.fireEvent(this.events.gridRendered,{
 					grid:this
 				});
+				
+				//显示分页工具栏
+				if(this.pagination!=null && !this.pagination.rendered){
+					this.pagination.render();
+				}
 			},
 			//彻底销毁grid
 			destroy:function(){
@@ -1007,15 +985,85 @@ LUI.EditGrid = {
 		if(gridInstance.autoLoad == "true" && gridInstance.datasource!=null){
 			//监听数据源的load事件 重新显示
 			gridInstance.datasource.addListener(gridInstance.datasource.events.load,gridInstance,function(source,target,event){
-				target.load();
+				var dsResult = event.params.result;
+				var dsRecords = event.params.records;
+				target.load(dsResult,dsRecords);
 			});
 		}
-		
+		//分页工具栏
+		if(config.pagiTarget!=null){
+			gridInstance.pagination = LUI.Grid.Pagination.createNew(gridInstance,config.pagiTarget);
+		}		
 		//登记此grid
 		if(LUI.Grid.hasInstance(gridInstance.name)){
 			LUI.Message.warn('警告','同名表格控件(LUI.Grid:'+gridInstance.name+')已存在！');
 		}
 		LUI.Grid.instances.put(gridInstance);
 		return gridInstance;
+	}
+};
+
+
+LUI.Grid.Pagination = {
+	createNew:function(grid,pagiRenderto){
+		//创建grid对象
+		var pagiInstance = $.extend(LUI.Widget.createNew(),{
+			renderto:pagiRenderto,
+			current_page:-1,
+			items_per_page:0,
+			start:0,
+			totalCount:0,
+			num_display_entries:4,
+			num_edge_entries:2,
+			prev_text:'前一页',
+			next_text:'后一页',
+			grid:grid,
+			rendered:false,
+			render:function(){
+				if(this.renderto!=null){
+					var _this = this;
+					$(this.renderto).pagination(this.totalCount, {
+						items_per_page:this.items_per_page,
+						num_display_entries:this.num_display_entries,
+						num_edge_entries:this.num_edge_entries,
+						prev_text:this.prev_text,
+						next_text:this.next_text,
+						current_page:0,
+						callback:function(page_index, jq){
+							_this.current_page = page_index;
+							_this.changePageTo(page_index);
+							return false;
+						}
+					});
+					this.rendered = true;
+					this.grid.fireEvent(this.grid.events.pagiRendered,{
+						grid:this.grid,
+						pagiEl:this.renderto,
+						start:this.start,
+						limit:this.items_per_page,
+						pageIndex:0
+					});
+				}
+			},
+			setPagiInfo:function(pagiInfo){
+				var currentPage = pagiInfo.limit>0?Math.floor(pagiInfo.start/pagiInfo.limit):0;
+				this.start = pagiInfo.start;
+				if(this.current_page != currentPage || this.items_per_page != pagiInfo.limit || this.totalCount != pagiInfo.totalCount){
+					this.current_page = currentPage;
+					this.items_per_page = pagiInfo.limit;
+					this.totalCount = pagiInfo.totalCount;
+					if(this.rendered){
+						this.render();
+					}
+				}
+			},
+			//切换至新页面
+			changePageTo:function(newIndex){
+				if(this.grid.datasource!=null){
+					this.grid.datasource.page(newIndex);
+				}
+			}
+		});
+		return pagiInstance;
 	}
 };

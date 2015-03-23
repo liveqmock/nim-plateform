@@ -40,10 +40,11 @@ LUI.FieldFactoryManager = {
 };
 
 $(document).ready(function(){
-	LUI.FieldFactoryManager.regsterFieldFactory('setField',LUI.Form.DisplayField.SetFileDisplay);//文件集合显示
+	LUI.FieldFactoryManager.regsterFieldFactory('filesetField',LUI.Form.DisplayField.fileSetDisplay);//文件集合显示
+	LUI.FieldFactoryManager.regsterFieldFactory('filesetField',LUI.Form.SetField.FilesetEditor,true);
+	
 	LUI.FieldFactoryManager.regsterFieldFactory('setField',LUI.Form.DisplayField.SetDisplay);//表格集合显示
 	LUI.FieldFactoryManager.regsterFieldFactory('setField',LUI.Form.SetField.CheckboxEditor);
-	LUI.FieldFactoryManager.regsterFieldFactory('setField',LUI.Form.SetField.FileEditor);
 	LUI.FieldFactoryManager.regsterFieldFactory('setField',LUI.Form.SetField.GridEditor,true);
 
 	LUI.FieldFactoryManager.regsterFieldFactory('dateField',LUI.Form.DisplayField.DateDisplay);
@@ -54,11 +55,12 @@ $(document).ready(function(){
 	LUI.FieldFactoryManager.regsterFieldFactory('dateField',LUI.Form.Field.Time);
 	LUI.FieldFactoryManager.regsterFieldFactory('dateField',LUI.Form.Field.Date,true);
 
-	LUI.FieldFactoryManager.regsterFieldFactory('objectField',LUI.Form.DisplayField.ObjectFileDisplay);//文件显示
+	LUI.FieldFactoryManager.regsterFieldFactory('fileField',LUI.Form.DisplayField.FileDisplay);//文件显示
+	LUI.FieldFactoryManager.regsterFieldFactory('fileField',LUI.Form.Field.File,true);//文件
+
 	LUI.FieldFactoryManager.regsterFieldFactory('objectField',LUI.Form.DisplayField.ObjectDisplay);//对象显示
 //	LUI.FieldFactoryManager.regsterFieldFactory('objectField',LUI.Form.Field.ObjectRadioOther);//无线按钮选择+其它
 //	LUI.FieldFactoryManager.regsterFieldFactory('objectField',LUI.Form.Field.ObjectPopup);//弹出式选择
-	LUI.FieldFactoryManager.regsterFieldFactory('objectField',LUI.Form.Field.File);//文件
 	LUI.FieldFactoryManager.regsterFieldFactory('objectField',LUI.Form.Field.ObjectRadioEditor);//无线按钮选择
 	LUI.FieldFactoryManager.regsterFieldFactory('objectField',LUI.Form.Field.ObjectSelectWithPage);//下拉选择 关联页面
 	LUI.FieldFactoryManager.regsterFieldFactory('objectField',LUI.Form.Field.ObjectSelect,true);//下拉选择

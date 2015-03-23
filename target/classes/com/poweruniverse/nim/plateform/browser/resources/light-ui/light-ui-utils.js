@@ -391,39 +391,6 @@
 			document.getElementById('_downloadFrame').src = 'download?type=file&fjid='+fileId;
 			
 		},
-		//对某些数据执行status类型的操作
-		execute:function (xiTongDH,gongNengDH,caoZuoDH,dataArray,callback) {
-			$.ajax({
-				url: "http://"+_urlInfo.host+":"+_urlInfo.port+"/jservice/", 
-				type: "POST", 
-				data:{
-					component:'nim-data',
-					service:'data',
-					method:'execute',
-					arguments:"{" +
-						"xiTongDH:'"+xiTongDH+"'," +
-						"gongNengDH:'"+gongNengDH+"'," +
-						"caoZuoDH:'"+caoZuoDH+"'," +
-						"submitData:"+LUI.Util.stringify(dataArray) +
-					"}"
-				},
-				dataType:"json",
-				success: function(result){
-					if(result.success){
-						if(callback!=null){
-							callback.apply(this,[result]);
-						}else{
-							LUI.Message.info("信息","操作成功！");
-						}
-					}else{
-						LUI.Message.info("信息",result.errorMsg);
-					}
-				},
-	            error:function(){
-					LUI.Message.info("信息","访问服务器失败!");
-	            }
-			});
-		},
 		//上传文件
 		//参数：{
 		//			extentions:[] 		允许的文件扩展名

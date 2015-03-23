@@ -157,7 +157,7 @@ LUI.Form = {
 					}
 					
 					var v = this.record.getFieldValue(field.name);
-					if(v!=null && (field.fieldType =='object' || field.fieldType =='set' ) ){
+					if(v!=null && (field.fieldType =='object' || field.fieldType =='file' || field.fieldType =='set' || field.fieldType =='fileset') ){
 						v = v.getData();
 					}
 					//初始化值的时候
@@ -174,9 +174,10 @@ LUI.Form = {
 						rs.addListener(rs.events.remove,field,function(sRecordSet,tField,event,eventOrigin){
 							tField._onRemove(event.params.record,true,eventOrigin||sRecordSet);
 						});
-						rs.addListener(rs.events.change,field,function(sRecordSet,tField,event,eventOrigin){
-							tField._onChange(event.params.record,true,eventOrigin||sRecordSet);
-						});
+						//集合控件 不监听record中值的变化 由控件内部自己处理
+//						rs.addListener(rs.events.change,field,function(sRecordSet,tField,event,eventOrigin){
+//							tField._onChange(event.params.record,true,eventOrigin||sRecordSet);
+//						});
 					}else{
 						//其他类型 监听change事件即可
 						//1、record监听field的变化 修改自身的值
@@ -189,7 +190,7 @@ LUI.Form = {
 						this.record.addListener(this.record.events.change,field,function(sRecord,tField,event,eventOrigin){
 							if(event.params.fieldName == tField.name){
 								var evtNewVal = sRecord.getFieldValue(tField.name);
-								if(evtNewVal!=null && (tField.fieldType =='object' || tField.fieldType =='set' ) ){
+								if(evtNewVal!=null && (tField.fieldType =='object' || tField.fieldType =='file' || tField.fieldType =='set' || tField.fieldType =='fileset') ){
 									evtNewVal = evtNewVal.getData();
 								}
 								tField.setValue(evtNewVal,true,false,eventOrigin||sRecord);
@@ -214,8 +215,10 @@ LUI.Form = {
 					var field = this.fields[i];
 					//取消监听field的变化
 					field.removeListener(field.events.change,this.record);
-					//取消监听record的变化
-					this.record.removeListener(this.record.events.change,field);
+					//取消字段对record变化的监听
+					if(this.record!=null){
+						this.record.removeListener(this.record.events.change,field);
+					}
 				}
 				this.binded = false;
 				this.record = null;
@@ -371,6 +374,61 @@ LUI.Form = {
 				
 				this.removeAllListener();
 				LUI.Form.instances.remove(this);
+			},
+			save:function(callback){
+				var xiTongDH = null;
+				if(this.xiTongDH!=null){
+					xiTongDH = this.xiTongDH;
+				}
+				var gongNengDH = null;
+				if(this.gongNengDH!=null){
+					gongNengDH = this.gongNengDH;
+				}
+				var caoZuoDH = null;
+				if(this.caoZuoDH!=null){
+					caoZuoDH = this.caoZuoDH;
+				}
+				var _this = this;
+				this.datasource.save(xiTongDH,gongNengDH,caoZuoDH,function(result){
+					if(callback!=null){
+						callback.apply(_this,[result]);
+					}
+				});
+			},
+			submit:function(callback){
+				var invalidField = this.getFirstInvalidField();
+				if(invalidField == null){
+					var xiTongDH = null;
+					if(this.xiTongDH!=null){
+						xiTongDH = this.xiTongDH;
+					}
+					var gongNengDH = null;
+					if(this.gongNengDH!=null){
+						gongNengDH = this.gongNengDH;
+					}
+					var caoZuoDH = null;
+					if(this.caoZuoDH!=null){
+						caoZuoDH = this.caoZuoDH;
+					}
+					
+					this.datasource.submit(xiTongDH,gongNengDH,caoZuoDH,function(result){
+						if(callback!=null){
+							callback.apply(_this,[result]);
+						}
+					});
+				}else{
+					LUI.Message.error('表单验证不通过','字段('+invalidField.label+'):'+invalidField.validInfo,null,{
+						callback:function(){
+							if(invalidField.component =='setGridEditor' && (invalidField.value!=null && invalidField.value.length >0 && invalidField.grid!=null && invalidField.grid.rendered)){
+								invalidField = invalidField.grid.getFirstInvalidField();
+								invalidField.focus();
+								if(callback!=null){
+									callback.apply(_this,[{success:false,errorMsg:'表单验证不通过'}]);
+								}
+							}
+						}
+					});
+				}
 			}
 		},formCfg);
 		//创建form对象
@@ -495,48 +553,10 @@ LUI.Form.Button = {
 			type:btnType,
 			onClickFunc:null,
 			save:function(){
-				var xiTongDH = null;
-				if(this.form.xiTongDH!=null){
-					xiTongDH = this.form.xiTongDH;
-				}
-				var gongNengDH = null;
-				if(this.form.gongNengDH!=null){
-					gongNengDH = this.form.gongNengDH;
-				}
-				var caoZuoDH = null;
-				if(this.form.caoZuoDH!=null){
-					caoZuoDH = this.form.caoZuoDH;
-				}
-				this.form.datasource.save(xiTongDH,gongNengDH,caoZuoDH);
+				this.form.save();
 			},
 			submit:function(){
-				var invalidField = this.form.getFirstInvalidField();
-				if(invalidField == null){
-					var xiTongDH = null;
-					if(this.form.xiTongDH!=null){
-						xiTongDH = this.form.xiTongDH;
-					}
-					var gongNengDH = null;
-					if(this.form.gongNengDH!=null){
-						gongNengDH = this.form.gongNengDH;
-					}
-					var caoZuoDH = null;
-					if(this.form.caoZuoDH!=null){
-						caoZuoDH = this.form.caoZuoDH;
-					}
-					
-					this.form.datasource.submit(xiTongDH,gongNengDH,caoZuoDH);
-				}else{
-					LUI.Message.error('表单验证不通过','字段('+invalidField.label+'):'+invalidField.validInfo,null,{
-						callback:function(){
-							if(invalidField.component =='setGridEditor' && (invalidField.value!=null && invalidField.value.length >0 && invalidField.grid!=null && invalidField.grid.rendered)){
-								invalidField = invalidField.grid.getFirstInvalidField();
-								invalidField.focus();
-							}
-						}
-					});
-					return ;
-				}
+				this.form.submit();
 			},
 			reset:function(){
 				this.form.reset();
@@ -1094,7 +1114,7 @@ LUI.DisplayForm = {
 							console.error('错误:字段('+field.label+':'+field.name+')的类型('+field.fieldType+')不正确，应为('+fieldDef.fieldType+')！');
 						}else{
 							var v = this.record.getFieldValue(field.name);
-							if(v!=null && (field.fieldType =='object' || field.fieldType =='set' ) ){
+							if(v!=null && (field.fieldType =='object' || field.fieldType =='file' || field.fieldType =='set' || field.fieldType =='fileset' ) ){
 								v = v.getData();
 							}
 							//初始化值的时候
@@ -1104,7 +1124,7 @@ LUI.DisplayForm = {
 							this.record.addListener(this.record.events.change,field,function(sRecord,tField,event,eventOrigin){
 								if(event.params.fieldName == tField.name){
 									var evtNewVal = sRecord.getFieldValue(tField.name);
-									if(evtNewVal!=null && (tField.fieldType =='object' || tField.fieldType =='set' ) ){
+									if(evtNewVal!=null && (tField.fieldType =='object' || tField.fieldType =='file' || tField.fieldType =='set' || tField.fieldType =='fileset') ){
 										evtNewVal = evtNewVal.getData();
 									}
 									tField.setValue(evtNewVal,true,false,eventOrigin||sRecord);
@@ -1401,7 +1421,7 @@ LUI.WorkflowForm = {
 					for(var j=0;j<this.fields.length;j++){
 						var f = this.fields[j];
 						var v = rowRecord.getFieldValue(f.name);
-						if(v!=null && (f.fieldType =='object' || f.fieldType =='set' ) ){
+						if(v!=null && (f.fieldType =='object' || f.fieldType =='file' || f.fieldType =='set' || f.fieldType =='fileset') ){
 							v = v.getData();
 						}
 						var displayValue = f.formatRawValue(v);
@@ -1446,7 +1466,7 @@ LUI.WorkflowForm = {
 										var _rawValue =  '<span id="icon" class="nim-file-type-icon-16 "></span>' +
 											'<a onclick="LUI.Util.downloadFile('+lcblData.liuChengJSBLZ+');" href="javascript:void(0);" class="" style="padding-left: 20px;vertical-align: middle;">'+lcblData.liuChengJSBLZXS+'</a>';
 										formFieldEl.html(_rawValue);
-									}else if(formFieldValue!=null && (formField.fieldType =='object' || formField.fieldType =='set' ) ){
+									}else if(formFieldValue!=null && (formField.fieldType =='object' || formField.fieldType =='file' || formField.fieldType =='set' || formField.fieldType =='fileset') ){
 										var formFieldDisplayValue = lcblData.liuChengJSBLZXS;
 										formFieldEl.html(formFieldDisplayValue);
 									}else{

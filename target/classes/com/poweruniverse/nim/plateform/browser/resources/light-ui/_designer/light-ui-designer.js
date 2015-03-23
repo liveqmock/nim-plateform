@@ -1033,7 +1033,7 @@ LUI.PageDesigner = {
 													if(!nodeFound){
 														//添加字段
 														var ziDuanType = checkedZDNodes[i].data.ziDuanLX.ziDuanLXDH;
-														if(ziDuanType == 'object' || ziDuanType == 'set'){
+														if(ziDuanType == 'object' || ziDuanType == 'file' || ziDuanType == 'set' || ziDuanType == 'fileset'){
 															ziDuanType = "complexProperty";
 														}else{
 															ziDuanType = "simpleProperty";
@@ -1529,7 +1529,7 @@ LUI.PageDesigner = {
 											}else{
 												//添加字段
 												ziDuanLXDH = childZdDef.ziDuanLX.ziDuanLXDH;
-												if(ziDuanLXDH == 'object' || ziDuanLXDH == 'set'){
+												if(ziDuanLXDH == 'object' || ziDuanLXDH == 'file' || ziDuanLXDH == 'set' || ziDuanLXDH == 'fileset'){
 													ziDuanComponent = complexZdType;
 												}else{
 													ziDuanComponent = "simpleProperty";
@@ -1754,9 +1754,12 @@ LUI.PageDesigner = {
 							//查找对应的表格和字段实例
 							var gridInst = LUI.Grid.getInstance(gridNode.data.name);
 							if(gridInst!=null){
-								var cellInst = gridInst.rows[0].getCell(node.data.name);
-								if(cellInst!=null){
-									return cellInst.field;
+								var row =gridInst.rows[0];
+								if(row!=null && row.getCell !=null){
+									var cellInst = row.getCell(node.data.name);
+									if(cellInst!=null){
+										return cellInst.field;
+									}
 								}
 							}
 						}
@@ -2127,6 +2130,8 @@ LUI.PageDesigner = {
 						cmpName = 'complexProperty';
 					}else if(parentNode.component!=null && parentNode.component.name == 'formFields' && (cmpName == 'simpleField' || cmpName == 'complexField')){
 						cmpName = nodeData.fieldType+'Display';
+					}else if(cmpName == 'gridColumn'){
+						cmpName = nodeData.fieldType+'DisplayColumn';
 					}
 					nodeData.component = cmpName;
 					//--
@@ -2566,20 +2571,23 @@ function refreshExtendForm(eventSource,eventTarget,event,eventOriginal){
 		//添加或删除下级节点
 		var structureDef = [].concat(typeDef.structure||[]).concat(node.component.structure||[]);
 		//删除下级节点(只删除已经不存在的节点)
-		if(node.children!=null && node.children.length > 0){
-			for(var k= node.children.length-1;k>=0;k--){
-				var cNode = node.children[k];
-				var isExsits = false;
-				for(var i=0;i<structureDef.length;i++){
-					var structureName = structureDef[i]['component-name'];
-					var structure_component_def = LUI.PageDesigner.instance._components[structureName];
-					if(structure_component_def != null && cNode.component.type == structure_component_def.type){
-						isExsits = true;
-						break;
+		if(node.component.type !='page'){
+			//只处理非page节点
+			if(node.children!=null && node.children.length > 0){
+				for(var k= node.children.length-1;k>=0;k--){
+					var cNode = node.children[k];
+					var isExsits = false;
+					for(var i=0;i<structureDef.length;i++){
+						var structureName = structureDef[i]['component-name'];
+						var structure_component_def = LUI.PageDesigner.instance._components[structureName];
+						if(structure_component_def != null && cNode.component.type == structure_component_def.type){
+							isExsits = true;
+							break;
+						}
 					}
-				}
-				if(!isExsits){
-					LUI.PageDesigner.instance._pageCmpTree.removeNode(cNode,true);
+					if(!isExsits){
+						LUI.PageDesigner.instance._pageCmpTree.removeNode(cNode,true);
+					}
 				}
 			}
 		}
@@ -2658,7 +2666,7 @@ function refreshGridExtendForm(eventSource,eventTarget,event,eventOriginal){
 		var oldVal = event.params.oldValue;
 		var isInitial = event.params.isInitial;
 		//如果是显示类型的表格 -> 编辑类型的表格
-		if(!isInitial && (oldVal == 'displayGrid' || oldVal == 'treeDisplayGrid') && (newVal == 'editGrid' || newVal == 'treeEditGrid')){
+		if(!isInitial && (newVal == 'displayGrid' || newVal == 'treeDisplayGrid') && (oldVal == 'editGrid' || oldVal == 'treeEditGrid')){
 			//查找
 			for(var i=0;i<selectedNode.children.length;i++ ){
 				var cNode = selectedNode.children[i];
@@ -2667,32 +2675,13 @@ function refreshGridExtendForm(eventSource,eventTarget,event,eventOriginal){
 					//循环检查表格列 设为对应的显示类型
 					for(var j=0;j<columnsNode.children.length;j++ ){
 						var dNode = columnsNode.children[j];
+						
 						var typeName = dNode.data.fieldType+'Column';
-						var type_def = LUI.PageDesigner.instance._types[typeName];
-						var component_name = type_def.defaultComponent;
+						var component_name = dNode.data.fieldType+'DisplayColumn';;
 						dNode.data.type = typeName;
 						dNode.data.component = component_name;
 						
-						var component_def = LUI.PageDesigner.instance._components[component_name];
-						dNode.component = component_def;
-					}
-					
-					break;
-				}
-			}
-		}else if(!isInitial && (newVal == 'displayGrid' || newVal == 'treeDisplayGrid') && (oldVal == 'editGrid' || oldVal == 'treeEditGrid')){
-			//查找
-			for(var i=0;i<selectedNode.children.length;i++ ){
-				var cNode = selectedNode.children[i];
-				if(cNode.component.type == 'columns'){
-					var columnsNode= cNode;
-					//循环检查表格列 设为对应的显示类型
-					for(var j=0;j<columnsNode.children.length;j++ ){
-						var dNode = columnsNode.children[j];
-						dNode.data.type = 'column';
-						dNode.data.component = 'gridColumn';
-						
-						dNode.component = LUI.PageDesigner.instance._components['gridColumn'];
+						dNode.component = LUI.PageDesigner.instance._components[component_name];
 					}
 					break;
 				}
@@ -2751,7 +2740,7 @@ function setGongNengOptionsForSelect(eventSource,eventTarget,event,eventOriginal
 	var xiTongDH = xiTongDHField.getValue();
 	
 	if(xiTongDH == null){
-		gongNengDHField.disable();
+		gongNengDHField.loadOptions([]);
 	}else{
 		var options = [];
 		for(var i=0;i<LUI.PageDesigner.instance._gongNengs.length;i++ ){
@@ -2760,9 +2749,7 @@ function setGongNengOptionsForSelect(eventSource,eventTarget,event,eventOriginal
 				options[options.length] = {text:gongNengData.gongNengMC,value:gongNengData.gongNengDH};
 			}
 		}
-		gongNengDHField.setOptions(options);
-		
-		gongNengDHField.enable();
+		gongNengDHField.loadOptions(options);
 	}
 }
 
@@ -2777,7 +2764,7 @@ function setShiTiLeiOptionsForSelect(eventSource,eventTarget,event,eventOriginal
 	var xiTongDH = xiTongDHField.getValue();
 	
 	if(xiTongDH == null){
-		this.disable();
+		shiTiLeiDHField.loadOptions([]);
 	}else{
 		var options = [];
 		
@@ -2789,8 +2776,7 @@ function setShiTiLeiOptionsForSelect(eventSource,eventTarget,event,eventOriginal
 				options[options.length] = {text:shiTiLeiData.shiTiLeiMC,value:shiTiLeiData.shiTiLeiDH};
 			}
 		}
-		shiTiLeiDHField.setOptions(options);
-		shiTiLeiDHField.enable();
+		shiTiLeiDHField.loadOptions(options);
 	}
 }
 
@@ -2805,7 +2791,7 @@ function setCaoZuoOptionsBySelect(eventSource,eventTarget,event,eventOriginal){
 	var gongNengDHField = LUI.PageDesigner.instance.getFormField(selectedNode,'gongNengDH');
 	var gongNengDH = gongNengDHField.getValue();
 	if(gongNengDH == null){
-		caoZuoDHField.disable();
+		caoZuoDHField.loadOptions([]);
 	}else{
 		var options = [];
 		for(var i=0;i<LUI.PageDesigner.instance._gongNengs.length;i++ ){
@@ -2813,13 +2799,12 @@ function setCaoZuoOptionsBySelect(eventSource,eventTarget,event,eventOriginal){
 			if(gongNengData.gongNengDH == gongNengDH){
 				for(var j=0;j<gongNengData.czs.length;j++ ){
 					var caoZuoData = gongNengData.czs[j];
-					options[options.length] = {text:caoZuoData.caoZuoMC,value:caoZuoData.caoZuoDH};
+					options[options.length] = {text:caoZuoData.caoZuoMC,value:caoZuoData.caoZuoDH,duiXiangXG:caoZuoData.duiXiangXG};
 				}
 				break;
 			}
 		}
-		caoZuoDHField.setOptions(options);
-		caoZuoDHField.enable();
+		caoZuoDHField.loadOptions(options);
 	}
 }
 
@@ -3674,6 +3659,55 @@ function getFieldsTypeOfForm(){
 	return options;
 }
 
+/**
+ * 取同类型的组件 作为选择项 提供给文本选择框
+ * @param typeName
+ * @returns {Array}
+ */
+function getColumnsTypeOfGrid(){
+	//如果是显示表单 只显示显示字段控件
+	//当前选中节点
+	var selectedNodes = LUI.PageDesigner.instance._pageCmpTree.getSelectedNodes();
+	var selectedNode = selectedNodes[0];
+	
+	var isEditable = false;
+	//表格 or 子表格
+	if(selectedNode.getParentNode().getParentNode().data.component == 'subGrid'){
+		var setFieldNode = selectedNode.getParentNode().getParentNode().getParentNode();
+		var setFieldComponentName = setFieldNode.data.component;
+		if(setFieldComponentName == 'setGridEditor'){
+			isEditable = true;
+		}else if(setFieldComponentName == 'setDisplay'){
+			isEditable = false;
+		}
+	}else{
+		var gridNode = selectedNode.getParentNode().getParentNode();
+		var gridComponentName = gridNode.data.component;
+		if(gridComponentName == 'editGrid'){
+			isEditable = true;
+		}else if(gridComponentName == 'displayGrid'){
+			isEditable = false;
+		}
+	}
+	//
+	var typeName = selectedNode.component.type;
+	var options = [];
+	for(  var cmpKey in  LUI.PageDesigner.instance._components){
+		var comp = LUI.PageDesigner.instance._components[cmpKey];
+		if(comp.type == typeName && comp.isAppendable != 'false'){
+			//如果是可编辑表格 只取显示控件
+			if(!isEditable){
+				if(comp.name.indexOf("Display") >=0){
+					options[options.length] = {text:comp.label,value:comp.name};
+				}
+			}else{
+				options[options.length] = {text:comp.label,value:comp.name};
+			}
+		}
+	}
+	return options;
+}
+
 
 /**
  * 取数据源节点信息 作为选择项 提供给数据源字段的文本选择框
@@ -4273,6 +4307,30 @@ function setShowHideRenderTo(eventSource,eventTarget,event,eventOriginal){
 	}
 }
 
+//选择了操作以后 根据是否对象相关 确定是否显示主键字段
+function showHideIDField(caoZuoField,eventTarget,event,eventOriginal){
+	//当前选中的节点
+	var selectedNodes = LUI.PageDesigner.instance._pageCmpTree.getSelectedNodes();
+	var selectedNode = selectedNodes[0];
+	
+	var duiXiangXG = true;
+	
+	var idField = LUI.PageDesigner.instance.getFormField(selectedNode,'id');
+	if(idField!=null){
+		var option = caoZuoField.getSelection();
+		if(option!=null && !option.data.duiXiangXG){
+			duiXiangXG = false;
+		}
+		
+		if(duiXiangXG){
+			idField.enable();
+			idField.show();
+		}else{
+			idField.disable();
+			idField.hide();
+		}
+	}
+}
 
 /**
  * 表格中的列 设置是否有编辑控件

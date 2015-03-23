@@ -342,8 +342,8 @@
 			<property name="xiTongDH" label="系统" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getXiTongOptions" info="" enabled="true" onChange="setGongNengOptionsForSelect"/>
 			<property name="gongNengDH" label="功能" type="string" allowBlank="false"  widget="stringTriggerSelectEditor" allowSearch="true" info="" enabled="true" renderTemplate="{{text}} [{{value}}]" 
 					  onChange="setCaoZuoOptionsBySelect" onTriggerClick="openGongNengPage"/>
-			<property name="caoZuoDH" label="操作" type="string" allowBlank="false"  widget="stringSelectEditor" allowSearch="true" info="" enabled="true" renderTemplate="{{text}} [{{value}}]"/>
-			<property name="id" label="主键值" type="string" allowBlank="true"  info="主键值"/>
+			<property name="caoZuoDH" label="操作" type="string" allowBlank="false"  widget="stringSelectEditor" allowSearch="true" info="" enabled="true" renderTemplate="{{text}} [{{value}}]" onChange="showHideIDField"/>
+			<property name="id" label="主键值" type="string" allowBlank="false"  info="主键值"/>
 		</properties>
 		<structure>
 			<item component-name="properties" />

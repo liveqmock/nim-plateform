@@ -24,9 +24,6 @@ LUI.Form.SetField = {
 			_onRemove:function (record,silence,originSource){
 				return;
 			},
-			_onChange:function (record,silence,originSource){
-				return;
-			},
 			/**
 			 * 将显示值转换为数据值
 			 */
@@ -323,9 +320,9 @@ LUI.Form.SetField.CheckboxEditor = {
 
 //复选框类型的集合字段编辑控件
 //
-LUI.Form.SetField.FileEditor = {
+LUI.Form.SetField.FilesetEditor = {
 	uniqueId:0,
-	type:'setFileEditor',
+	type:'filesetEditor',
 	createNew:function(fieldMeta,lui_form){
 		
 		var field = $.extend(LUI.Form.SetField.createNew(fieldMeta,lui_form),{
@@ -515,31 +512,23 @@ LUI.Form.SetField.GridEditor = {
 				return this.grid;
 			},
 			render:function(){
-				if(this.renderType != 'none'){
-					//生成toolsbar
-					this.toolsbar.render();
-					//显示表格
-					this.grid.render();
-					//将自定义onchange方法 绑定到当前对象的change事件
-					if(this.onChangeFunction!=null){
-						this.addListener(this.events.change,this._observer,this.onChangeFunction);
-					}
-					this.rendered = true;
+				//生成toolsbar
+				this.toolsbar.render();
+				//显示表格
+				this.grid.render();
+				//将自定义onchange方法 绑定到当前对象的change事件
+				if(this.onChangeFunction!=null){
+					this.addListener(this.events.change,this._observer,this.onChangeFunction);
 				}
+				this.rendered = true;
 //				this.validate();
 			},
 			_onAdd:function (record,silence,originSource){
-				this.grid.addRow(record);
+				var row = this.grid._addRow(record);
+				row.init();
 			},
 			_onRemove:function (record,silence,originSource){
-				this.grid.removeRow(record);
-			},
-			_onChange:function (record,silence,originSource){
-				if(originSource.id != this.grid.id){
-					//通知有变化的行重新显示
-					var row = this.grid.getRowByRecord(record);
-					this.grid.renderRow(row);
-				}
+				this.grid._removeRow(record);
 			},
 			setValue:function (newVal,silence,isInitial,originSource){
 //				this.value = newVal;
@@ -548,23 +537,25 @@ LUI.Form.SetField.GridEditor = {
 					//初始化的时候  从recordset中 直接取得
 					var rs = this.form.record.getFieldValue(this.name);
 					for(var i=0;i<rs.size();i++){
-						this.grid.addRow(rs.getRecordByIndex(i));
+						this.grid._addRow(rs.getRecordByIndex(i));
 					}
 					
+					//表格中 所有行列都加入完成后 调用init方法 为每个单元格设置值(发出change事件)
+					this.grid.init();
 					//全部表格行添加完成后 为每个单元格的字段 发出change事件
-					for(var i=0;i<this.grid.rows.length;i++){
-						var row = this.grid.rows[i];
-						for(var k=0;k<row.cells.length;k++){
-							var cell = row.cells[k];
-							if(cell.field!=null){
-								cell.field.fireEvent(cell.field.events.change,{
-									oldValue:cell.field.getValue(),
-									newValue:cell.field.getValue(),
-									isInitial: true
-								},this.grid); 
-							}
-						}
-					}
+//					for(var i=0;i<this.grid.rows.length;i++){
+//						var row = this.grid.rows[i];
+//						for(var k=0;k<row.cells.length;k++){
+//							var cell = row.cells[k];
+//							if(cell.field!=null){
+//								cell.field.fireEvent(cell.field.events.change,{
+//									oldValue:cell.field.getValue(),
+//									newValue:cell.field.getValue(),
+//									isInitial: true
+//								},this.grid); 
+//							}
+//						}
+//					}
 				}else{
 					//为field setValue 通知resultset改变 通过对resultset的监听间接改变字段的显示
 					this.form.record.setFieldValue(this.name,newVal,false,false,null);
@@ -585,7 +576,8 @@ LUI.Form.SetField.GridEditor = {
 					this.valid = false;
 					this.validInfo = '此字段不允许为空!';
 				}else{
-					this.valid = this.grid.validate();//表格的校验结果  会通过validchange事件 改变当前字段的校验信息
+					this.valid = this.grid.validate();//
+					this.validInfo = this.grid.validInfo;//
 				}
 				return this.valid;
 			},

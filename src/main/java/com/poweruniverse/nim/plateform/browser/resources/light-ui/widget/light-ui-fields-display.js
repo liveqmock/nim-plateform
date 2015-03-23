@@ -4,6 +4,8 @@
  * 显示用的字段定义
  */
 LUI.Form.DisplayField = {
+	uniqueId:0,
+	type:'displayField',
 	createNew:function(fieldMeta,lui_form){
 		var fieldConfig = $.extend({},fieldMeta);
 		
@@ -152,6 +154,9 @@ LUI.Form.DisplayField = {
 					}
 				}
 			},
+			isValid:function (){
+				return true;
+			},
 			//撤销对页面元素的创建
 			deRender:function(forceDeRender){
 				if(this.renderType != 'none' ){
@@ -239,6 +244,8 @@ LUI.Form.DisplayField.StringDisplay = {
 	type:'stringDisplay',
 	createNew:function(fieldMeta,lui_form){
 		return $.extend(LUI.Form.DisplayField.createNew(fieldMeta,lui_form),{
+			id: '_form_field_'+LUI.Form.DisplayField.StringDisplay.type+'_'+(++LUI.Form.DisplayField.uniqueId),
+			type:LUI.Form.DisplayField.StringDisplay.type
 		});
 	}
 };
@@ -248,6 +255,8 @@ LUI.Form.DisplayField.TextDisplay = {
 	type:'textDisplay',
 	createNew:function(fieldMeta,lui_form){
 		return $.extend(LUI.Form.DisplayField.createNew(fieldMeta,lui_form),{
+			id: '_form_field_'+LUI.Form.DisplayField.TextDisplay.type+'_'+(++LUI.Form.DisplayField.uniqueId),
+			type:LUI.Form.DisplayField.TextDisplay.type
 		});
 	}
 };
@@ -257,6 +266,8 @@ LUI.Form.DisplayField.BooleanDisplay = {
 	type:'booleanDisplay',
 	createNew:function(fieldMeta,lui_form){
 		return $.extend(LUI.Form.DisplayField.createNew(fieldMeta,lui_form),{
+			id: '_form_field_'+LUI.Form.DisplayField.BooleanDisplay.type+'_'+(++LUI.Form.DisplayField.uniqueId),
+			type:LUI.Form.DisplayField.BooleanDisplay.type,
 			formatRawValue:function(dataVal){
 				var _rawValue = '&nbsp;';
 				if(dataVal!=null && dataVal!='null'){
@@ -272,6 +283,8 @@ LUI.Form.DisplayField.BooleanRadioDisplay = {
 	type:'booleanRadioDisplay',
 	createNew:function(fieldMeta,lui_form){
 		return $.extend(LUI.Form.DisplayField.createNew(fieldMeta,lui_form),{
+			id: '_form_field_'+LUI.Form.DisplayField.BooleanRadioDisplay.type+'_'+(++LUI.Form.DisplayField.uniqueId),
+			type:LUI.Form.DisplayField.BooleanRadioDisplay.type,
 			formatRawValue:function(dataVal){
 				var _rawValue = '&nbsp;';
 				if(dataVal!=null && dataVal!='null'){
@@ -295,6 +308,8 @@ LUI.Form.DisplayField.BooleanCheckDisplay = {
 	type:'booleanCheckDisplay',
 	createNew:function(fieldMeta,lui_form){
 		return $.extend(LUI.Form.DisplayField.createNew(fieldMeta,lui_form),{
+			id: '_form_field_'+LUI.Form.DisplayField.BooleanCheckDisplay.type+'_'+(++LUI.Form.DisplayField.uniqueId),
+			type:LUI.Form.DisplayField.BooleanCheckDisplay.type,
 			formatRawValue:function(dataVal){
 				var _rawValue = '&nbsp;';
 				if(dataVal!=null && dataVal!='null'){
@@ -311,6 +326,8 @@ LUI.Form.DisplayField.IntDisplay = {
 	type:'intDisplay',
 	createNew:function(fieldMeta,lui_form){
 		return $.extend(LUI.Form.DisplayField.createNew(fieldMeta,lui_form),{
+			id: '_form_field_'+LUI.Form.DisplayField.IntDisplay.type+'_'+(++LUI.Form.DisplayField.uniqueId),
+			type:LUI.Form.DisplayField.IntDisplay.type,
 			formatRawValue:function(dataVal){
 				var _rawValue = '&nbsp;';
 				if(dataVal!=null){
@@ -348,6 +365,8 @@ LUI.Form.DisplayField.DoubleDisplay = {
 	type:'doubleDisplay',
 	createNew:function(fieldMeta,lui_form){
 		return $.extend(LUI.Form.DisplayField.createNew(fieldMeta,lui_form),{
+			id: '_form_field_'+LUI.Form.DisplayField.DoubleDisplay.type+'_'+(++LUI.Form.DisplayField.uniqueId),
+			type:LUI.Form.DisplayField.DoubleDisplay.type,
 			formatRawValue:function(dataVal){
 				var _rawValue = '&nbsp;';
 				if(dataVal!=null){
@@ -395,6 +414,8 @@ LUI.Form.DisplayField.DateDisplay = {
 	type:'dateDisplay',
 	createNew:function(fieldMeta,lui_form){
 		return $.extend(LUI.Form.DisplayField.createNew(fieldMeta,lui_form),{
+			id: '_form_field_'+LUI.Form.DisplayField.DateDisplay.type+'_'+(++LUI.Form.DisplayField.uniqueId),
+			type:LUI.Form.DisplayField.DateDisplay.type,
 			formatRawValue:function(dataVal){
 				var _rawValue = '';
 				if(dataVal!=null){
@@ -416,6 +437,8 @@ LUI.Form.DisplayField.DateTimeDisplay = {
 	type:'dateTimeDisplay',
 	createNew:function(fieldMeta,lui_form){
 		return $.extend(LUI.Form.DisplayField.createNew(fieldMeta,lui_form),{
+			id: '_form_field_'+LUI.Form.DisplayField.DateTimeDisplay.type+'_'+(++LUI.Form.DisplayField.uniqueId),
+			type:LUI.Form.DisplayField.DateTimeDisplay.type,
 			formatRawValue:function(dataVal){
 				var _rawValue = '';
 				if(dataVal!=null){
@@ -437,6 +460,8 @@ LUI.Form.DisplayField.TimeDisplay = {
 	type:'timeDisplay',
 	createNew:function(fieldMeta,lui_form){
 		return $.extend(LUI.Form.DisplayField.createNew(fieldMeta,lui_form),{
+			id: '_form_field_'+LUI.Form.DisplayField.TimeDisplay.type+'_'+(++LUI.Form.DisplayField.uniqueId),
+			type:LUI.Form.DisplayField.TimeDisplay.type,
 			formatRawValue:function(dataVal){
 				var _rawValue = '';
 				if(dataVal!=null){
@@ -460,14 +485,18 @@ LUI.Form.DisplayField.ObjectDisplay = {
 	type:'objectDisplay',
 	createNew:function(fieldMeta,lui_form){
 		return $.extend(LUI.Form.DisplayField.createNew(fieldMeta,lui_form),{
+			id: '_form_field_'+LUI.Form.DisplayField.ObjectDisplay.type+'_'+(++LUI.Form.DisplayField.uniqueId),
+			type:LUI.Form.DisplayField.ObjectDisplay.type
 		});
 	}
 };
 
-LUI.Form.DisplayField.ObjectFileDisplay = {
-	type:'objectFileDisplay',
+LUI.Form.DisplayField.FileDisplay = {
+	type:'fileDisplay',
 	createNew:function(fieldMeta,lui_form){
 		return $.extend(LUI.Form.DisplayField.createNew(fieldMeta,lui_form),{
+			id: '_form_field_'+LUI.Form.DisplayField.FileDisplay.type+'_'+(++LUI.Form.DisplayField.uniqueId),
+			type:LUI.Form.DisplayField.FileDisplay.type,
 			formatRawValue:function(dataVal){
 				var _rawValue = '&nbsp;';
 				if(dataVal!=null){
@@ -484,15 +513,55 @@ LUI.Form.DisplayField.ObjectFileDisplay = {
 LUI.Form.DisplayField.SetDisplay = {
 	type:'setDisplay',
 	createNew:function(fieldMeta,lui_form){
-		return $.extend(LUI.Form.DisplayField.createNew(fieldMeta,lui_form),{
+		var field = $.extend(LUI.Form.DisplayField.createNew(fieldMeta,lui_form),{
+			id: '_form_field_'+LUI.Form.DisplayField.SetDisplay.type+'_'+(++LUI.Form.DisplayField.uniqueId),
+			type:LUI.Form.DisplayField.SetDisplay.type,
+			getGrid:function(){
+				return this.grid;
+			},
+			render:function(){
+				//显示表格
+				this.grid.render();
+				this.rendered = true;
+			},
+			_onAdd:function (record,silence,originSource){
+				var row = this.grid._addRow(record);
+				row.init();
+			},
+			_onRemove:function (record,silence,originSource){
+				this.grid._onRemove(record);
+			},
+//			_onChange:function (record,silence,originSource){
+//				//表格行内的单元格会监听对应的record变化 更新自身的显示 不需要在这里进行处理
+//			},
+			setValue:function (newVal,silence,isInitial,originSource){
+				var rs = this.form.record.getFieldValue(this.name);
+				for(var i=0;i<rs.size();i++){
+					this.grid._addRow(rs.getRecordByIndex(i));
+				}
+				//表格中 所有行列都加入完成后 调用init方法 为每个单元格设置值(发出change事件)
+				this.grid.init();
+			},
+			setSizeDesignable:function(node,isEnable){
+				return;
+			}
 		});
+		//关联的表格
+		var subGrid = LUI.Grid.getInstance(field.gridName);
+		if(subGrid!=null){
+			subGrid.parentField = field;
+			field.grid = subGrid;
+		}
+		return field;
 	}
 };
 
-LUI.Form.DisplayField.SetFileDisplay = {
-	type:'setFileDisplay',
+LUI.Form.DisplayField.fileSetDisplay = {
+	type:'filesetDisplay',
 	createNew:function(fieldMeta,lui_form){
 		return $.extend(LUI.Form.DisplayField.createNew(fieldMeta,lui_form),{
+			id: '_form_field_'+LUI.Form.DisplayField.fileSetDisplay.type+'_'+(++LUI.Form.DisplayField.uniqueId),
+			type:LUI.Form.DisplayField.fileSetDisplay.type,
 			formatRawValue:function(dataVal){
 				var _rawValue = '&nbsp;';
 				if(dataVal!=null){
@@ -507,6 +576,12 @@ LUI.Form.DisplayField.SetFileDisplay = {
 					}
 				}
 				return _rawValue;
+			},
+			_onAdd:function (record,silence,originSource){
+				alert('显示新增的附件！');
+			},
+			_onRemove:function (record,silence,originSource){
+				alert('不显示删除的附件！');
 			}
 		});
 	}

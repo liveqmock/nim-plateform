@@ -14,6 +14,10 @@ LUI.Grid.Column = {
 			LUI.Message.info("错误","必须为表列提供fieldType参数!");
 			return null;
 		}
+		//兼容老代码 gridColumn不再使用
+		if(colCfg.component == 'gridColumn'){
+			colCfg.component = colCfg.fieldType+'DisplayColumn'
+		}
 
 		//创建column对象
 		var columnInstance = $.extend(LUI.Widget.createNew(),{
@@ -43,37 +47,6 @@ LUI.Grid.Column = {
 					this.cellFactory = LUI.Grid.CellFactoryManager.getCellFactory(type,widget);
 				}
 				var cell = this.cellFactory.createNew(this.grid,row,this);
-				//为cell设置初始值
-				if(this.name != "@index"){
-					var v = row.record.getFieldValue(this.name);
-					if(v!=null && (this.fieldType =='object' || this.fieldType =='set' ) ){
-						v = v.getData();
-					}
-					cell.setValue(v,true,true,row.record);
-			
-					
-					//record监听cell的变化 修改自身的值
-					if(cell.field!=null){
-						var _grid = this.grid;
-						cell.field.addListener(cell.field.events.change,row.record,function(sField,tRecord,event,eventOrigin){
-							tRecord.setFieldValue(sField.name,event.params.newValue,false,false,_grid);//表格中 单元格的变化 统一以grid的名义 发出事件
-						});
-					}
-					
-					
-					//cell监听record的变化 修改cell的值
-					row.record.addListener(row.record.events.change,cell,function(sRecord,tCell,event,eventOrigin){
-						if(event.params.fieldName == tCell.column.name){
-							var evtNewVal = sRecord.getFieldValue(tCell.column.name);
-							if(evtNewVal!=null && (tCell.column.fieldType =='object' || tCell.column.fieldType =='set' ) ){
-								evtNewVal = evtNewVal.getData();
-							}
-							tCell.setValue(evtNewVal,true,false,eventOrigin||sRecord);
-						}
-					});
-				}else{
-					cell.setValue(v,true,true,row.record);
-				}
 				
 				this.cells[this.cells.length] = cell;
 				return cell;
@@ -202,32 +175,35 @@ LUI.Grid.Cell = {
 				change:'_cell_change',
 				validChange:'_cell_valid_change'
 			},
+			//cell的 setValue只是用于显示 
 			setValue:function(newVal,silence,isInitial,originSource){
-				//显示列setValue只是显示
 				if(this.rendered){
 					this.render();
 				}
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return null;
 			},
 			reRender:function(){
-				//没有field的时候 才生成显示内容
+				//没有field的时候 重新显示单元格
 				if(this.field == null){
 					this.render();
 				}
 			},
 			render:function(){
+				//没有field的时候（显示单元格） 才生成显示内容
 				if(this.field == null){
-					//没有field的时候 才生成显示内容
 					var rowData = this.row.record.getData();
 					this.el = this.row.el.find(this.column.renderto);
 					
 					//显示单元格内容
 					if(this.column.name.indexOf('@index') >=0){
 						//显示行号
-						this.el.html(this.row.index +1);
+						var rowIndex = this.row.index +1;
+						if(this.row.grid.pagination!=null && this.row.grid.pagination.start > 0){
+							rowIndex = rowIndex + this.row.grid.pagination.start;
+						}
+						this.el.html(rowIndex);
 					}else{
 						var _compiledValue = this.column._compiledTemplate(rowData);
 						if(_compiledValue!=null && _compiledValue.length > 0){
@@ -251,7 +227,7 @@ LUI.Grid.Cell = {
 				this.validInfo = "第 "+(row.index +1)+" 行  "+(this.column.label)+" "+this.field.validInfo;
 				
 				if( oldValid!= this.valid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
+					//this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
 				return this.valid;
 			},
@@ -286,7 +262,6 @@ LUI.Grid.Cell.StringCell = {
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
@@ -312,11 +287,9 @@ LUI.Grid.Cell.PasswordCell = {
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -338,11 +311,9 @@ LUI.Grid.Cell.StringSelectCell = {
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -364,11 +335,9 @@ LUI.Grid.Cell.MobileCell = {
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -390,11 +359,9 @@ LUI.Grid.Cell.PostCodeCell = {
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -416,11 +383,9 @@ LUI.Grid.Cell.EmailCell = {
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -442,11 +407,9 @@ LUI.Grid.Cell.ChooseElCell = {
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -468,11 +431,9 @@ LUI.Grid.Cell.StringTextCell = {
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -505,11 +466,9 @@ LUI.Grid.Cell.TextCell = {
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -579,11 +538,9 @@ LUI.Grid.Cell.BooleanCheckCell = {
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -605,11 +562,9 @@ LUI.Grid.Cell.BooleanSelectCell = {
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -631,11 +586,9 @@ LUI.Grid.Cell.BooleanRadioCell = {
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -662,8 +615,12 @@ LUI.Grid.Cell.IntDisplayCell = {
 				this.el = this.row.el.find(this.column.renderto);
 				//显示单元格内容
 				if(this.column.name.indexOf('@index') >=0){
-					//显示序号
-					this.el.html(this.row.index +1);
+					//显示行号
+					var rowIndex = this.row.index +1;
+					if(this.row.grid.pagination!=null && this.row.grid.pagination.start > 0){
+						rowIndex = rowIndex + this.row.grid.pagination.start;
+					}
+					this.el.html(rowIndex);
 				}else{
 					//显示单元格内容
 					var rowData = this.row.record.getData();
@@ -698,11 +655,9 @@ LUI.Grid.Cell.IntCell = {
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -767,11 +722,9 @@ LUI.Grid.Cell.DoubleCell = {
 	createNew:function(grid,row,column){
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -803,11 +756,9 @@ LUI.Grid.Cell.DateCell = {
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -829,11 +780,9 @@ LUI.Grid.Cell.TimeCell = {
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -855,11 +804,9 @@ LUI.Grid.Cell.MonthCell = {
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -892,11 +839,9 @@ LUI.Grid.Cell.ObjectSelectCell = {
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -906,6 +851,10 @@ LUI.Grid.Cell.ObjectSelectCell = {
 			}
 		});
 		//创建编辑控件
+		var renderTemplate = column.initConfig.renderTemplate;
+		renderTemplate = renderTemplate.replace(new RegExp(""+column.initConfig.name+"\\.","gm"),'');
+		column.initConfig.renderTemplate = renderTemplate;
+		
 		var f = LUI.Form.Field.ObjectSelect.createNew(column.initConfig,null,false);
 		cell.setField(LUI.Grid.CellEditor.createNew(grid,cell,f));
 		return cell;
@@ -919,11 +868,9 @@ LUI.Grid.Cell.ObjectRadioCell = {
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -933,24 +880,26 @@ LUI.Grid.Cell.ObjectRadioCell = {
 			}
 		});
 		//创建编辑控件
+		var renderTemplate = column.initConfig.renderTemplate;
+		renderTemplate = renderTemplate.replace(new RegExp(""+column.initConfig.name+"\\.","gm"),''); 
+		column.initConfig.renderTemplate = renderTemplate;
+		
 		var f = LUI.Form.Field.ObjectRadioEditor.createNew(column.initConfig,null,false);
 		cell.setField(LUI.Grid.CellEditor.createNew(grid,cell,f));
 		return cell;
 	}
 };
 
-//对象 附件上传列
+//附件 上传列
 LUI.Grid.Cell.FileUploaderCell = {
 	type:'fileUploaderColumn',
 	createNew:function(grid,row,column){
 		//创建单元格
 		var cell = $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
 			setValue:function(newVal,silence,isInitial,originSource){
-				//通知编辑列setValue
 				this.field.setValue(newVal,silence,isInitial,originSource);
 			},
 			getValue:function(){
-				//显示列没有getValue
 				return this.field.getValue();
 			},
 			render:function(){
@@ -960,11 +909,25 @@ LUI.Grid.Cell.FileUploaderCell = {
 			}
 		});
 		//创建编辑控件
+		var renderTemplate = column.initConfig.renderTemplate;
+		renderTemplate = renderTemplate.replace(new RegExp(""+column.initConfig.name+"\\.","gm"),''); 
+		column.initConfig.renderTemplate = renderTemplate;
+		
 		var f = LUI.Form.Field.File.createNew(column.initConfig,null,false);
 		cell.setField(LUI.Grid.CellEditor.createNew(grid,cell,f));
 		return cell;
 	}
 };
+
+//附件 显示列
+LUI.Grid.Cell.FileDisplayCell = {
+	type:'fileDisplayColumn',
+	createNew:function(grid,row,column){
+		return $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
+		});
+	}
+};
+
 //8、集合类型//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //集合 显示列
 LUI.Grid.Cell.SetDisplayCell = {
@@ -975,6 +938,24 @@ LUI.Grid.Cell.SetDisplayCell = {
 	}
 };
 
+//9、附件集合类型//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//附件集合 显示列
+LUI.Grid.Cell.FilesetDisplayCell = {
+	type:'filesetDisplayColumn',
+	createNew:function(grid,row,column){
+		return $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
+		});
+	}
+};
+
+//附件集合 编辑列
+LUI.Grid.Cell.FilesetEditorCell = {
+	type:'filesetEditorColumn',
+	createNew:function(grid,row,column){
+		return $.extend(LUI.Grid.Cell.createNew(grid,row,column),{
+		});
+	}
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //注册//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1053,15 +1034,20 @@ LUI.Grid.CellFactoryManager = {
 	LUI.Grid.CellFactoryManager.regsterCellFactory('dateColumn',LUI.Grid.Cell.DateCell);
 	LUI.Grid.CellFactoryManager.regsterCellFactory('dateColumn',LUI.Grid.Cell.DateDisplayCell,true);
 
+	LUI.Grid.CellFactoryManager.regsterCellFactory('fileColumn',LUI.Grid.Cell.FileUploaderCell);//文件上传
+	LUI.Grid.CellFactoryManager.regsterCellFactory('fileColumn',LUI.Grid.Cell.FileDisplayCell,true);//文件查看
+
 //	LUI.Grid.CellFactoryManager.regsterCellFactory('objectColumn',LUI.Grid.Cell.ObjectRadioOther);//无线按钮选择+其它
 //	LUI.Grid.CellFactoryManager.regsterCellFactory('objectColumn',LUI.Grid.Cell.ObjectPopup);//弹出式选择
-	LUI.Grid.CellFactoryManager.regsterCellFactory('objectColumn',LUI.Grid.Cell.FileUploaderCell);//文件
 	LUI.Grid.CellFactoryManager.regsterCellFactory('objectColumn',LUI.Grid.Cell.ObjectRadioCell);//无线按钮选择
 	LUI.Grid.CellFactoryManager.regsterCellFactory('objectColumn',LUI.Grid.Cell.ObjectSelectCell);//下拉选择
 	LUI.Grid.CellFactoryManager.regsterCellFactory('objectColumn',LUI.Grid.Cell.ObjectDisplayCell,true);//下拉选择
 
+
+	LUI.Grid.CellFactoryManager.regsterCellFactory('setColumn',LUI.Grid.Cell.FilesetEditor);
+	LUI.Grid.CellFactoryManager.regsterCellFactory('setColumn',LUI.Grid.Cell.FileSetDisplay,true);
+
 	LUI.Grid.CellFactoryManager.regsterCellFactory('setColumn',LUI.Grid.Cell.SetCheckboxEditor);
-	LUI.Grid.CellFactoryManager.regsterCellFactory('setColumn',LUI.Grid.Cell.SetFileEditor);
 	LUI.Grid.CellFactoryManager.regsterCellFactory('setColumn',LUI.Grid.Cell.SetGridEditor);
 	LUI.Grid.CellFactoryManager.regsterCellFactory('setColumn',LUI.Grid.Cell.SetDisplayCell,true);
 	

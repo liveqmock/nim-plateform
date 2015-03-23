@@ -18,7 +18,7 @@
 	<type name="stringColumn" label="字符"  isAppendable="false" sequence="73" defaultComponent="stringDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="类型" default="" enabled="false"/>
-			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getColumnsTypeOfGrid" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题 " enabled="true"/>
 			<property name="name" label="名称" type="string" allowBlank="false" info="字段名"  enabled="true"/>
 		</properties>
@@ -31,7 +31,7 @@
 	<type name="textColumn" label="字符"  isAppendable="false" sequence="74" defaultComponent="textDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="类型" default="" enabled="false"/>
-			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getColumnsTypeOfGrid" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题 " enabled="true"/>
 			<property name="name" label="名称" type="string" allowBlank="false" info="字段名"  enabled="true"/>
 		</properties>
@@ -44,7 +44,7 @@
 	<type name="booleanColumn" label="逻辑"  isAppendable="false" sequence="75" defaultComponent="booleanDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="类型" default="" enabled="false"/>
-			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getColumnsTypeOfGrid" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题 " enabled="true"/>
 			<property name="name" label="名称" type="string" allowBlank="false" info="字段名"  enabled="true"/>
 		</properties>
@@ -57,7 +57,7 @@
 	<type name="intColumn" label="整数"  isAppendable="false" sequence="76" defaultComponent="intDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="类型" default="" enabled="false"/>
-			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getColumnsTypeOfGrid" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题 " enabled="true"/>
 			<property name="name" label="名称" type="string" allowBlank="false" info="字段名"  enabled="true"/>
 		</properties>
@@ -70,7 +70,7 @@
 	<type name="doubleColumn" label="小数"  isAppendable="false" sequence="77" defaultComponent="doubleDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="类型" default="" enabled="false"/>
-			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getColumnsTypeOfGrid" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题 " enabled="true"/>
 			<property name="name" label="名称" type="string" allowBlank="false" info="字段名"  enabled="true"/>
 		</properties>
@@ -83,7 +83,7 @@
 	<type name="dateColumn" label="日期"  isAppendable="false" sequence="78" defaultComponent="dateDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="类型" default="" enabled="false"/>
-			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getColumnsTypeOfGrid" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题 " enabled="true"/>
 			<property name="name" label="名称" type="string" allowBlank="false" info="字段名"  enabled="true"/>
 		</properties>
@@ -92,11 +92,28 @@
 		<events>
 		</events>
 	</type>
-	<!-- 7列类型  object-->
+	
+	<!-- 7列类型  object--> 
 	<type name="objectColumn" label="对象"  isAppendable="false" sequence="79" defaultComponent="objectDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="类型" default="" enabled="false"/>
-			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getColumnsTypeOfGrid" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题 " enabled="true"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="字段名"  enabled="true"/>
+		</properties>
+		<extensions>
+		</extensions>
+		<structure>
+		</structure>
+		<events>
+		</events>
+	</type>
+	
+	<!-- 7列类型  object-->
+	<type name="fileColumn" label="附件"  isAppendable="false" sequence="79" defaultComponent="fileDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+		<properties>
+			<property name="fieldType" label="类型" type="string" allowBlank="false" info="类型" default="" enabled="false"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getColumnsTypeOfGrid" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题 " enabled="true"/>
 			<property name="name" label="名称" type="string" allowBlank="false" info="字段名"  enabled="true"/>
 		</properties>
@@ -111,7 +128,7 @@
 	<type name="setColumn" label="集合"  isAppendable="false" sequence="80" defaultComponent="setDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
 		<properties>
 			<property name="fieldType" label="类型" type="string" allowBlank="false" info="类型" default="" enabled="false"/>
-			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getComponentOfType" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getColumnsTypeOfGrid" info="" enabled="true" onChange="refreshExtendForm"/>
 			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题 " enabled="true"/>
 			<property name="name" label="名称" type="string" allowBlank="false" info="字段名"  enabled="true"/>
 		</properties>
@@ -120,4 +137,19 @@
 		<events>
 		</events>
 	</type>
+	
+	<!-- 8列类型  set-->
+	<type name="filesetColumn" label="文件集合"  isAppendable="false" sequence="80" defaultComponent="filesetDisplayColumn" iconClass="ui-icon-copy" isArray="false" isDragable="true">
+		<properties>
+			<property name="fieldType" label="类型" type="string" allowBlank="false" info="类型" default="" enabled="false"/>
+			<property name="component" label="" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getColumnsTypeOfGrid" info="" enabled="true" onChange="refreshExtendForm"/>
+			<property name="label" label="标题" type="string" allowBlank="false" info="字段标题 " enabled="true"/>
+			<property name="name" label="名称" type="string" allowBlank="false" info="字段名"  enabled="true"/>
+		</properties>
+		<extensions>
+		</extensions>
+		<events>
+		</events>
+	</type>
+
 </type-def>

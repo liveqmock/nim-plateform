@@ -43,8 +43,18 @@ LUI.Datasource = {
 				submit:'dataset_submit',//提交记录
 				save:'dataset_save'//保存记录
 			},
+			//设置或添加过滤条件
+			setFilter:function(property,operator,value){
+				var filter = this.getFilter(property);
+				if(filter!=null){
+					filter.operator = operator;
+					filter.value = value;
+				}else{
+					this.addFilter(property,operator,value);
+				}
+			},
+			//添加一个基础过滤条件
 			addFilter:function(property,operator,value){
-				this.removeFilter(property);
 				this.filters[this.filters.length] = {property:property,operator:operator,value:value};
 			},
 			removeFilter:function(property){
@@ -52,11 +62,25 @@ LUI.Datasource = {
 				if(this.filters.length >0 ){
 					for(var i=0;i<this.filters.length;i++){
 						if(this.filters[i].property == property){
+							filter = this.filters[i];
 							this.filters.splice(i,1);
 							break;
 						}
 					}
 				}
+				return filter;
+			},
+			getFilter:function(property){
+				var filter = null;
+				if(this.filters.length >0 ){
+					for(var i=0;i<this.filters.length;i++){
+						if(this.filters[i].property == property){
+							filter = this.filters[i];
+							break;
+						}
+					}
+				}
+				return filter;
 			},
 			/**
 			 * 调用此方法 通知数据源向服务器请求数据
@@ -138,6 +162,7 @@ LUI.Datasource = {
 				this.lastParams = params;
 				this.lastResult = result;
 				//根据当前取得的数据 创建record
+				var records = [];
 				for(var i=0;i<this.lastResult.rows.length;i++){
 					var rowData = this.lastResult.rows[i];
 					var r = LUI.Record.createNew(this.fields,this.primaryFieldName);
@@ -146,6 +171,7 @@ LUI.Datasource = {
 						r.loadData(rowData);
 						this.records.put(r.id,r);
 //						rowData._record_id = r.id; 
+						records[records.length] = r;
 						
 						this.fireEvent(this.events.add,{
 							record:r
@@ -159,7 +185,8 @@ LUI.Datasource = {
 			
 				this.fireEvent(this.events.load,{
 					params:this.lastParams,
-					result:this.lastResult
+					result:this.lastResult,
+					records:records
 				});
 			},
 			getResult:function(){

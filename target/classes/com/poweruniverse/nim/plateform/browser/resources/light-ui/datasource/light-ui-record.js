@@ -43,7 +43,7 @@ LUI.Record = {
 				
 				for(var i=0;i<this.fields.length;i++){
 					var fieldValObj = retData[this.fields[i].name];
-					if(fieldValObj!=null && ( this.fields[i].fieldType == 'object' || this.fields[i].fieldType == 'set')){
+					if(fieldValObj!=null && ( this.fields[i].fieldType == 'object' || this.fields[i].fieldType == 'file' || this.fields[i].fieldType == 'set' || this.fields[i].fieldType == 'fileset')){
 						var subPKs = fieldValObj;
 						if(subPKs!=null){
 							fieldValObj.saveOK(subPKs);
@@ -72,7 +72,7 @@ LUI.Record = {
 						var fieldDef = this.getFieldDefine(p);
 						var fieldValObj = this.oldData[fieldDef.name];
 						var lastVal = this.data[fieldDef.name];
-						if(fieldValObj!=null && fieldDef.fieldType == 'object'){
+						if(fieldValObj!=null && (fieldDef.fieldType == 'object' || fieldDef.fieldType == 'file')){
 							var fieldRecord = LUI.Record.createNew(fieldDef.fields,fieldDef.meta.primaryFieldName);
 							fieldRecord.loadData(fieldValObj);
 							fieldRecord.primaryFieldValue = fieldValObj[fieldDef.meta.primaryFieldName];
@@ -199,7 +199,7 @@ LUI.Record = {
 					return ;
 				}
 				//
-				if(fieldDef.fieldType == 'object'){
+				if(fieldDef.fieldType == 'object' || fieldDef.fieldType == 'file'){
 					var fieldRecord = this.getFieldValue(fieldName);
 					if(fieldNewValue==null){
 						//将对象类型的字段置为null 要取消对此记录的监听
@@ -346,11 +346,11 @@ LUI.Record = {
 					for(var p in dataObj){
 						if(this.hasField(p)){
 							var fieldDef = this.getFieldDefine(p);
-							if(dataObj[p]!=null && fieldDef.fieldType == 'object'){
+							if(dataObj[p]!=null && (fieldDef.fieldType == 'object' || fieldDef.fieldType == 'file')){
 								var relaObj = {};
 								relaObj[fieldDef.meta.primaryFieldName] = dataObj[p].primaryFieldValue;
 								newData[p] = relaObj;
-							}else if(dataObj[p]!=null && fieldDef.fieldType == 'set'){
+							}else if(dataObj[p]!=null && (fieldDef.fieldType == 'set' || fieldDef.fieldType == 'fileset')){
 								newData[p] = dataObj[p].getSubmitData(onlyModified);
 							}else if(dataObj[p]!=null){
 								if(fieldDef.fieldType == 'string' || fieldDef.fieldType == 'text'){
@@ -392,65 +392,66 @@ LUI.Record = {
 			},
 			//为record对象加载数据 根据主键值判断 是否新增的记录
 			loadData:function(dataObj){
-				
 				var _data = {};
-				for(var i=0;i<this.fields.length;i++){
-					var fieldDef = this.fields[i];
-					var fieldValObj = dataObj[fieldDef.name];
-					if(fieldValObj!=null && fieldDef.fieldType == 'object'){
-						var fieldRecord = LUI.Record.createNew(fieldDef.fields,fieldDef.meta.primaryFieldName);
-						fieldRecord.loadData(fieldValObj);
-						fieldRecord.primaryFieldValue = fieldValObj[fieldDef.meta.primaryFieldName];
-						fieldRecord.fieldName = fieldDef.name;
-
-						fieldRecord.addListener(fieldRecord.events.change,this,function(objRecord,r,e,o){
-							this.data[objRecord.fieldName] = objRecord;
-							this.modified[objRecord.fieldName] = objRecord;
-							
-							this.fireEvent(this.events.change,{
-								fieldName:objRecord.fieldName,
-								oldValue:objRecord,
-								newValue:objRecord,
-								isInitial:false
-							},o||this);
-						});
-						_data[fieldDef.name] = fieldRecord;
-					}else if(fieldValObj!=null && fieldDef.fieldType == 'set'){
-						_data[fieldDef.name] = LUI.Recordset.createNew(fieldDef.fields,fieldDef.meta.primaryFieldName,fieldDef.name);
-						//监听resultset的增加、修改、删除事件 发出 record的change事件
-						_data[fieldDef.name].addListener(_data[fieldDef.name].events.change,this,function(setRecordset,r,e,o){
-							this.data[setRecordset.fieldName] = setRecordset;
-							this.modified[setRecordset.fieldName] = setRecordset;
-							this.fireEvent(this.events.change,{
-								fieldName:setRecordset.fieldName,
-								oldValue:setRecordset,
-								newValue:setRecordset,
-								isInitial:false
-							},o||this);
-						});
-						_data[fieldDef.name].addListener(_data[fieldDef.name].events.add,this,function(setRecordset,r,e,o){
-							this.data[setRecordset.fieldName] = setRecordset;
-							this.modified[setRecordset.fieldName] = setRecordset;
-							this.fireEvent(this.events.change,{
-								fieldName:setRecordset.fieldName,
-								oldValue:setRecordset,
-								newValue:setRecordset,
-								isInitial:false
-							},o||this);
-						});
-						_data[fieldDef.name].addListener(_data[fieldDef.name].events.remove,this,function(setRecordset,r,e,o){
-							this.data[setRecordset.fieldName] = setRecordset;
-							this.modified[setRecordset.fieldName] = setRecordset;
-							this.fireEvent(this.events.change,{
-								fieldName:setRecordset.fieldName,
-								oldValue:setRecordset,
-								newValue:setRecordset,
-								isInitial:false
-							},o||this);
-						});
-						_data[fieldDef.name].loadData(fieldValObj);
-					}else if(fieldValObj!=null){
-						_data[fieldDef.name] = fieldValObj;
+				if(dataObj!=null){
+					for(var i=0;i<this.fields.length;i++){
+						var fieldDef = this.fields[i];
+						var fieldValObj = dataObj[fieldDef.name];
+						if(fieldValObj!=null && (fieldDef.fieldType == 'object' || fieldDef.fieldType == 'file')){
+							var fieldRecord = LUI.Record.createNew(fieldDef.fields,fieldDef.meta.primaryFieldName);
+							fieldRecord.loadData(fieldValObj);
+							fieldRecord.primaryFieldValue = fieldValObj[fieldDef.meta.primaryFieldName];
+							fieldRecord.fieldName = fieldDef.name;
+	
+							fieldRecord.addListener(fieldRecord.events.change,this,function(objRecord,r,e,o){
+								this.data[objRecord.fieldName] = objRecord;
+								this.modified[objRecord.fieldName] = objRecord;
+								
+								this.fireEvent(this.events.change,{
+									fieldName:objRecord.fieldName,
+									oldValue:objRecord,
+									newValue:objRecord,
+									isInitial:false
+								},o||this);
+							});
+							_data[fieldDef.name] = fieldRecord;
+						}else if(fieldValObj!=null && (fieldDef.fieldType == 'set' || fieldDef.fieldType == 'fileset')){
+							_data[fieldDef.name] = LUI.Recordset.createNew(fieldDef.fields,fieldDef.meta.primaryFieldName,fieldDef.name);
+							//监听resultset的增加、修改、删除事件 发出 record的change事件
+							_data[fieldDef.name].addListener(_data[fieldDef.name].events.change,this,function(setRecordset,r,e,o){
+								this.data[setRecordset.fieldName] = setRecordset;
+								this.modified[setRecordset.fieldName] = setRecordset;
+								this.fireEvent(this.events.change,{
+									fieldName:setRecordset.fieldName,
+									oldValue:setRecordset,
+									newValue:setRecordset,
+									isInitial:false
+								},o||this);
+							});
+							_data[fieldDef.name].addListener(_data[fieldDef.name].events.add,this,function(setRecordset,r,e,o){
+								this.data[setRecordset.fieldName] = setRecordset;
+								this.modified[setRecordset.fieldName] = setRecordset;
+								this.fireEvent(this.events.change,{
+									fieldName:setRecordset.fieldName,
+									oldValue:setRecordset,
+									newValue:setRecordset,
+									isInitial:false
+								},o||this);
+							});
+							_data[fieldDef.name].addListener(_data[fieldDef.name].events.remove,this,function(setRecordset,r,e,o){
+								this.data[setRecordset.fieldName] = setRecordset;
+								this.modified[setRecordset.fieldName] = setRecordset;
+								this.fireEvent(this.events.change,{
+									fieldName:setRecordset.fieldName,
+									oldValue:setRecordset,
+									newValue:setRecordset,
+									isInitial:false
+								},o||this);
+							});
+							_data[fieldDef.name].loadData(fieldValObj);
+						}else if(fieldValObj!=null){
+							_data[fieldDef.name] = fieldValObj;
+						}
 					}
 				}
 				
@@ -458,7 +459,7 @@ LUI.Record = {
 				this.data = _data;
 				this.modified = {};
 				
-				this.primaryFieldValue = dataObj[this.primaryFieldName];
+				this.primaryFieldValue = this.oldData[this.primaryFieldName];
 				//无主键值的记录 要将所有值都记录到modified
 				if(this.primaryFieldValue == null){
 					this.isNew = true;
@@ -528,7 +529,7 @@ LUI.Record = {
 			destroy:function(){
 				for(var i=0;i<this.fields.length;i++){
 					var fieldValObj = this.data[this.fields[i].name];
-					if(fieldValObj!=null && ( this.fields[i].fieldType == 'object' || this.fields[i].fieldType == 'set')){
+					if(fieldValObj!=null && ( this.fields[i].fieldType == 'object' || this.fields[i].fieldType == 'file' || this.fields[i].fieldType == 'set' || this.fields[i].fieldType == 'fileset')){
 						fieldValObj.destroy();
 					}
 				}

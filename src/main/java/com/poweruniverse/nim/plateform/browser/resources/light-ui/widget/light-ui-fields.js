@@ -114,9 +114,14 @@ LUI.Form.Field = {
 						this.value = newVal;
 						//校验通过后 重新格式化显示值
 						newRawValue = this.formatRawValue(newVal);
-					}else{
+					}else if(!isInitial){
 						//字段值 = null
 						this.value = null;
+					}else if(isInitial){
+						//记录字段值
+						this.value = newVal;
+						//校验通过后 重新格式化显示值
+						newRawValue = this.formatRawValue(newVal);
 					}
 					
 					//显示值有变化 
@@ -265,7 +270,7 @@ LUI.Form.Field = {
 					this.clearInvalid();
 				}
 				if( oldValid!= this.valid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
+					//this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
 				return this.valid;
 			},
@@ -741,6 +746,8 @@ LUI.Form.Field.BooleanCheckEditor = {
 			var field = $.extend(LUI.Form.Field.createNew(fieldMeta,lui_form),{
 					id: '_form_field_booleancheck_'+(++LUI.Form.Field.BooleanCheckEditor.uniqueId),
 					type:LUI.Form.Field.BooleanCheckEditor.type,
+//					value:false,
+//					valid:true,
 					setValue:function (newValue,silence,isInitial,originSource){
 						var oldVal = this.value;
 						var newVal = null;
@@ -900,7 +907,7 @@ LUI.Form.Field.String = {
 				}
 				
 				if( oldValid!= this.valid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
+					//this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
 				return this.valid;
 			}
@@ -981,7 +988,7 @@ LUI.Form.Field.Password = {
 				}
 				
 				if( oldValid!= this.valid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
+					//this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
 				return this.valid;
 			}
@@ -1024,7 +1031,7 @@ LUI.Form.Field.MobileNumber = {
 				
 				//var oldValid = this.valid;
 				if( oldValid!= this.valid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
+					//this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
 				return this.valid;
 			}
@@ -1067,7 +1074,7 @@ LUI.Form.Field.PostCode = {
 				
 				//var oldValid = this.valid;
 				if( oldValid!= this.valid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
+					//this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
 				return this.valid;
 			}
@@ -1111,7 +1118,7 @@ LUI.Form.Field.Email = {
 					
 					//var oldValid = this.valid;
 					if( oldValid!= this.valid){
-						this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
+						//this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 					}
 					return this.valid;
 				}
@@ -1311,7 +1318,7 @@ LUI.Form.Field.StringText = {
 					
 					//var oldValid = this.valid;
 					if( oldValid!= this.valid){
-						this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
+						//this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 					}
 					return this.valid;
 				}
@@ -1467,13 +1474,13 @@ LUI.Form.Field.StringSelect = {
 		var field = $.extend(LUI.Form.Field.createNew(fieldMeta,lui_form),{
 			id: '_form_field_string_select_'+(++LUI.Form.Field.StringSelect.uniqueId),
 			type:LUI.Form.Field.StringSelect.type,
-			options:fieldMeta.options,
+			initOptions:fieldMeta.options,
 			dataGetter:fieldMeta.dataGetter,
 			minLength:minLength,
 			renderTemplateExpression:renderTemplateExpression,
 			render:function(){
 				if(this.loaded == false){
-					this.initOptions();
+					this.createOptions();
 				}
 				if(this.renderType != 'none'){
 					if(this.createFieldEl(LUI.Template.Field.select)){
@@ -1489,10 +1496,8 @@ LUI.Form.Field.StringSelect = {
 							allowEdit:this.allowEdit,
 							source: function( request, response ) {
 								var searchString = null;
-								var isShowAll = false;
 								if(request.term == 'search all'){
 									//点击了下拉按钮
-									isShowAll = true;
 									if(this.options.minLength >0){
 										return;
 									}
@@ -1503,7 +1508,12 @@ LUI.Form.Field.StringSelect = {
 								
 								//输入字符或点击下拉箭头 请求显示符合条件的选项 
 								//本地搜索
-								contextThis.search(searchString,isShowAll);
+								if(!contextThis.loaded){
+									//如果还没有load 需要初始化全部选项
+									contextThis.createOptions();
+								}
+								//进行本地搜索
+								contextThis.filterOptions(searchString);
 								response(contextThis.options);
 							},
 							minLength: contextThis.minLength,
@@ -1513,23 +1523,12 @@ LUI.Form.Field.StringSelect = {
 							}
 						});
 						
-						//将自定义onchange方法 绑定到当前对象的change事件
-//						if(this.onChangeFunction!=null){
-//							this.addListener(this.events.change,this._observer,this.onChangeFunction);
-//						}
-		//				//在ie浏览器中 checkbox需要失去焦点才能触发change事件
-		//				if (isIE) {
-		//					this.inputEl.click(function () {
-		//						this.blur();
-		//						this.focus();
-		//					});
-		//				}; 
 						this.rendered = true;
 						//原值要重新显示出来
 						this.displayRawValue();
 					}
 				}
-				this.validate(this.value);
+//				this.validate(this.value);
 			},
 			setValue:function (newVal,silence,isInitial,originSource){
 				var oldVal = this.value;
@@ -1537,11 +1536,11 @@ LUI.Form.Field.StringSelect = {
 				if(!this.equalsValue(this.value,newVal)){
 					//记录字段值
 					this.value = newVal;
-					var newRawValue = this.formatRawValue(newVal);
-					//如果校验通过
-					this.validate(newRawValue)
+					//校验
+					this.validate(newVal)
 					
-					//显示值有变化 
+					//显示值
+					var newRawValue = this.formatRawValue(newVal);
 					if(!this.equalsRawValue(this.rawValue,newRawValue)){
 						//保存显示值并重新显示
 						this.rawValue =newRawValue;
@@ -1549,7 +1548,6 @@ LUI.Form.Field.StringSelect = {
 							this.displayRawValue();
 						}
 					}
-					
 					
 					//触发change事件
 					if(!silence && (originSource==null || originSource != this)){
@@ -1560,6 +1558,19 @@ LUI.Form.Field.StringSelect = {
 						},originSource||this);
 					}
 				}
+			},
+			getSelection:function(){
+				var option = null;
+				if(this.value!=null && this.allOptions!=null){
+					for(var i=0;i<this.allOptions.length;i++){
+						var optionData = this.allOptions[i];
+						if(optionData.value == this.value){
+							option = optionData;
+							break;
+						}
+					}
+				}
+				return option;
 			},
 			/**
 			 * 将显示值转换为数据值
@@ -1587,16 +1598,12 @@ LUI.Form.Field.StringSelect = {
 			formatRawValue:function(dataVal){
 				var _rawValue = '';
 				if(dataVal!=null && this.allOptions !=null){
-					if(typeof(dataVal) == 'string'){
-						for(var i=0;i<this.allOptions.length;i++){
-							var optionData = this.allOptions[i];
-							if(optionData.value == dataVal){
-								_rawValue = this.renderTemplateExpression(optionData);
-								break;
-							}
+					for(var i=0;i<this.allOptions.length;i++){
+						var optionData = this.allOptions[i];
+						if(optionData.value == dataVal){
+							_rawValue = this.renderTemplateExpression(optionData.data);
+							break;
 						}
-					}else if(typeof(dataVal) == 'object'){
-						_rawValue = this.renderTemplateExpression(dataVal);
 					}
 				}
 				return _rawValue;
@@ -1610,25 +1617,39 @@ LUI.Form.Field.StringSelect = {
 			},
 			loaded:false,
 			allOptions:[],
-			initOptions:function(){
-				if(this.options !=null && this.options.length >0){
-					this.allOptions = eval(this.options); 
-//				}else if (this.dataGetter!=null && this.dataGetter.length>0){
-//					var dataGetterFunc = window[this.dataGetter];
-//					if(dataGetterFunc==null){
-//						LUI.Message.warn('查询失败','字段的dataGetter函数('+this.dataGetter+')不存在！');
-//					}else{
-//						this.allOptions = dataGetterFunc.apply(this); 
-//					}
+			options:[],
+			//根据初始化配置 创建选择项
+			createOptions:function(){
+				if(this.initOptions !=null && this.initOptions.length >0){
+					var options = eval(this.initOptions); //初始化配置中提供的选项
+					this.loadOptions(options);
 				}
 			},
-			setOptions:function(opts){
-				this.allOptions = opts;
-				//重新计算显示值 
-				var newRawValue = this.formatRawValue(this.value);
-				//检查是否有效
-				this.validate(newRawValue);
+			//加载全部选项 并根据模板显示公式 生成各选项的显示内容
+			loadOptions:function(opts){
+				this.loaded = true;
 				
+				var options = []
+				for(var i=0;i<opts.length;i++){
+					var option =$.extend({},opts[i]) ;
+					
+					var optionLabel = option.value;
+					if(this.renderTemplateExpression!=null){
+						optionLabel = this.renderTemplateExpression(option);
+					}
+					options[options.length] = {
+						value: option.value,
+						label: optionLabel,
+						data:option
+					};
+				}
+				this.allOptions = options;
+				this.options = options;
+				
+				//校验
+				this.validate(this.value)
+				//显示值
+				var newRawValue = this.formatRawValue(this.value);
 				if(!this.equalsRawValue(this.rawValue,newRawValue)){
 					//保存显示值并重新显示
 					this.rawValue =newRawValue;
@@ -1636,52 +1657,63 @@ LUI.Form.Field.StringSelect = {
 						this.displayRawValue();
 					}
 				}
+			},
+			//根据搜索关键字 对下拉选项进行过滤 
+			filterOptions:function(searchString){
 				var valueExists = false;
+				var options = []
 				for(var i=0;i<this.allOptions.length;i++){
-					var optionData = this.allOptions[i];
-					if(this.value!=null && this.value == optionData.value){
-						valueExists = true;
-						break;
+					var option = this.allOptions[i];
+					if(searchString==null || option.label.toLowerCase().indexOf(searchString) >= 0){
+						options[options.length] = option;
+						if(this.value !=null && option.data !=null && this.value == option.data.value){
+							valueExists = true;
+						}
+					}
+				}
+				this.options = options;
+				
+				//校验
+				this.validate(this.value)
+				//显示值
+				var newRawValue = this.formatRawValue(this.value);
+				if(!this.equalsRawValue(this.rawValue,newRawValue)){
+					//保存显示值并重新显示
+					this.rawValue =newRawValue;
+					if(this.rendered ){
+						this.displayRawValue();
+					}
+				}
+			},
+			validate:function(dataValue){
+				var oldValid = this.valid;
+				//默认只检查 是否允许为空
+				if((dataValue==null || (''+dataValue).length ==0) && !this.allowBlank){
+					this.valid = false;
+					this.validInfo = '此字段不允许为空!';
+				}else{
+					this.valid = false;
+					this.validInfo = '无效的值!';
+					//还要检查是否在选择范围内
+					for(var i=0;i<this.options.length;i++){
+						var option = this.options[i];
+						if( option.value == dataValue){
+							this.valid = true;
+							this.validInfo = null;
+							break;
+						}
 					}
 				}
 				
-				if(this.value!=null && !valueExists){
-					this.setValue(null,true);
+				if(!this.valid){
+					this.markInvalid();
+				}else{
+					this.clearInvalid();
 				}
-			},
-			search:function(searchString,isShowAll){
-				if(this.rendered){
-					var searchStringLowerCase = null;
-					if(searchString!=null){
-						searchStringLowerCase = searchString.toLowerCase();
-					}
-					//删除原有选项
-					this.options = [];
-//					var valueExists = false;
-					for(var i=0;i<this.allOptions.length;i++){
-						var optionData = this.allOptions[i];
-//						if(this.value!=null && this.value == optionData.value){
-//							valueExists = true;
-//						}
-						
-						var optionLabel = optionData.value;
-						if(this.renderTemplateExpression!=null){
-							optionLabel = this.renderTemplateExpression(optionData);
-						}
-						if(searchStringLowerCase==null || optionLabel.toLowerCase().indexOf(searchStringLowerCase) >= 0){
-							this.options[this.options.length] = {
-								value: optionData.value,
-								label: optionLabel
-							};
-						}
-					}
-					
-//					if(this.value!=null && !valueExists){
-//						this.setValue(null,true);
-//					}else if(this.value ==null && this.allowBlank== false && this.options.length >0){
-//						this.setValue(this.options[0].value,true);
-//					}
+				if( oldValid!= this.valid){
+					//this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
+				return this.valid;
 			},
 			markInvalid:function(){
 				if(this.enabled && this.rendered ){
@@ -1736,7 +1768,7 @@ LUI.Form.Field.StringTriggerSelect = {
 			},
 			render:function(){
 				if(this.loaded == false){
-					this.initOptions();
+					this.createOptions();
 				}
 				if(this.renderType != 'none'){
 					if(this.createFieldEl(LUI.Template.Field.selectWithTrigger)){
@@ -1752,10 +1784,8 @@ LUI.Form.Field.StringTriggerSelect = {
 							allowEdit:this.allowEdit,
 							source: function( request, response ) {
 								var searchString = null;
-								var isShowAll = false;
 								if(request.term == 'search all'){
 									//点击了下拉按钮
-									isShowAll = true;
 									if(this.options.minLength >0){
 										return;
 									}
@@ -1765,8 +1795,12 @@ LUI.Form.Field.StringTriggerSelect = {
 								}
 								
 								//输入字符或点击下拉箭头 请求显示符合条件的选项 
-								//本地搜索
-								contextThis.search(searchString,isShowAll);
+								if(!contextThis.loaded){
+									//如果还没有load 需要初始化全部选项
+									contextThis.createOptions();
+								}
+								//进行本地搜索
+								contextThis.filterOptions(searchString);
 								response(contextThis.options);
 							},
 							minLength: contextThis.minLength,
@@ -1788,10 +1822,8 @@ LUI.Form.Field.StringTriggerSelect = {
 						//原值要重新显示出来
 						this.displayRawValue();
 					}
-					
-					
 				}
-				this.validate(this.value);
+//				this.validate(this.value);
 			},
 			resize:function(fieldWidth){
 				this.inputEl.outerWidth(fieldWidth  -20);
@@ -2172,8 +2204,12 @@ LUI.Form.Field.StringHTML = {
 					if(this.validate(newVal)){
 						//校验通过
 						this.value = newVal;
-					}else{
+					}else if(!isInitial){
+						//字段值 = null
 						this.value = null;
+					}else if(isInitial){
+						//记录字段值
+						this.value = newVal;
 					}
 					//即使校验不通过 错误的显示值也要显示
 					this.rawValue = newVal;
@@ -2477,7 +2513,7 @@ LUI.Form.Field.StringHTML = {
 				
 				//var oldValid = this.valid;
 				if( oldValid!= this.valid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
+					//this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
 				return this.valid;
 			}
@@ -2689,7 +2725,7 @@ LUI.Form.Field.Int = {
 				
 				//var oldValid = this.valid;
 				if( oldValid!= this.valid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
+					//this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
 				return this.valid;
 			},
@@ -2845,7 +2881,7 @@ LUI.Form.Field.Double = {
 				
 				//var oldValid = this.valid;
 				if( oldValid!= this.valid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
+					//this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
 				return this.valid;
 			},
@@ -2974,7 +3010,6 @@ LUI.Form.Field.ObjectSelect = {
 		var field = $.extend(LUI.Form.Field.createNew(fieldMeta,lui_form),{
 			id: '_form_field_objectselect_'+(++LUI.Form.Field.ObjectSelect.uniqueId),
 			type:LUI.Form.Field.ObjectSelect.type,
-			options:[],
 			queryFields:queryFields,
 			datasource:_datasource,
 			beforeLoadFunction:beforeLoadFunc,
@@ -2987,6 +3022,9 @@ LUI.Form.Field.ObjectSelect = {
 			},
 			render:function(){
 				if(this.renderType != 'none'){
+					if(this.loaded == false){
+						this.createOptions();
+					}
 					if(this.createFieldEl(LUI.Template.Field.select)){
 //						this.fieldWidth = this.inputEl.width();
 //						this.resize(this.fieldWidth);
@@ -3002,10 +3040,8 @@ LUI.Form.Field.ObjectSelect = {
 							allowEdit:this.allowEdit,
 							source: function( request, response ) {
 								var searchString = null;
-								var isShowAll = false;
 								if(request.term == 'search all'){
 									//点击了下拉按钮
-									isShowAll = true;
 									if(this.options.minLength >0){
 										return;
 									}
@@ -3017,9 +3053,9 @@ LUI.Form.Field.ObjectSelect = {
 								//输入字符或点击下拉箭头 请求显示符合条件的选项 
 								if(contextThis.searchMode == 'local'){
 									//本地搜索
-									if(contextThis.datasource.loaded == true){
+									if(contextThis.loaded == true){
 										//如果已经load了全部数据 进行本地搜索
-										contextThis.initOptions(searchString,isShowAll);
+										contextThis.filterOptions(searchString);
 										response(contextThis.options);
 									}else{
 										//如果还没有load 需要远程取得全部数据 再进行本地搜索
@@ -3027,7 +3063,8 @@ LUI.Form.Field.ObjectSelect = {
 											contextThis.beforeLoadFunction.apply(contextThis,[contextThis,null,null]);
 										}
 										contextThis.datasource.load({},function(){
-											contextThis.initOptions(searchString,isShowAll);
+											contextThis.createOptions();
+											contextThis.filterOptions(searchString);//搜索关键字
 											response(contextThis.options);
 										},true,false);
 									}
@@ -3053,7 +3090,7 @@ LUI.Form.Field.ObjectSelect = {
 									contextThis.datasource.load({
 										filters:filters
 									},function(){
-										contextThis.initOptions(searchString,isShowAll);
+										contextThis.createOptions();
 										response(contextThis.options);
 									},true,false);
 								}
@@ -3061,57 +3098,15 @@ LUI.Form.Field.ObjectSelect = {
 							minLength: minLength,
 							select: function( event, ui ) {
 								contextThis.setValue(ui.item.data);
+								return false;
 							}
 						});
-						//如果数据源已经loaded 初始化选择项
-//						if(this.datasource.loaded == true ){
-//							this.initOptions();
-//						}
-						
-						
-						
-						//将自定义onchange方法 绑定到当前对象的change事件
-//						if(this.onChangeFunction!=null){
-//							this.addListener(this.events.change,this._observer,this.onChangeFunction);
-//						}
-		//				//在ie浏览器中 checkbox需要失去焦点才能触发change事件
-		//				if (isIE) {
-		//					this.inputEl.click(function () {
-		//						this.blur();
-		//						this.focus();
-		//					});
-		//				}; 
 						this.rendered = true;
 						//原值要重新显示出来
 						this.displayRawValue();
 					}
 				}
-				this.validate(this.value);
-			},
-			validate:function(dataVal){
-				var oldValid = this.valid;
-				//对象类型的字段 只校验字段值 是否允许为空
-				this.valid = true;
-				//将空显示值 变为
-				//默认只检查 是否允许为空
-				if((dataVal == null || dataVal.length ==0) && !this.allowBlank){
-					this.valid = false;
-					this.validInfo = '此字段不允许为空!';
-				}else{
-					this.valid = true;
-				}
-				
-				if(!this.valid){
-					this.markInvalid();
-				}else{
-					this.clearInvalid();
-				}
-				
-				//var oldValid = this.valid;
-				if( oldValid!= this.valid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
-				}
-				return this.valid;
+//				this.validate(this.value);
 			},
 			setSizeDesignable:function(node,isEnable){
 				if(!this.rendered){
@@ -3154,15 +3149,20 @@ LUI.Form.Field.ObjectSelect = {
 					}
 				}
 				var oldVal = this.value;
-				//如果值有变化
-				if(!this.equalsValue(this.value,newVal)){
+				//如果值有变化或 初始化
+				if(isInitial || !this.equalsValue(this.value,newVal)){
 					if(this.validate(newVal)){
-						//校验通过
+						//初始化或校验通过
 						this.value = newVal;
 						this.rawValue = this.formatRawValue(newVal);
-					}else{
+					}else if(!isInitial){
+						//非初始化的情况下 才清除无效的值（因为可能是因为还没有加载选择项 造成的无效）
 						this.value = null;
 						this.rawValue = '';
+					}else if(isInitial){
+						//初始化的情况下 无论是否有效 先记录下来（因为可能是因为还没有加载选择项 造成的无效）
+						this.value = newVal;
+						this.rawValue = this.formatRawValue(newVal);
 					}
 					//无论校验通过与否 都生成显示值
 					
@@ -3211,14 +3211,6 @@ LUI.Form.Field.ObjectSelect = {
 						return r.getData();
 					}
 				}
-				
-//				for(var i=0;i<this.options.length;i++){
-//					var item = this.options[i];
-//					var elText = item.label.toLowerCase();
-//					if ( elText.indexOf(valueLowerCase) >= 0 ) {
-//						return item.data;
-//					}
-//				}
 				return null;
 			},
 			/**
@@ -3273,33 +3265,141 @@ LUI.Form.Field.ObjectSelect = {
 				//按钮变为diabeld
 				comboboxIns.trigger.button("disable");
 			},
-			initOptions:function(searchString,isShowAll){
-				var searchStringLowerCase = null;
-				if(searchString!=null){
-					searchStringLowerCase = searchString.toLowerCase();
-				}
-				//删除原有选项
-				this.options = [];
-				
-				if(this.allowBlank && (searchStringLowerCase==null || isShowAll)){
-					this.options[this.options.length] = {
-						value: null,
-						label: "无"
-					};
-				}
-				
-				for(var i=0;i<this.datasource.size();i++){
-					var r = this.datasource.getRecord(i);
-					var rData = r.getData();
-					var text = this.formatRawValue(rData);
-					if(searchStringLowerCase==null || text.toLowerCase().indexOf(searchStringLowerCase) >= 0){
-						this.options[this.options.length] = {
-							value: text,
-							label: text,
-							data:rData
-						};
+			loaded:false,
+			allOptions:[],
+			options:[],
+			//从数据源中取得所有选项
+			createOptions:function(){
+				var options = [];
+				if(this.datasource.loaded == true){
+					//删除原有选项
+					for(var i=0;i<this.datasource.size();i++){
+						var r = this.datasource.getRecord(i);
+						var rData = r.getData();
+						options[options.length] = rData;
 					}
 				}
+				this.loadOptions(options);
+			},
+			addOption:function(optionData,noValidate){
+				var newOptionData =$.extend({},optionData) ;
+				
+				var optionValue = newOptionData[this.datasource.primaryFieldName];
+				var optionLabel = optionValue;
+				if(this.renderTemplateExpression!=null){
+					optionLabel = this.renderTemplateExpression(newOptionData);
+				}
+				var newOption = {
+					value: optionValue,
+					label: optionLabel,
+					data:newOptionData
+				};
+					
+				this.allOptions[this.allOptions.length] = newOption;
+				this.options[this.options.length] = newOption;
+				
+				if(!noValidate){
+					//校验
+					var newRawValue = this.formatRawValue(this.value);
+					this.validate(newRawValue)
+					//显示值有变化 
+					if(!this.equalsRawValue(this.rawValue,newRawValue)){
+						//保存显示值并重新显示
+						this.rawValue =newRawValue;
+						if(this.rendered ){
+							this.displayRawValue();
+						}
+					}
+				}
+			},
+			//加载全部选项 并根据模板显示公式 生成各选项的显示内容
+			loadOptions:function(opts,noValidate){
+				this.loaded = true;
+				
+				var options = []
+				for(var i=0;i<opts.length;i++){
+					var option =$.extend({},opts[i]) ;
+					
+					var optionValue = option[this.datasource.primaryFieldName];
+					var optionLabel = optionValue;
+					if(this.renderTemplateExpression!=null){
+						optionLabel = this.renderTemplateExpression(option);
+					}
+					options[options.length] = {
+						value: optionValue,
+						label: optionLabel,
+						data:option
+					};
+				}
+				this.allOptions = options;
+				this.options = options;
+				
+				//校验
+				if(!noValidate){
+					this.validate(this.value)
+					//显示值有变化 
+					var newRawValue = this.formatRawValue(this.value);
+					if(!this.equalsRawValue(this.rawValue,newRawValue)){
+						//保存显示值并重新显示
+						this.rawValue =newRawValue;
+						if(this.rendered ){
+							this.displayRawValue();
+						}
+					}
+				}
+			},
+			//根据搜索关键字 对下拉选项进行过滤 
+			filterOptions:function(searchString){
+				var options = []
+				for(var i=0;i<this.allOptions.length;i++){
+					var option = this.allOptions[i];
+					if(searchString==null || option.label.toLowerCase().indexOf(searchString) >= 0){
+						options[options.length] = option;
+					}
+				}
+				this.options = options;
+				
+				//校验
+				this.validate(this.value)
+				//显示值有变化 
+				var newRawValue = this.formatRawValue(this.value);
+				if(!this.equalsRawValue(this.rawValue,newRawValue)){
+					//保存显示值并重新显示
+					this.rawValue =newRawValue;
+					if(this.rendered ){
+						this.displayRawValue();
+					}
+				}
+			},
+			validate:function(dataValue){
+				var oldValid = this.valid;
+				//默认只检查 是否允许为空
+				if((dataValue==null || (''+dataValue).length ==0) && !this.allowBlank){
+					this.valid = false;
+					this.validInfo = '此字段不允许为空!';
+				}else{
+					this.valid = false;
+					this.validInfo = '无效的值!';
+					//还要检查是否在选择范围内
+					for(var i=0;i<this.options.length;i++){
+						var option = this.options[i];
+						if( option.data[this.datasource.primaryFieldName] == dataValue[this.datasource.primaryFieldName]){
+							this.valid = true;
+							this.validInfo = null;
+							break;
+						}
+					}
+				}
+				
+				if(!this.valid){
+					this.markInvalid();
+				}else{
+					this.clearInvalid();
+				}
+				if( oldValid!= this.valid){
+					//this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
+				}
+				return this.valid;
 			}
 		});
 		return field;
@@ -3328,11 +3428,10 @@ LUI.Form.Field.ObjectSelectWithPage = {
 							disabled:!this.enabled,
 							allowEdit:this.allowEdit,
 							source: function( request, response ) {
+								//输入字符或点击下拉箭头 请求显示符合条件的选项 
 								var searchString = null;
-								var isShowAll = false;
 								if(request.term == 'search all'){
 									//点击了下拉按钮
-									isShowAll = true;
 									if(this.options.minLength >0){
 										return;
 									}
@@ -3344,9 +3443,9 @@ LUI.Form.Field.ObjectSelectWithPage = {
 								//输入字符或点击下拉箭头 请求显示符合条件的选项 
 								if(contextThis.searchMode == 'local'){
 									//本地搜索
-									if(contextThis.datasource.loaded == true){
+									if(contextThis.loaded == true){
 										//如果已经load了全部数据 进行本地搜索
-										contextThis.initOptions(searchString,isShowAll);
+										contextThis.filterOptions(searchString);
 										response(contextThis.options);
 									}else{
 										//如果还没有load 需要远程取得全部数据 再进行本地搜索
@@ -3354,7 +3453,8 @@ LUI.Form.Field.ObjectSelectWithPage = {
 											contextThis.beforeLoadFunction.apply(contextThis,[contextThis,null,null]);
 										}
 										contextThis.datasource.load({},function(){
-											contextThis.initOptions(searchString,isShowAll);
+											contextThis.createOptions();
+											contextThis.filterOptions(searchString);//搜索关键字
 											response(contextThis.options);
 										},true,false);
 									}
@@ -3380,7 +3480,7 @@ LUI.Form.Field.ObjectSelectWithPage = {
 									contextThis.datasource.load({
 										filters:filters
 									},function(){
-										contextThis.initOptions(searchString,isShowAll);
+										contextThis.createOptions();
 										response(contextThis.options);
 									},true,false);
 								}
@@ -3388,6 +3488,7 @@ LUI.Form.Field.ObjectSelectWithPage = {
 							minLength: minLength,
 							select: function( event, ui ) {
 								contextThis.setValue(ui.item.data);
+								return false;
 							}
 						});
 						//将自定义onchange方法 绑定到当前对象的change事件
@@ -3404,7 +3505,7 @@ LUI.Form.Field.ObjectSelectWithPage = {
 						this.displayRawValue();
 					}
 				}
-				this.validate(this.value);
+//				this.validate(this.value);
 			},
 			resize:function(fieldWidth){
 				this.inputEl.outerWidth(fieldWidth  -20);
@@ -3844,7 +3945,7 @@ LUI.Form.Field.Date = {
 					
 					//var oldValid = this.valid;
 					if( oldValid!= this.valid){
-						this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
+						//this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 					}
 					return this.valid;
 				}
@@ -3878,7 +3979,7 @@ LUI.Form.Field.Year = {
 
 LUI.Form.Field.File = {
 	uniqueId:0,
-	type:'fileUploaderEditor',
+	type:'fileEditor',
 	createNew:function(fieldMeta,lui_form,createNotExistsEl){
 //		var renderType = fieldMeta.renderType||'generate';
 //		fieldMeta.renderType = 'rela';
@@ -3989,9 +4090,12 @@ LUI.Form.Field.File = {
 						this.value = newVal;
 						//校验通过后 重新格式化显示值
 						newRawValue = this.formatRawValue(newVal);
-					}else{
+					}else if(!isInitial){
 						//字段值 = null
 						this.value = null;
+					}else if(isInitial){
+						//记录字段值
+						this.value = newVal;
 					}
 					
 					//显示值有变化 
@@ -4034,7 +4138,7 @@ LUI.Form.Field.File = {
 				
 				//var oldValid = this.valid;
 				if( oldValid!= this.valid){
-					this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
+					//this.fireEvent(this.events.validChange,{oldValue:oldValid,newValue:this.valid});
 				}
 				return this.valid;
 			},

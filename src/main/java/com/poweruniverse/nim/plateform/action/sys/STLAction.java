@@ -333,6 +333,8 @@ public class STLAction {
 			if(versionString!=null){
 				entityObj.setShiTiLeiBB(versionString);
 				sess.update(entityObj);
+				//生成表结构
+				EntityManager.createTable(entityObj, entityObj.getBiaoMing());
 			}else{
 				errorCount++;
 			}

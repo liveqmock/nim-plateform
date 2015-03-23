@@ -221,26 +221,31 @@ LUI.Mapping = {
 							if(_columnNode == null){
 								
 								if(LUI.Mapping._gridMapping._gridNode.component.name == 'singleEditForm' ){
+									//编辑表单
 									var type_def = LUI.PageDesigner.instance._types[ _columnType+"Field"];
 									
 									_columnNodeComponent = type_def.defaultComponent;
 								}else if(LUI.Mapping._gridMapping._gridNode.component.name == 'dataDisplayForm' ){
+									//显示表单
 									_columnNodeComponent = _columnType+"Display";
 								}else if( LUI.Mapping._gridMapping._gridNode.component.name == 'editGrid'){
+									//编辑表格
 									var type_def = LUI.PageDesigner.instance._types[ _columnType+"Column"];
-									
 									_columnNodeComponent = type_def.defaultComponent;
 								}else if( LUI.Mapping._gridMapping._gridNode.component.name == 'subGrid'){
-									//子表格 且在集合字段中（非集合字段显示）
+									//子表格
 									var parentSetNode = LUI.Mapping._gridMapping._gridNode.getParentNode();
 									if(parentSetNode.component.name == 'setGridEditor'){
+										//在集合编辑字段中
 										var type_def = LUI.PageDesigner.instance._types[ _columnType+"Column"];
 										_columnNodeComponent = type_def.defaultComponent;
 									}else{
-										_columnNodeComponent = "gridColumn";
+										//在集合显示字段中
+										_columnNodeComponent = _columnType+"DisplayColumn";
 									}
 								}else{
-									_columnNodeComponent = "gridColumn";
+									//显示表格
+									_columnNodeComponent = _columnType+"DisplayColumn";
 								}
 								_columnNode = LUI.PageDesigner.instance.addComponentNode(LUI.Mapping._gridMapping._columnsNode,_columnNodeComponent,_columnLabel);
 							}
@@ -273,6 +278,16 @@ LUI.Mapping = {
 							_columnNode.data.fieldType = _columnType;
 							_columnNode.data.renderto = '#'+_columnRenderto;
 							_columnNode.data.renderTemplate = _columnRenderTemplate;
+							
+							//为编辑表格添加字段节点后 根据目标元素的类别 修改字段的生成方式
+							if(LUI.Mapping._gridMapping._gridNode.component.name == 'singleEditForm' ){
+								var targetEl = $(LUI.Mapping._gridMapping._gridNode.data.renderto+" #"+_columnRenderto);
+								if(targetEl.is('input')){
+									_columnNode.data.renderType = 'rela';
+								}else{
+									_columnNode.data.renderType = 'insert';
+								}
+							}
 							LUI.PageDesigner.instance._pageCmpTree.updateNode(_columnNode);
 							
 						}else if(_columnNodeId!=null && _columnNodeId.length >0){
@@ -366,7 +381,7 @@ LUI.Mapping = {
 								//显示column类型
 								_parentLi.find('input#columnType').val((columnNameArray.length > 1)?'object':newType);
 								//显示column表达式
-								if(newType == 'object'){
+								if(newType == 'object' || newType == 'file' ){
 									//全column属性名称
 									_parentLi.find('input#fullPropertyName').val(newName+'.'+zdObj.guanLianSTL.xianShiLie);
 									_parentLi.find('span#columnExpression input').val('{{'+newName+'.'+zdObj.guanLianSTL.xianShiLie+'}}').removeAttr('disabled');
@@ -385,7 +400,7 @@ LUI.Mapping = {
 				},
 				//初始化列表行  
 				//清除列表中 原有信息
-				//将目标元素中的所有.data子元素 加入列表
+				//将目标元素中的所有有id的子元素 加入列表
 				initMappingEls:function(){
 					//grid节点 及目标元素
 					var gridRenderto = this._gridNode.data.renderto;
@@ -997,7 +1012,7 @@ LUI.PropertyChoose = {
 					for(var i =0;i<rows.length;i++){
 						var row = rows[i];
 						row.ziDuanDH = parentNodeZDDH+row.ziDuanDH;
-						var isLeaf = row.ziDuanLX.ziDuanLXDH !='object' && row.ziDuanLX.ziDuanLXDH !='set';
+						var isLeaf = row.ziDuanLX.ziDuanLXDH !='object' && row.ziDuanLX.ziDuanLXDH !='file' && row.ziDuanLX.ziDuanLXDH !='set' && row.ziDuanLX.ziDuanLXDH !='fileset';
 						var newNode = new Core4j.toolbox.TableTreeNode({
 							id:(parentNodeId==null?'':parentNodeId)+'_zd_'+rows[i].ziDuanDM,
 							order: 99 - rows[i].ziDuanLX.ziDuanLXDM,
