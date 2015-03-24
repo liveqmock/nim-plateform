@@ -1,5 +1,5 @@
 <!-- nim-plateform组件 提供的webservice服务 -->
-<component name="nim-plateform">
+<component name="nim-plateform" type="plateform" clientSrcPath="D:/data/workspace/nim-plateform-wsclient/src/main/java/" clientPackage="nim.plateform.wsclient">
 	<!-- 提供设计器服务 -->
 	<webservice name="designer" class="com.poweruniverse.nim.plateform.webservice.DesignerWebserviceImpl" />
 	<!-- 提供页面文件服务 -->

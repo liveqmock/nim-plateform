@@ -14,7 +14,6 @@ import net.sf.json.JSONObject;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import org.hibernate.SessionFactory;
 
 import com.poweruniverse.nim.base.description.Application;
 import com.poweruniverse.nim.base.description.Component;
@@ -92,15 +91,46 @@ public class ApplicationInitialServlet extends BasePlateformServlet{
 
 			String serverName = appEl.attributeValue("name");
 			String serverTitle = appEl.attributeValue("title");
-			String serverSrcPath = appEl.attributeValue("src");
+			String serverMode = appEl.attributeValue("mode");
 			String serverModule = appEl.attributeValue("module");
-			String serverJdkPath = appEl.attributeValue("jdkPath");
 			String serverIp = appEl.attributeValue("ip");
 			String serverPort = appEl.attributeValue("port");
 			String serverWebservicePort = appEl.attributeValue("webservicePort");
-			String serverWebserviceSrc = appEl.attributeValue("webserviceSrc");
-			app = Application.init(contextPath,serverName, serverTitle, serverSrcPath,serverModule,serverJdkPath, serverIp, serverPort, serverWebservicePort, serverWebserviceSrc);
-
+			
+			app = Application.init(contextPath,serverName, serverTitle,serverMode,serverModule, serverIp, serverPort, serverWebservicePort);
+			
+			Element developEl = appEl.element("develop");
+			if(developEl!=null){
+				String appSrcPath = developEl.attributeValue("appSrcPath");
+				String jdkPath = developEl.attributeValue("jdkPath");
+				
+				//检查appSrcPath路径是否存在
+				File appSrcPathFile = new File(appSrcPath);
+				if(!appSrcPathFile.exists()){
+					System.err.println("开发模式定义的应用系统源文件路径("+appSrcPath+")不存在！");
+					System.err.println("已自动改变运行模式为：正式运行");
+					Application.getInstance().setMode("work");
+				}else{
+					//检查jdkPath路径是否存在
+					File jdkPathFile = new File(jdkPath);
+					if(!jdkPathFile.exists()){
+						System.err.println("开发模式定义的应用系统源文件路径("+jdkPath+")不存在！");
+						System.err.println("已自动改变运行模式为：正式运行");
+						Application.getInstance().setMode("work");
+					}else{
+						Application.setDevelopConfig(appSrcPath, jdkPath);
+					}
+				}
+			}else if(Application.getInstance().isDevelopMode()){
+				System.err.println("配置文件中运行模式为："+Application.getInstance().getMode()+",但未找到开发模式所需的develop定义信息");
+				System.err.println("已自动改变运行模式为：正式运行");
+				Application.getInstance().setMode("work");
+			}
+			
+			System.out.println("-------------------------------------------");
+			System.out.println("当前系统运行模式(平台开发plateform/应用开发application/正式运行work)："+Application.getInstance().getMode());
+			System.out.println("-------------------------------------------");
+			
 			Element pagesEl = appEl.element("pages");
 			Element loginPageEl = pagesEl.element("login");
 			Element homePageEl = pagesEl.element("home");
@@ -116,24 +146,47 @@ public class ApplicationInitialServlet extends BasePlateformServlet{
 				if(cmpName == null){
 					System.err.println("组件名称不存在,忽略此组件！");
 				}else{
-					LocalComponent componentInfo = new LocalComponent(cmpName);
-					//从组件同名配置文件中 取得webservice配置信息
-					Document componentCfgDoc = reader.read(ApplicationInitialServlet.class.getResourceAsStream("/"+cmpName+".cfg.xml"));
-					Element componentCfgRootEl = componentCfgDoc.getRootElement();//
-					if(!cmpName.equals(componentCfgRootEl.attributeValue("name"))){
-						System.err.println("组件配置文件：WEB-INF/classes/"+cmpName+".cfg.xml中的名称与组件名称不符,忽略此组件的webservice服务配置！");
+					//在web-inf目录中查找组件配置文件
+					Document componentCfgDoc = null;
+					File componentCfgFile = new File(app.getContextPath()+"WEB-INF/"+cmpName+".component.xml");
+					if(componentCfgFile.exists()){
+						componentCfgDoc = reader.read(componentCfgFile);
 					}else{
-						List<Element> webserviceEls = (List<Element>)componentCfgRootEl.elements("webservice");
-						for(Element webserviceEl : webserviceEls){
-							String wsName = webserviceEl.attributeValue("name");
-							String wsClass = webserviceEl.attributeValue("class");
-							LocalWebservice wsInfo = new LocalWebservice(componentInfo,wsName,wsClass);
-							//记录此webservice
-							componentInfo.addWebservice(wsInfo);
+						//在类路径中查找组件配置文件
+						InputStream is = ApplicationInitialServlet.class.getResourceAsStream("/"+cmpName+".component.xml");
+						if(is!=null){
+							componentCfgDoc = reader.read(is);
 						}
 					}
-					//记录此组件
-					app.addComponent(componentInfo);
+					//解析配置文件
+					if(componentCfgDoc!=null){
+						Element componentCfgRootEl = componentCfgDoc.getRootElement();//
+
+						String cmpType = componentCfgRootEl.attributeValue("type");
+						String clientSrcPath = componentCfgRootEl.attributeValue("clientSrcPath");
+						String clientPackage = componentCfgRootEl.attributeValue("clientPackage");
+
+						LocalComponent componentInfo = new LocalComponent(cmpName,cmpType,clientSrcPath,clientPackage);
+						
+						if(!cmpName.equals(componentCfgRootEl.attributeValue("name"))){
+							System.err.println("组件配置文件："+cmpName+".component.xml中的名称与组件名称不符,忽略此组件的webservice服务配置！");
+						}else{
+							List<Element> webserviceEls = (List<Element>)componentCfgRootEl.elements("webservice");
+							for(Element webserviceEl : webserviceEls){
+								String wsName = webserviceEl.attributeValue("name");
+								String wsClass = webserviceEl.attributeValue("class");
+								LocalWebservice wsInfo = new LocalWebservice(componentInfo,wsName,wsClass);
+								//记录此webservice
+								componentInfo.addWebservice(wsInfo);
+							}
+						}
+						//记录此组件
+						app.addComponent(componentInfo);
+					}else{
+						//在web-inf目录和类路径均未找到此组件的配置文件
+						System.err.println("组件配置文件："+cmpName+".component.xml不存在,忽略此组件！");
+					}
+					
 				}
 			}
 			
@@ -148,21 +201,37 @@ public class ApplicationInitialServlet extends BasePlateformServlet{
 					System.err.println("组件名称不存在,忽略此组件！");
 				}else{
 					RemoteComponent componentInfo = new RemoteComponent(cmpName, cmpIp, cmpWsPort);
-					//从组件同名配置文件中 取得webservice配置信息
-					Document componentCfgDoc = reader.read(ApplicationInitialServlet.class.getResourceAsStream("/"+cmpName+".cfg.xml"));
-					Element componentCfgRootEl = componentCfgDoc.getRootElement();//
-					if(!cmpName.equals(componentCfgRootEl.attributeValue("name"))){
-						System.err.println("组件配置文件：WEB-INF/classes/"+cmpName+".cfg.xml中的名称与组件名称不符,忽略此组件的webservice服务配置！");
+					
+					//在web-inf目录中查找组件配置文件
+					Document componentCfgDoc = null;
+					File componentCfgFile = new File(app.getContextPath()+"WEB-INF/"+cmpName+".component.xml");
+					if(componentCfgFile.exists()){
+						componentCfgDoc = reader.read(componentCfgFile);
 					}else{
-						List<Element> webserviceEls = (List<Element>)componentCfgRootEl.elements("webservice");
-						for(Element webserviceEl : webserviceEls){
-							String wsName = webserviceEl.attributeValue("name");
-							String wsClientClass = webserviceEl.attributeValue("clientClass");
-							String wsClientServiceClass = webserviceEl.attributeValue("clientServiceClass");
-							RemoteWebservice wsInfo = new RemoteWebservice(componentInfo, wsName, wsClientClass, wsClientServiceClass);
-							//记录此webservice
-							componentInfo.addWebservice(wsInfo);
+						//在类路径中查找组件配置文件
+						InputStream is = ApplicationInitialServlet.class.getResourceAsStream("/"+cmpName+".component.xml");
+						if(is!=null){
+							componentCfgDoc = reader.read(is);
 						}
+					}
+					//从组件同名配置文件中 取得webservice配置信息
+					if(componentCfgDoc!=null){
+						Element componentCfgRootEl = componentCfgDoc.getRootElement();//
+						if(!cmpName.equals(componentCfgRootEl.attributeValue("name"))){
+							System.err.println("组件配置文件："+cmpName+".component.xml中的名称与组件名称不符,忽略此组件的webservice服务配置！");
+						}else{
+							List<Element> webserviceEls = (List<Element>)componentCfgRootEl.elements("webservice");
+							for(Element webserviceEl : webserviceEls){
+								String wsName = webserviceEl.attributeValue("name");
+								String wsClientClass = webserviceEl.attributeValue("clientClass");
+								String wsClientServiceClass = webserviceEl.attributeValue("clientServiceClass");
+								RemoteWebservice wsInfo = new RemoteWebservice(componentInfo, wsName, wsClientClass, wsClientServiceClass);
+								//记录此webservice
+								componentInfo.addWebservice(wsInfo);
+							}
+						}
+					}else{
+						System.err.println("组件配置文件："+cmpName+".component.xml不存在,忽略此组件的webservice服务配置！");
 					}
 					//记录此组件
 					app.addComponent(componentInfo);
