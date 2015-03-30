@@ -256,6 +256,7 @@ LUI.Form.Field = {
 			validate:function(dataValue){
 				var oldValid = this.valid;
 				this.valid = true;
+				this.validInfo = null;
 				//默认只检查 是否允许为空
 				if((dataValue==null || (''+dataValue).length ==0) && !this.allowBlank){
 					this.valid = false;
@@ -872,6 +873,7 @@ LUI.Form.Field.String = {
 				var oldValid = this.valid;
 				//字符型字段 除了校验是否为空外还需要检查长度是否符合要求
 				this.valid = true;
+				this.validInfo = null;
 				//检查值是否 有效
 				var stringValue = dataValue==null?'':dataValue;
 				if(stringValue.length ==0){
@@ -953,6 +955,7 @@ LUI.Form.Field.Password = {
 				var oldValid = this.valid;
 				//密码型字段 除了校验是否为空外还需要检查长度是否符合要求（以后可以加上 强制字母 大小写等密码强度要求）
 				this.valid = true;
+				this.validInfo = null;
 				//检查存储值是否 有效
 				var stringValue = dataValue==null?'':dataValue;
 				if(stringValue.length ==0){
@@ -1008,6 +1011,7 @@ LUI.Form.Field.MobileNumber = {
 				var oldValid = this.valid;
 				//手机号字段 除了校验是否为空外还需要检查号码是否符合要求
 				this.valid = true;
+				this.validInfo = null;
 				//检查值是否 有效
 				var stringValue = dataValue==null?'':dataValue;
 				if(stringValue.length ==0){
@@ -1050,7 +1054,7 @@ LUI.Form.Field.PostCode = {
 				var oldValid = this.valid;
 				//手机号字段 除了校验是否为空外还需要检查号码是否符合要求
 				this.valid = true;
-
+				this.validInfo = null;
 				//检查值是否 有效
 				var stringValue = dataValue==null?'':dataValue;
 				if(stringValue.length ==0){
@@ -1282,6 +1286,7 @@ LUI.Form.Field.StringText = {
 					var oldValid = this.valid;
 					//字符型字段 除了校验是否为空外还需要检查长度是否符合要求
 					this.valid = true;
+					this.validInfo = null;
 					//检查值是否 有效
 					var stringValue = dataValue==null?'':dataValue;
 					if(stringValue.length ==0){
@@ -1691,6 +1696,9 @@ LUI.Form.Field.StringSelect = {
 				if((dataValue==null || (''+dataValue).length ==0) && !this.allowBlank){
 					this.valid = false;
 					this.validInfo = '此字段不允许为空!';
+				}else if((dataValue==null || (''+dataValue).length ==0) && this.allowBlank){
+					this.valid = true;
+					this.validInfo = null;
 				}else{
 					this.valid = false;
 					this.validInfo = '无效的值!';
@@ -2477,6 +2485,7 @@ LUI.Form.Field.StringHTML = {
 				var oldValid = this.valid;
 				//html型字段 除了校验是否为空外还需要检查长度是否符合要求
 				this.valid = true;
+				this.validInfo = null;
 				//检查值是否 有效
 				var stringValue = dataValue==null?'':dataValue;
 				if(stringValue.length ==0){
@@ -2682,6 +2691,7 @@ LUI.Form.Field.Int = {
 				var oldValid = this.valid;
 				//数值型字段 除了校验是否为空外还需要检查是否有效 大小是否是否符合要求
 				this.valid = true;
+				this.validInfo = null;
 
 				//检查值是否 有效
 				var stringValue = dataValue==null?'':(''+dataValue).replace(/,/g,"");
@@ -3377,6 +3387,9 @@ LUI.Form.Field.ObjectSelect = {
 				if((dataValue==null || (''+dataValue).length ==0) && !this.allowBlank){
 					this.valid = false;
 					this.validInfo = '此字段不允许为空!';
+				}else if((dataValue==null || (''+dataValue).length ==0) && this.allowBlank){
+					this.valid = true;
+					this.validInfo = null;
 				}else{
 					this.valid = false;
 					this.validInfo = '无效的值!';
@@ -4128,6 +4141,7 @@ LUI.Form.Field.File = {
 					this.validInfo = '此字段不允许为空!';
 				}else{
 					this.valid = true;
+					this.validInfo = null;
 				}
 				
 				if(!this.valid){

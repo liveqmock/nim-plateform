@@ -140,6 +140,9 @@ LUI.Form = {
 				this.record = this.datasource.getRecord(0);
 				this.bindRecord();
 				
+				this.fireEvent(this.events.load,{
+					form:this
+				});
 			},
 			//加载数据记录 并通过对双方的监听 建立关联
 			binded:false,
@@ -251,6 +254,10 @@ LUI.Form = {
 				return field;
 			},
 			rendered:false,
+			events:{
+				load:'form_load',
+				render:'form_render'
+			},
 			//生成或绑定页面元素
 			el:null,
 			formEl:null,
@@ -315,6 +322,9 @@ LUI.Form = {
 				}
 				//
 				this.rendered = true;
+				this.fireEvent(this.events.render,{
+					form:this
+				});
 			},
 			//撤销对页面元素的改变
 			deRender:function(forceDeRender){
@@ -609,6 +619,9 @@ LUI.Form.Button = {
 						});
 					}
 					this.rendered = true;
+					this.fireEvent(this.events.render,{
+						form:this
+					});
 				}
 			},
 			//撤销对页面元素的改变
@@ -1094,6 +1107,10 @@ LUI.DisplayForm = {
 				this.record = this.datasource.getRecord(0);
 				this.bindRecord();
 				
+				this.fireEvent(this.events.load,{
+					form:this
+				});
+				
 			},
 			//加载数据记录 并通过对双方的监听 建立关联
 			binded:false,
@@ -1164,6 +1181,10 @@ LUI.DisplayForm = {
 				}
 			},
 			rendered:false,
+			events:{
+				load:'form_load',
+				render:'form_render'
+			},
 			//生成或绑定页面元素
 			el:null,
 			formEl:null,
@@ -1221,6 +1242,9 @@ LUI.DisplayForm = {
 				}
 				//
 				this.rendered = true;
+				this.fireEvent(this.events.render,{
+					form:this
+				});
 			},
 			//撤销对页面元素的改变
 			deRender:function(forceDeRender){
@@ -1298,7 +1322,28 @@ LUI.DisplayForm = {
 				lui_form.addField(field);
 			}
 		}
-		//是否生成字段
+		//
+		//事件监听
+		if(lui_form.listenerDefs!=null){
+			if(lui_form.listenerDefs.onLoad!=null){
+				var onLoadFunc = window[lui_form.listenerDefs.onLoad];
+				if(onLoadFunc==null){
+					LUI.Message.warn('错误','事件onGridRendered的处理函数('+lui_form.listenerDefs.onLoad+')不存在！');
+				}else{
+					lui_form.addListener(lui_form.events.load,LUI.Observable.createNew(),onLoadFunc);
+				}
+			}
+			
+			if(lui_form.listenerDefs.onRender!=null){
+				var onRenderFunc = window[lui_form.listenerDefs.onRender];
+				if(onRenderFunc==null){
+					LUI.Message.warn('错误','事件onRowRendered的处理函数('+lui_form.listenerDefs.onRender+')不存在！');
+				}else{
+					lui_form.addListener(lui_form.events.render,LUI.Observable.createNew(),onRenderFunc);
+				}
+			}
+		}
+		//是否生成表单
 		if(lui_form.autoRender){
 			lui_form.render();
 		}
@@ -1508,6 +1553,7 @@ LUI.WorkflowForm = {
 //					});
 				}
 			
+				
 			}
 		},formCfg);
 		//创建form对象

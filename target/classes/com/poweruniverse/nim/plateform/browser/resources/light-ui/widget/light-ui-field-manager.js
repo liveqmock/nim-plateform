@@ -77,17 +77,17 @@ $(document).ready(function(){
 
 	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.DisplayField.StringDisplay);
 	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.ChosenSelect);
-	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.StringSelect);
 	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.StringTriggerSelect);
-	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.Email);//邮箱
-	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.MobileNumber);//手机号
-	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.PostCode);//邮编
+	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.StringSelect);
 //	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.StringPlusSelect);
 	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.StringChooseEl);
 	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.URLField);
 	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.StringText);
 	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.StringHTML);
 	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.Password);
+	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.Email);//邮箱
+	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.MobileNumber);//手机号
+	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.PostCode);//邮编
 	LUI.FieldFactoryManager.regsterFieldFactory('stringField',LUI.Form.Field.String,true);
 
 	

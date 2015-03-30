@@ -114,6 +114,7 @@
 			
 		</properties>
 		<events>
+			<event name="onLoad" type="string" label="数据加载" params="" />
 			<event name="onRender" type="string" label="显示完成" params="" />
 		</events>
 	</type>

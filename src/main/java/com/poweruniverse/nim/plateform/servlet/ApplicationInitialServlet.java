@@ -45,15 +45,19 @@ public class ApplicationInitialServlet extends BasePlateformServlet{
 		Application app = initApplicationConfig(this.ContextPath);
 		
 		if(app!=null){
+			System.out.println("---------------------------------------");
 			//循环所有local组件
 			for(String cmpName:app.getComponentKeySet()){
 				Component componentInfo = app.getComponent(cmpName);
 				if(componentInfo.isLocalComponent()){
 					LocalComponent lc = (LocalComponent)componentInfo;
-					//初始化所有组件
+					//初始化本地组件
 					lc.initialize();
-					//发布webservice服务
+					//通知本地组件发布webservice服务
 					lc.publish();
+				}else{
+					RemoteComponent rc = (RemoteComponent)componentInfo;
+					System.out.println("	远程组件("+rc.getName()+")的webservice服务在 "+rc.getIp()+":"+rc.getWebservicePort()+"运行");
 				}
 			}
 		}else{
@@ -162,7 +166,7 @@ public class ApplicationInitialServlet extends BasePlateformServlet{
 					if(componentCfgDoc!=null){
 						Element componentCfgRootEl = componentCfgDoc.getRootElement();//
 
-						String cmpType = componentCfgRootEl.attributeValue("type");
+						String cmpType = componentCfgRootEl.attributeValue("type");//组件类型：平台组件 、应用系统组件
 						String clientSrcPath = componentCfgRootEl.attributeValue("clientSrcPath");
 						String clientPackage = componentCfgRootEl.attributeValue("clientPackage");
 
@@ -171,6 +175,7 @@ public class ApplicationInitialServlet extends BasePlateformServlet{
 						if(!cmpName.equals(componentCfgRootEl.attributeValue("name"))){
 							System.err.println("组件配置文件："+cmpName+".component.xml中的名称与组件名称不符,忽略此组件的webservice服务配置！");
 						}else{
+							@SuppressWarnings("unchecked")
 							List<Element> webserviceEls = (List<Element>)componentCfgRootEl.elements("webservice");
 							for(Element webserviceEl : webserviceEls){
 								String wsName = webserviceEl.attributeValue("name");
@@ -200,7 +205,7 @@ public class ApplicationInitialServlet extends BasePlateformServlet{
 				if(cmpName == null){
 					System.err.println("组件名称不存在,忽略此组件！");
 				}else{
-					RemoteComponent componentInfo = new RemoteComponent(cmpName, cmpIp, cmpWsPort);
+					
 					
 					//在web-inf目录中查找组件配置文件
 					Document componentCfgDoc = null;
@@ -215,26 +220,31 @@ public class ApplicationInitialServlet extends BasePlateformServlet{
 						}
 					}
 					//从组件同名配置文件中 取得webservice配置信息
-					if(componentCfgDoc!=null){
+					if(componentCfgDoc==null){
+						System.err.println("组件配置文件："+cmpName+".component.xml不存在,忽略此组件的webservice服务配置！");
+					}else{
 						Element componentCfgRootEl = componentCfgDoc.getRootElement();//
 						if(!cmpName.equals(componentCfgRootEl.attributeValue("name"))){
 							System.err.println("组件配置文件："+cmpName+".component.xml中的名称与组件名称不符,忽略此组件的webservice服务配置！");
 						}else{
+							String clientPackage = componentCfgRootEl.attributeValue("clientPackage");
+							RemoteComponent componentInfo = new RemoteComponent(cmpName, cmpIp, cmpWsPort,clientPackage);
+							
+							@SuppressWarnings("unchecked")
 							List<Element> webserviceEls = (List<Element>)componentCfgRootEl.elements("webservice");
 							for(Element webserviceEl : webserviceEls){
 								String wsName = webserviceEl.attributeValue("name");
-								String wsClientClass = webserviceEl.attributeValue("clientClass");
-								String wsClientServiceClass = webserviceEl.attributeValue("clientServiceClass");
-								RemoteWebservice wsInfo = new RemoteWebservice(componentInfo, wsName, wsClientClass, wsClientServiceClass);
+								String wsCLass = webserviceEl.attributeValue("class");
+								String wsClientServiceClass = clientPackage+"."+wsCLass.substring(wsCLass.lastIndexOf(".")+1);
+										
+								RemoteWebservice wsInfo = new RemoteWebservice(componentInfo, wsName, wsCLass, wsClientServiceClass);
 								//记录此webservice
 								componentInfo.addWebservice(wsInfo);
 							}
+							//记录此组件
+							app.addComponent(componentInfo);
 						}
-					}else{
-						System.err.println("组件配置文件："+cmpName+".component.xml不存在,忽略此组件的webservice服务配置！");
 					}
-					//记录此组件
-					app.addComponent(componentInfo);
 				}
 			}
 			//session factory 配置
@@ -245,6 +255,7 @@ public class ApplicationInitialServlet extends BasePlateformServlet{
 			sessionConfig.put("cfgFileName", sessionFactoryFileName);
 			
 			JSONArray xiTongConfigs = new JSONArray();
+			@SuppressWarnings("unchecked")
 			List<Element> xiTongEls = (List<Element>)sessionFactoryEl.elements("xiTong");
 			for(Element xiTongEl : xiTongEls){
 				JSONObject xiTongConfig = JSONConvertUtils.applyXML2Json(xiTongEl,false);
