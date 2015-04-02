@@ -336,7 +336,7 @@ LUI.Datasource = {
 					data:{
 						component:'nim-data',
 						service:'data',
-						method:'save',
+						method:'submit',
 						arguments:"{" +
 							"xiTongDH:'"+xiTongDH+"'," +
 							"gongNengDH:'"+gongNengDH+"'," +
