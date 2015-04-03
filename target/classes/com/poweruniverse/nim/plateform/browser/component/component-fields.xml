@@ -861,6 +861,7 @@
 	
 	<component name="fileEditor" type="fileField" label="附件上传"  xmlElName="field" isEditable="true" isRemovable="true" >
 		<properties>
+			<property name="fuJianLX" label="附件类型" type="string" allowBlank="false" widget="textSelectEditor" dataGetter="getFuJianLXOptions" info="" enabled="true"/>
 			<property name="renderto" label="目标元素" type="string" allowBlank="true" info="关联元素" enabled="true" widget="textChooseElEditor" onChange="setFormFieldRenderTo"/>
 			<property name="renderTemplate" widget="textareaEditor"  label="显示表达式" type="text" allowBlank="true" info="生成显示内容的Handlebars表达式" enabled="true" />
 			<property name="enabled" label="是否启用" type="string" allowBlank="false" info="是否启用" default="true" enabled="true" 

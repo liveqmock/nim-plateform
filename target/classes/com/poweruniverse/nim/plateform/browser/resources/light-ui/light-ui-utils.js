@@ -427,7 +427,7 @@
 					text: "上传",
 					click:function(event) {
 						$.ajaxFileUpload({
-							url: 'nimUpload/?fjlx=2', //用于文件上传的服务器端请求地址
+							url: 'upload/?fuJianLXDM='+options.fuJianLX, //用于文件上传的服务器端请求地址
 							secureuri: false, //是否需要安全协议，一般设置为false
 							fileElementId: 'myfile2', //文件上传域的ID
 							dataType: 'json', //返回值类型 一般设置为json
@@ -497,7 +497,7 @@
 			
 			
 			uploadFileHandler = divEl.find("#fileuploader").uploadFile($.extend({
-				url:"nimUpload/?fjlx=1",
+				url:"upload/?fuJianLXDM="+options.fuJianLX,
 				fileName:"myfile",
 				dragDrop:false,
 				autoSubmit:false,

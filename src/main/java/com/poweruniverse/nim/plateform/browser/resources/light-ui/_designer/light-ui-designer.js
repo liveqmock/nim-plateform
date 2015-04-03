@@ -2703,6 +2703,15 @@ function getXiTongOptions(){
 	return options;
 }
 
+function getFuJianLXOptions(){
+	var options = [];
+	for(var i=0;i<LUI.PageDesigner.instance._fuJianLXs.length;i++ ){
+		var fuJianLXData = LUI.PageDesigner.instance._fuJianLXs[i];
+		options[options.length] = {text:fuJianLXData.fuJianLXMC,value:fuJianLXData.fuJianLXDH};
+	}
+	return options;
+}
+
 /**
  * 取得字段类型选项参数
  */

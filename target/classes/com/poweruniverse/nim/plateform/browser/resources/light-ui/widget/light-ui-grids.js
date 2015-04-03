@@ -1021,28 +1021,34 @@ LUI.Grid.Pagination = {
 			rendered:false,
 			render:function(){
 				if(this.renderto!=null){
-					var _this = this;
-					$(this.renderto).pagination(this.totalCount, {
-						items_per_page:this.items_per_page,
-						num_display_entries:this.num_display_entries,
-						num_edge_entries:this.num_edge_entries,
-						prev_text:this.prev_text,
-						next_text:this.next_text,
-						current_page:0,
-						callback:function(page_index, jq){
-							_this.current_page = page_index;
-							_this.changePageTo(page_index);
-							return false;
-						}
-					});
-					this.rendered = true;
-					this.grid.fireEvent(this.grid.events.pagiRendered,{
-						grid:this.grid,
-						pagiEl:this.renderto,
-						start:this.start,
-						limit:this.items_per_page,
-						pageIndex:0
-					});
+					if(this.items_per_page == 0){
+						$(this.renderto).hide();
+					}else{
+						$(this.renderto).show();
+						
+						var _this = this;
+						$(this.renderto).pagination(this.totalCount, {
+							items_per_page:this.items_per_page,
+							num_display_entries:this.num_display_entries,
+							num_edge_entries:this.num_edge_entries,
+							prev_text:this.prev_text,
+							next_text:this.next_text,
+							current_page:0,
+							callback:function(page_index, jq){
+								_this.current_page = page_index;
+								_this.changePageTo(page_index);
+								return false;
+							}
+						});
+						this.rendered = true;
+						this.grid.fireEvent(this.grid.events.pagiRendered,{
+							grid:this.grid,
+							pagiEl:this.renderto,
+							start:this.start,
+							limit:this.items_per_page,
+							pageIndex:0
+						});
+					}
 				}
 			},
 			setPagiInfo:function(pagiInfo){

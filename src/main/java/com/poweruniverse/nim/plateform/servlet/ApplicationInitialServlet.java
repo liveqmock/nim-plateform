@@ -23,6 +23,7 @@ import com.poweruniverse.nim.base.description.RemoteComponent;
 import com.poweruniverse.nim.base.description.RemoteWebservice;
 import com.poweruniverse.nim.base.servlet.BasePlateformServlet;
 import com.poweruniverse.nim.data.entity.EntityManager;
+import com.poweruniverse.nim.data.entity.RegisterManager;
 import com.poweruniverse.nim.data.service.utils.HibernateSessionFactory;
 import com.poweruniverse.nim.data.service.utils.JSONConvertUtils;
 
@@ -286,6 +287,10 @@ public class ApplicationInitialServlet extends BasePlateformServlet{
 			}else if(!EntityManager.checkEntitySyn(contextPath)){
 				//检查实体类版本是否一致 
 				//是否需要根据实体类定义文件 重新生成java类 hbm文件 实体类数据
+				app = null;
+			}else if(!RegisterManager.checkRegisterSyn(contextPath)){
+				//检查功能版本是否一致 
+				//是否需要根据功能定义文件 重新生成action类 功能数据等
 				app = null;
 			}else if(!HibernateSessionFactory.loadMappings()){
 				//添加其他mapping
